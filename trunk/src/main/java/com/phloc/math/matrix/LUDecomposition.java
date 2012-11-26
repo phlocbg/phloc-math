@@ -17,6 +17,8 @@
  */
 package com.phloc.math.matrix;
 
+import java.io.Serializable;
+
 /**
  * LU Decomposition.
  * <P>
@@ -30,14 +32,8 @@ package com.phloc.math.matrix;
  * decomposition is in the solution of square systems of simultaneous linear
  * equations. This will fail if isNonsingular() returns false.
  */
-
-public class LUDecomposition implements java.io.Serializable
+public class LUDecomposition implements Serializable
 {
-
-  /*
-   * ------------------------ Class variables ------------------------
-   */
-
   /**
    * Array for internal storage of decomposition.
    * 
@@ -52,7 +48,7 @@ public class LUDecomposition implements java.io.Serializable
    * @serial row dimension.
    * @serial pivot sign.
    */
-  private final int m_nROws, m_nCols;
+  private final int m_nRows, m_nCols;
 
   private int pivsign;
 
@@ -80,16 +76,16 @@ public class LUDecomposition implements java.io.Serializable
     // Use a "left-looking", dot-product, Crout/Doolittle algorithm.
 
     LU = A.getArrayCopy ();
-    m_nROws = A.getRowDimension ();
+    m_nRows = A.getRowDimension ();
     m_nCols = A.getColumnDimension ();
-    piv = new int [m_nROws];
-    for (int i = 0; i < m_nROws; i++)
+    piv = new int [m_nRows];
+    for (int i = 0; i < m_nRows; i++)
     {
       piv[i] = i;
     }
     pivsign = 1;
     double [] LUrowi;
-    final double [] LUcolj = new double [m_nROws];
+    final double [] LUcolj = new double [m_nRows];
 
     // Outer loop.
 
@@ -98,14 +94,14 @@ public class LUDecomposition implements java.io.Serializable
 
       // Make a copy of the j-th column to localize references.
 
-      for (int i = 0; i < m_nROws; i++)
+      for (int i = 0; i < m_nRows; i++)
       {
         LUcolj[i] = LU[i][j];
       }
 
       // Apply previous transformations.
 
-      for (int i = 0; i < m_nROws; i++)
+      for (int i = 0; i < m_nRows; i++)
       {
         LUrowi = LU[i];
 
@@ -124,7 +120,7 @@ public class LUDecomposition implements java.io.Serializable
       // Find pivot and exchange if necessary.
 
       int p = j;
-      for (int i = j + 1; i < m_nROws; i++)
+      for (int i = j + 1; i < m_nRows; i++)
       {
         if (Math.abs (LUcolj[i]) > Math.abs (LUcolj[p]))
         {
@@ -147,9 +143,9 @@ public class LUDecomposition implements java.io.Serializable
 
       // Compute multipliers.
 
-      if (j < m_nROws && LU[j][j] != 0.0)
+      if (j < m_nRows && LU[j][j] != 0.0)
       {
-        for (int i = j + 1; i < m_nROws; i++)
+        for (int i = j + 1; i < m_nRows; i++)
         {
           LU[i][j] /= LU[j][j];
         }
@@ -209,9 +205,9 @@ public class LUDecomposition implements java.io.Serializable
 
   public Matrix getL ()
   {
-    final Matrix X = new Matrix (m_nROws, m_nCols);
+    final Matrix X = new Matrix (m_nRows, m_nCols);
     final double [][] L = X.getArray ();
-    for (int i = 0; i < m_nROws; i++)
+    for (int i = 0; i < m_nRows; i++)
     {
       for (int j = 0; j < m_nCols; j++)
       {
@@ -268,8 +264,8 @@ public class LUDecomposition implements java.io.Serializable
 
   public int [] getPivot ()
   {
-    final int [] p = new int [m_nROws];
-    for (int i = 0; i < m_nROws; i++)
+    final int [] p = new int [m_nRows];
+    for (int i = 0; i < m_nRows; i++)
     {
       p[i] = piv[i];
     }
@@ -284,8 +280,8 @@ public class LUDecomposition implements java.io.Serializable
 
   public double [] getDoublePivot ()
   {
-    final double [] vals = new double [m_nROws];
-    for (int i = 0; i < m_nROws; i++)
+    final double [] vals = new double [m_nRows];
+    for (int i = 0; i < m_nRows; i++)
     {
       vals[i] = piv[i];
     }
@@ -302,7 +298,7 @@ public class LUDecomposition implements java.io.Serializable
 
   public double det ()
   {
-    if (m_nROws != m_nCols)
+    if (m_nRows != m_nCols)
     {
       throw new IllegalArgumentException ("Matrix must be square.");
     }
@@ -328,14 +324,10 @@ public class LUDecomposition implements java.io.Serializable
 
   public Matrix solve (final Matrix B)
   {
-    if (B.getRowDimension () != m_nROws)
-    {
+    if (B.getRowDimension () != m_nRows)
       throw new IllegalArgumentException ("Matrix row dimensions must agree.");
-    }
     if (!this.isNonsingular ())
-    {
       throw new RuntimeException ("Matrix is singular.");
-    }
 
     // Copy right hand side with pivoting
     final int nx = B.getColumnDimension ();
@@ -346,30 +338,18 @@ public class LUDecomposition implements java.io.Serializable
     for (int k = 0; k < m_nCols; k++)
     {
       for (int i = k + 1; i < m_nCols; i++)
-      {
         for (int j = 0; j < nx; j++)
-        {
           X[i][j] -= X[k][j] * LU[i][k];
-        }
-      }
     }
     // Solve U*X = Y;
     for (int k = m_nCols - 1; k >= 0; k--)
     {
       for (int j = 0; j < nx; j++)
-      {
         X[k][j] /= LU[k][k];
-      }
       for (int i = 0; i < k; i++)
-      {
         for (int j = 0; j < nx; j++)
-        {
           X[i][j] -= X[k][j] * LU[i][k];
-        }
-      }
     }
     return Xmat;
   }
-
-  private static final long serialVersionUID = 1;
 }
