@@ -22,6 +22,8 @@ import java.util.Arrays;
 
 import com.phloc.commons.math.MathHelper;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * Eigenvalues and eigenvectors of a real matrix.
  * <P>
@@ -37,7 +39,6 @@ import com.phloc.commons.math.MathHelper;
  * V.times(D). The matrix V may be badly conditioned, or even singular, so the
  * validity of the equation A = V*D*inverse(V) depends upon V.cond().
  **/
-
 public class EigenvalueDecomposition implements Serializable
 {
   /**
@@ -94,7 +95,6 @@ public class EigenvalueDecomposition implements Serializable
     // Bowdler, Martin, Reinsch, and Wilkinson, Handbook for
     // Auto. Comp., Vol.ii-Linear Algebra, and the corresponding
     // Fortran subroutine in EISPACK.
-
     for (int j = 0; j < m_nDim; j++)
     {
       m_aEVd[j] = m_aEigenVector[m_nDim - 1][j];
@@ -478,24 +478,24 @@ public class EigenvalueDecomposition implements Serializable
 
   // Complex scalar division.
 
-  private transient double cdivr, cdivi;
+  private double m_dCdivr, m_dCdivi;
 
   private void _cdiv (final double xr, final double xi, final double yr, final double yi)
   {
     double r, d;
-    if (Math.abs (yr) > Math.abs (yi))
+    if (MathHelper.abs (yr) > MathHelper.abs (yi))
     {
       r = yi / yr;
       d = yr + r * yi;
-      cdivr = (xr + r * xi) / d;
-      cdivi = (xi - r * xr) / d;
+      m_dCdivr = (xr + r * xi) / d;
+      m_dCdivi = (xi - r * xr) / d;
     }
     else
     {
       r = yr / yi;
       d = yi + r * yr;
-      cdivr = (r * xr + xi) / d;
-      cdivi = (r * xi - xr) / d;
+      m_dCdivr = (r * xr + xi) / d;
+      m_dCdivi = (r * xi - xr) / d;
     }
   }
 
@@ -929,8 +929,8 @@ public class EigenvalueDecomposition implements Serializable
           else
           {
             _cdiv (0.0, -m_aHessenBerg[n - 1][n], m_aHessenBerg[n - 1][n - 1] - p, q);
-            m_aHessenBerg[n - 1][n - 1] = cdivr;
-            m_aHessenBerg[n - 1][n] = cdivi;
+            m_aHessenBerg[n - 1][n - 1] = m_dCdivr;
+            m_aHessenBerg[n - 1][n] = m_dCdivi;
           }
           m_aHessenBerg[n][n - 1] = 0.0;
           m_aHessenBerg[n][n] = 1.0;
@@ -958,8 +958,8 @@ public class EigenvalueDecomposition implements Serializable
               if (m_aEVe[i] == 0)
               {
                 _cdiv (-ra, -sa, w, q);
-                m_aHessenBerg[i][n - 1] = cdivr;
-                m_aHessenBerg[i][n] = cdivi;
+                m_aHessenBerg[i][n - 1] = m_dCdivr;
+                m_aHessenBerg[i][n] = m_dCdivi;
               }
               else
               {
@@ -975,8 +975,8 @@ public class EigenvalueDecomposition implements Serializable
                   vr = eps * norm * (Math.abs (w) + Math.abs (q) + Math.abs (x) + Math.abs (y) + Math.abs (z));
                 }
                 _cdiv (x * r - z * ra + q * sa, x * s - z * sa - q * ra, vr, vi);
-                m_aHessenBerg[i][n - 1] = cdivr;
-                m_aHessenBerg[i][n] = cdivi;
+                m_aHessenBerg[i][n - 1] = m_dCdivr;
+                m_aHessenBerg[i][n] = m_dCdivi;
                 if (Math.abs (x) > (Math.abs (z) + Math.abs (q)))
                 {
                   m_aHessenBerg[i + 1][n - 1] = (-ra - w * m_aHessenBerg[i][n - 1] + q * m_aHessenBerg[i][n]) / x;
@@ -985,8 +985,8 @@ public class EigenvalueDecomposition implements Serializable
                 else
                 {
                   _cdiv (-r - y * m_aHessenBerg[i][n - 1], -s - y * m_aHessenBerg[i][n], z, q);
-                  m_aHessenBerg[i + 1][n - 1] = cdivr;
-                  m_aHessenBerg[i + 1][n] = cdivi;
+                  m_aHessenBerg[i + 1][n - 1] = m_dCdivr;
+                  m_aHessenBerg[i + 1][n] = m_dCdivi;
                 }
               }
 
@@ -1055,8 +1055,8 @@ public class EigenvalueDecomposition implements Serializable
     m_aEVe = new double [m_nDim];
 
     m_bIsSymmetric = true;
-    for (int j = 0; (j < m_nDim) & m_bIsSymmetric; j++)
-      for (int i = 0; (i < m_nDim) & m_bIsSymmetric; i++)
+    for (int j = 0; j < m_nDim; j++)
+      for (int i = 0; i < m_nDim; i++)
         if (A[i][j] != A[j][i])
         {
           m_bIsSymmetric = false;
@@ -1113,6 +1113,7 @@ public class EigenvalueDecomposition implements Serializable
    * 
    * @return real(diag(D))
    */
+  @SuppressFBWarnings ("EI_EXPOSE_REP")
   public double [] getRealEigenvalues ()
   {
     return m_aEVd;
@@ -1123,6 +1124,7 @@ public class EigenvalueDecomposition implements Serializable
    * 
    * @return imag(diag(D))
    */
+  @SuppressFBWarnings ("EI_EXPOSE_REP")
   public double [] getImagEigenvalues ()
   {
     return m_aEVe;

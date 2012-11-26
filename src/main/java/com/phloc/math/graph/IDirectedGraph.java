@@ -17,7 +17,6 @@
  */
 package com.phloc.math.graph;
 
-
 /**
  * Interface for a modifiable directed graph.
  * 

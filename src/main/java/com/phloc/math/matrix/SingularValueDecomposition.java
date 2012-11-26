@@ -24,6 +24,8 @@ import javax.annotation.Nonnull;
 
 import com.phloc.commons.math.MathHelper;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * Singular Value Decomposition.
  * <P>
@@ -358,8 +360,8 @@ public class SingularValueDecomposition implements Serializable
               }
             }
           }
-        }
           break;
+        }
 
         // Split at negligible s(k).
         case 2:
@@ -385,8 +387,8 @@ public class SingularValueDecomposition implements Serializable
               }
             }
           }
-        }
           break;
+        }
 
         // Perform one qr step.
         case 3:
@@ -458,8 +460,8 @@ public class SingularValueDecomposition implements Serializable
           }
           e[p - 2] = f;
           iter = iter + 1;
-        }
           break;
+        }
 
         // Convergence.
         case 4:
@@ -505,8 +507,10 @@ public class SingularValueDecomposition implements Serializable
           }
           iter = 0;
           p--;
-        }
           break;
+        }
+        default:
+          throw new IllegalStateException ();
       }
     }
   }
@@ -543,6 +547,7 @@ public class SingularValueDecomposition implements Serializable
    * @return diagonal of S.
    */
   @Nonnull
+  @SuppressFBWarnings ("EI_EXPOSE_REP")
   public double [] getSingularValues ()
   {
     return m_aData;
