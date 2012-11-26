@@ -17,6 +17,9 @@
  */
 package com.phloc.math.matrix;
 
+import java.io.Serializable;
+import java.util.Arrays;
+
 import com.phloc.commons.math.MathHelper;
 
 /**
@@ -35,13 +38,8 @@ import com.phloc.commons.math.MathHelper;
  * validity of the equation A = V*D*inverse(V) depends upon V.cond().
  **/
 
-public class EigenvalueDecomposition implements java.io.Serializable
+public class EigenvalueDecomposition implements Serializable
 {
-
-  /*
-   * ------------------------ Class variables ------------------------
-   */
-
   /**
    * Row and column dimension (square matrix).
    * 
@@ -82,7 +80,7 @@ public class EigenvalueDecomposition implements java.io.Serializable
    * 
    * @serial working storage for nonsymmetric algorithm.
    */
-  private double [] ort;
+  private double [] m_aOrt;
 
   /*
    * ------------------------ Private Methods ------------------------
@@ -396,16 +394,16 @@ public class EigenvalueDecomposition implements java.io.Serializable
         double h = 0.0;
         for (int i = high; i >= m; i--)
         {
-          ort[i] = m_aHessenBerg[i][m - 1] / scale;
-          h += ort[i] * ort[i];
+          m_aOrt[i] = m_aHessenBerg[i][m - 1] / scale;
+          h += m_aOrt[i] * m_aOrt[i];
         }
         double g = Math.sqrt (h);
-        if (ort[m] > 0)
+        if (m_aOrt[m] > 0)
         {
           g = -g;
         }
-        h = h - ort[m] * g;
-        ort[m] = ort[m] - g;
+        h = h - m_aOrt[m] * g;
+        m_aOrt[m] = m_aOrt[m] - g;
 
         // Apply Householder similarity transformation
         // H = (I-u*u'/h)*H*(I-u*u')/h)
@@ -415,12 +413,12 @@ public class EigenvalueDecomposition implements java.io.Serializable
           double f = 0.0;
           for (int i = high; i >= m; i--)
           {
-            f += ort[i] * m_aHessenBerg[i][j];
+            f += m_aOrt[i] * m_aHessenBerg[i][j];
           }
           f = f / h;
           for (int i = m; i <= high; i++)
           {
-            m_aHessenBerg[i][j] -= f * ort[i];
+            m_aHessenBerg[i][j] -= f * m_aOrt[i];
           }
         }
 
@@ -429,15 +427,15 @@ public class EigenvalueDecomposition implements java.io.Serializable
           double f = 0.0;
           for (int j = high; j >= m; j--)
           {
-            f += ort[j] * m_aHessenBerg[i][j];
+            f += m_aOrt[j] * m_aHessenBerg[i][j];
           }
           f = f / h;
           for (int j = m; j <= high; j++)
           {
-            m_aHessenBerg[i][j] -= f * ort[j];
+            m_aHessenBerg[i][j] -= f * m_aOrt[j];
           }
         }
-        ort[m] = scale * ort[m];
+        m_aOrt[m] = scale * m_aOrt[m];
         m_aHessenBerg[m][m - 1] = scale * g;
       }
     }
@@ -458,20 +456,20 @@ public class EigenvalueDecomposition implements java.io.Serializable
       {
         for (int i = m + 1; i <= high; i++)
         {
-          ort[i] = m_aHessenBerg[i][m - 1];
+          m_aOrt[i] = m_aHessenBerg[i][m - 1];
         }
         for (int j = m; j <= high; j++)
         {
           double g = 0.0;
           for (int i = m; i <= high; i++)
           {
-            g += ort[i] * m_aEigenVector[i][j];
+            g += m_aOrt[i] * m_aEigenVector[i][j];
           }
           // Double division avoids possible underflow
-          g = (g / ort[m]) / m_aHessenBerg[m][m - 1];
+          g = (g / m_aOrt[m]) / m_aHessenBerg[m][m - 1];
           for (int i = m; i <= high; i++)
           {
-            m_aEigenVector[i][j] += g * ort[i];
+            m_aEigenVector[i][j] += g * m_aOrt[i];
           }
         }
       }
@@ -1048,7 +1046,6 @@ public class EigenvalueDecomposition implements java.io.Serializable
    * @param Arg
    *        Square matrix
    */
-
   public EigenvalueDecomposition (final Matrix Arg)
   {
     final double [][] A = Arg.getArray ();
@@ -1059,21 +1056,19 @@ public class EigenvalueDecomposition implements java.io.Serializable
 
     m_bIsSymmetric = true;
     for (int j = 0; (j < m_nDim) & m_bIsSymmetric; j++)
-    {
       for (int i = 0; (i < m_nDim) & m_bIsSymmetric; i++)
-      {
-        m_bIsSymmetric = (A[i][j] == A[j][i]);
-      }
-    }
+        if (A[i][j] != A[j][i])
+        {
+          m_bIsSymmetric = false;
+          break;
+        }
 
     if (m_bIsSymmetric)
     {
       for (int i = 0; i < m_nDim; i++)
       {
-        for (int j = 0; j < m_nDim; j++)
-        {
-          m_aEigenVector[i][j] = A[i][j];
-        }
+        final double [] aRow = A[i];
+        System.arraycopy (aRow, 0, m_aEigenVector[i], 0, aRow.length);
       }
 
       // Tridiagonalize.
@@ -1081,20 +1076,15 @@ public class EigenvalueDecomposition implements java.io.Serializable
 
       // Diagonalize.
       _tql2 ();
-
     }
     else
     {
       m_aHessenBerg = new double [m_nDim] [m_nDim];
-      ort = new double [m_nDim];
+      m_aOrt = new double [m_nDim];
 
       for (int j = 0; j < m_nDim; j++)
-      {
         for (int i = 0; i < m_nDim; i++)
-        {
           m_aHessenBerg[i][j] = A[i][j];
-        }
-      }
 
       // Reduce to Hessenberg form.
       _orthes ();
@@ -1113,7 +1103,6 @@ public class EigenvalueDecomposition implements java.io.Serializable
    * 
    * @return V
    */
-
   public Matrix getV ()
   {
     return new Matrix (m_aEigenVector, m_nDim, m_nDim);
@@ -1124,7 +1113,6 @@ public class EigenvalueDecomposition implements java.io.Serializable
    * 
    * @return real(diag(D))
    */
-
   public double [] getRealEigenvalues ()
   {
     return m_aEVd;
@@ -1135,7 +1123,6 @@ public class EigenvalueDecomposition implements java.io.Serializable
    * 
    * @return imag(diag(D))
    */
-
   public double [] getImagEigenvalues ()
   {
     return m_aEVe;
@@ -1146,30 +1133,20 @@ public class EigenvalueDecomposition implements java.io.Serializable
    * 
    * @return D
    */
-
   public Matrix getD ()
   {
     final Matrix X = new Matrix (m_nDim, m_nDim);
     final double [][] D = X.getArray ();
     for (int i = 0; i < m_nDim; i++)
     {
-      for (int j = 0; j < m_nDim; j++)
-      {
-        D[i][j] = 0.0;
-      }
+      Arrays.fill (D[i], 0.0);
       D[i][i] = m_aEVd[i];
       if (m_aEVe[i] > 0)
-      {
         D[i][i + 1] = m_aEVe[i];
-      }
       else
         if (m_aEVe[i] < 0)
-        {
           D[i][i - 1] = m_aEVe[i];
-        }
     }
     return X;
   }
-
-  private static final long serialVersionUID = 1;
 }
