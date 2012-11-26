@@ -35,12 +35,6 @@ import java.util.Locale;
 import org.junit.Test;
 
 import com.phloc.commons.io.file.FileOperations;
-import com.phloc.math.matrix.CholeskyDecomposition;
-import com.phloc.math.matrix.EigenvalueDecomposition;
-import com.phloc.math.matrix.LUDecomposition;
-import com.phloc.math.matrix.Matrix;
-import com.phloc.math.matrix.QRDecomposition;
-import com.phloc.math.matrix.SingularValueDecomposition;
 
 /**
  * TestMatrix tests the functionality of the Jama Matrix class and associated
@@ -773,7 +767,7 @@ public class TestMatrix
     {
       try_success ("minus... ", "");
     }
-    A = R.copy ();
+    A = R.getClone ();
     A.minusEquals (R);
     Z = new Matrix (A.getRowDimension (), A.getColumnDimension ());
     try
@@ -796,7 +790,7 @@ public class TestMatrix
       try_success ("minusEquals... ", "");
     }
 
-    A = R.copy ();
+    A = R.getClone ();
     B = Matrix.random (A.getRowDimension (), A.getColumnDimension ());
     C = A.minus (B);
     try
@@ -847,7 +841,7 @@ public class TestMatrix
     {
       errorCount = try_failure (errorCount, "uminus... ", "(-A + A != zeros)");
     }
-    A = R.copy ();
+    A = R.getClone ();
     O = new Matrix (A.getRowDimension (), A.getColumnDimension (), 1.0);
     C = A.arrayLeftDivide (R);
     try
@@ -887,7 +881,7 @@ public class TestMatrix
     {
       errorCount = try_failure (errorCount, "arrayLeftDivideEquals... ", "(M.\\M != ones)");
     }
-    A = R.copy ();
+    A = R.getClone ();
     try
     {
       A.arrayRightDivide (S);
@@ -926,7 +920,7 @@ public class TestMatrix
     {
       errorCount = try_failure (errorCount, "arrayRightDivideEquals... ", "(M./M != ones)");
     }
-    A = R.copy ();
+    A = R.getClone ();
     B = Matrix.random (A.getRowDimension (), A.getColumnDimension ());
     try
     {
