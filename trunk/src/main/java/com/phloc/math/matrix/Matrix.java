@@ -19,6 +19,7 @@ package com.phloc.math.matrix;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StreamTokenizer;
@@ -36,6 +37,9 @@ import javax.annotation.WillNotClose;
 
 import com.phloc.commons.ICloneable;
 import com.phloc.commons.math.MathHelper;
+import com.phloc.commons.system.SystemHelper;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Jama = Java Matrix class.
@@ -159,6 +163,7 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    *            All rows must have the same length
    * @see #constructWithCopy
    */
+  @SuppressFBWarnings ("EI_EXPOSE_REP")
   public Matrix (@Nonnull final double [][] aOther)
   {
     if (aOther == null)
@@ -182,6 +187,7 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * @param nCols
    *        Number of columns.
    */
+  @SuppressFBWarnings ("EI_EXPOSE_REP")
   public Matrix (@Nonnull final double [][] aOther, @Nonnegative final int nRows, @Nonnegative final int nCols)
   {
     if (aOther == null)
@@ -274,8 +280,8 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * 
    * @return Pointer to the two-dimensional array of matrix elements.
    */
-
-  public double [][] getArray ()
+  @SuppressFBWarnings ("EI_EXPOSE_REP")
+  double [][] getArray ()
   {
     return m_aData;
   }
@@ -1205,10 +1211,9 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * @param d
    *        Number of digits after the decimal.
    */
-
   public void print (final int w, final int d)
   {
-    print (new PrintWriter (System.out, true), w, d);
+    print (new PrintWriter (new OutputStreamWriter (System.out, SystemHelper.getSystemCharset ()), true), w, d);
   }
 
   /**
@@ -1249,7 +1254,7 @@ public class Matrix implements Serializable, ICloneable <Matrix>
 
   public void print (final NumberFormat format, final int width)
   {
-    print (new PrintWriter (System.out, true), format, width);
+    print (new PrintWriter (new OutputStreamWriter (System.out, SystemHelper.getSystemCharset ()), true), format, width);
   }
 
   // DecimalFormat is a little disappointing coming from Fortran or C's printf.

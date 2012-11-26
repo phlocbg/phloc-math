@@ -17,7 +17,6 @@
  */
 package com.phloc.math.graph;
 
-
 /**
  * Base interface for a read-only undirected graph.
  * 
