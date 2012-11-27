@@ -36,6 +36,7 @@ import com.phloc.math.graph.IGraphNode;
 import com.phloc.math.graph.IGraphRelation;
 import com.phloc.math.graph.simple.ISimpleGraph;
 import com.phloc.math.graph.simple.SimpleGraph;
+import com.phloc.math.graph.simple.SimpleGraphObjectFastFactory;
 
 /**
  * Find the minimum spanning tree of a graph, using Kruskal's algorithm.
@@ -125,7 +126,7 @@ public final class Kruskal
       s_aLogger.info ("Sorted relations: " + StringHelper.getImploded (';', aSortedRelationsText));
     }
 
-    final SimpleGraph ret = new SimpleGraph ();
+    final SimpleGraph ret = new SimpleGraph (new SimpleGraphObjectFastFactory ());
     // Duplicate all nodes from source graph
     for (final IGraphNode aNode : aGraph.getAllNodes ().values ())
     {

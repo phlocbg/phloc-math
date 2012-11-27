@@ -124,7 +124,7 @@ public final class Dijkstra
     public WorkRow (@Nonnegative final int nElements)
     {
       if (nElements <= 0)
-        throw new IllegalArgumentException ();
+        throw new IllegalArgumentException ("Elements must be positive: " + nElements);
       m_aElements = new LinkedHashMap <String, WorkElement <N>> (nElements);
     }
 
