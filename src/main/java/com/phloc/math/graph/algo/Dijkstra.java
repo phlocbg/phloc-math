@@ -138,6 +138,9 @@ public final class Dijkstra
 
     public void add (@Nonnull final WorkElement <N> aElement)
     {
+      if (aElement == null)
+        throw new NullPointerException ("element");
+
       m_aElements.put (aElement.getToNodeID (), aElement);
     }
 
@@ -157,6 +160,8 @@ public final class Dijkstra
       for (final WorkElement <N> aElement : m_aElements.values ())
         if (ret == null || aElement.getDistance () < ret.getDistance ())
           ret = aElement;
+      if (ret == null)
+        throw new IllegalStateException ("Cannot call this method without an element!");
       return ret;
     }
 
@@ -220,6 +225,25 @@ public final class Dijkstra
     }
   }
 
+  @Nullable
+  private static <N extends IBaseGraphNode <N, R>, R extends IBaseGraphRelation <N, R>> R _getRelationFromLastMatch (@Nonnull final WorkElement <N> aLastMatch,
+                                                                                                                     @Nonnull final N aNode)
+  {
+    if (aNode.isDirected ())
+    {
+      // Directed
+
+      // Cast to Object required for JDK command line compiler
+      final Object aDirectedFromNode = aLastMatch.getToNode ();
+      final Object aDirectedToNode = aNode;
+      final IDirectedGraphRelation r = ((IDirectedGraphNode) aDirectedFromNode).getOutgoingRelationTo ((IDirectedGraphNode) aDirectedToNode);
+      return GenericReflection.<IDirectedGraphRelation, R> uncheckedCast (r);
+    }
+
+    // Undirected
+    return aLastMatch.getToNode ().getRelation (aNode);
+  }
+
   @Nonnull
   public static <N extends IBaseGraphNode <N, R>, R extends IBaseGraphRelation <N, R>> Dijkstra.Result <N> applyDijkstra (@Nonnull final IBaseGraph <N, R> aGraph,
                                                                                                                           @Nonnull @Nonempty final String sFromID,
@@ -274,27 +298,12 @@ public final class Dijkstra
         // All following rows
         for (final N aNode : aAllRemainingNodes)
         {
-          // Get the relation from the last match to this node (may be null if
-          // nodes are not connected)
-          R aRelation;
-          if (aNode.isDirected ())
-          {
-            // Directed
-
-            // Cast to Object required for JDK command line compiler
-            final Object aDirectedFromNode = aLastMatch.getToNode ();
-            final Object aDirectedToNode = aNode;
-            final IDirectedGraphRelation r = ((IDirectedGraphNode) aDirectedFromNode).getOutgoingRelationTo ((IDirectedGraphNode) aDirectedToNode);
-            aRelation = GenericReflection.<IDirectedGraphRelation, R> uncheckedCast (r);
-          }
-          else
-          {
-            // Undirected
-            aRelation = aLastMatch.getToNode ().getRelation (aNode);
-          }
-
           // Find distance to last match
           final WorkElement <N> aPrevElement = aLastRow.getElement (aNode.getID ());
+
+          // Get the relation from the last match to this node (may be null if
+          // nodes are not connected)
+          final R aRelation = _getRelationFromLastMatch (aLastMatch, aNode);
           if (aRelation != null)
           {
             // Nodes are related - check weight
