@@ -19,6 +19,8 @@ package com.phloc.math.matrix;
 
 import java.io.Serializable;
 
+import javax.annotation.Nonnull;
+
 /**
  * LU Decomposition.
  * <P>
@@ -39,7 +41,7 @@ public class LUDecomposition implements Serializable
    * 
    * @serial internal array storage.
    */
-  private final double [][] LU;
+  private final double [][] m_aLU;
 
   /**
    * Row and column dimensions, and pivot sign.
@@ -50,18 +52,14 @@ public class LUDecomposition implements Serializable
    */
   private final int m_nRows, m_nCols;
 
-  private int pivsign;
+  private int m_nPivSign;
 
   /**
    * Internal storage of pivot vector.
    * 
    * @serial pivot vector.
    */
-  private final int [] piv;
-
-  /*
-   * ------------------------ Constructor ------------------------
-   */
+  private final int [] m_aPivot;
 
   /**
    * LU Decomposition Structure to access L, U and piv.
@@ -70,20 +68,17 @@ public class LUDecomposition implements Serializable
    *        Rectangular matrix
    */
 
-  public LUDecomposition (final Matrix A)
+  public LUDecomposition (@Nonnull final Matrix A)
   {
-
     // Use a "left-looking", dot-product, Crout/Doolittle algorithm.
 
-    LU = A.getArrayCopy ();
+    m_aLU = A.getArrayCopy ();
     m_nRows = A.getRowDimension ();
     m_nCols = A.getColumnDimension ();
-    piv = new int [m_nRows];
+    m_aPivot = new int [m_nRows];
     for (int i = 0; i < m_nRows; i++)
-    {
-      piv[i] = i;
-    }
-    pivsign = 1;
+      m_aPivot[i] = i;
+    m_nPivSign = 1;
     double [] LUrowi;
     final double [] LUcolj = new double [m_nRows];
 
@@ -91,28 +86,23 @@ public class LUDecomposition implements Serializable
 
     for (int j = 0; j < m_nCols; j++)
     {
-
       // Make a copy of the j-th column to localize references.
 
       for (int i = 0; i < m_nRows; i++)
-      {
-        LUcolj[i] = LU[i][j];
-      }
+        LUcolj[i] = m_aLU[i][j];
 
       // Apply previous transformations.
 
       for (int i = 0; i < m_nRows; i++)
       {
-        LUrowi = LU[i];
+        LUrowi = m_aLU[i];
 
         // Most of the time is spent in the following dot product.
 
         final int kmax = Math.min (i, j);
         double s = 0.0;
         for (int k = 0; k < kmax; k++)
-        {
           s += LUrowi[k] * LUcolj[k];
-        }
 
         LUrowi[j] = LUcolj[i] -= s;
       }
@@ -121,35 +111,26 @@ public class LUDecomposition implements Serializable
 
       int p = j;
       for (int i = j + 1; i < m_nRows; i++)
-      {
         if (Math.abs (LUcolj[i]) > Math.abs (LUcolj[p]))
-        {
           p = i;
-        }
-      }
       if (p != j)
       {
         for (int k = 0; k < m_nCols; k++)
         {
-          final double t = LU[p][k];
-          LU[p][k] = LU[j][k];
-          LU[j][k] = t;
+          final double t = m_aLU[p][k];
+          m_aLU[p][k] = m_aLU[j][k];
+          m_aLU[j][k] = t;
         }
-        final int k = piv[p];
-        piv[p] = piv[j];
-        piv[j] = k;
-        pivsign = -pivsign;
+        final int k = m_aPivot[p];
+        m_aPivot[p] = m_aPivot[j];
+        m_aPivot[j] = k;
+        m_nPivSign = -m_nPivSign;
       }
 
       // Compute multipliers.
-
-      if (j < m_nRows && LU[j][j] != 0.0)
-      {
+      if (j < m_nRows && m_aLU[j][j] != 0.0)
         for (int i = j + 1; i < m_nRows; i++)
-        {
-          LU[i][j] /= LU[j][j];
-        }
-      }
+          m_aLU[i][j] /= m_aLU[j][j];
     }
   }
 
@@ -186,14 +167,11 @@ public class LUDecomposition implements Serializable
    * 
    * @return true if U, and hence A, is nonsingular.
    */
-
   public boolean isNonsingular ()
   {
     for (int j = 0; j < m_nCols; j++)
-    {
-      if (LU[j][j] == 0)
+      if (m_aLU[j][j] == 0)
         return false;
-    }
     return true;
   }
 
@@ -202,30 +180,20 @@ public class LUDecomposition implements Serializable
    * 
    * @return L
    */
-
+  @Nonnull
   public Matrix getL ()
   {
     final Matrix X = new Matrix (m_nRows, m_nCols);
     final double [][] L = X.getArray ();
     for (int i = 0; i < m_nRows; i++)
-    {
       for (int j = 0; j < m_nCols; j++)
-      {
         if (i > j)
-        {
-          L[i][j] = LU[i][j];
-        }
+          L[i][j] = m_aLU[i][j];
         else
           if (i == j)
-          {
             L[i][j] = 1.0;
-          }
           else
-          {
             L[i][j] = 0.0;
-          }
-      }
-    }
     return X;
   }
 
@@ -234,25 +202,17 @@ public class LUDecomposition implements Serializable
    * 
    * @return U
    */
-
+  @Nonnull
   public Matrix getU ()
   {
     final Matrix X = new Matrix (m_nCols, m_nCols);
     final double [][] U = X.getArray ();
     for (int i = 0; i < m_nCols; i++)
-    {
       for (int j = 0; j < m_nCols; j++)
-      {
         if (i <= j)
-        {
-          U[i][j] = LU[i][j];
-        }
+          U[i][j] = m_aLU[i][j];
         else
-        {
           U[i][j] = 0.0;
-        }
-      }
-    }
     return X;
   }
 
@@ -261,14 +221,12 @@ public class LUDecomposition implements Serializable
    * 
    * @return piv
    */
-
+  @Nonnull
   public int [] getPivot ()
   {
     final int [] p = new int [m_nRows];
     for (int i = 0; i < m_nRows; i++)
-    {
-      p[i] = piv[i];
-    }
+      p[i] = m_aPivot[i];
     return p;
   }
 
@@ -277,14 +235,12 @@ public class LUDecomposition implements Serializable
    * 
    * @return (double) piv
    */
-
+  @Nonnull
   public double [] getDoublePivot ()
   {
     final double [] vals = new double [m_nRows];
     for (int i = 0; i < m_nRows; i++)
-    {
-      vals[i] = piv[i];
-    }
+      vals[i] = m_aPivot[i];
     return vals;
   }
 
@@ -302,10 +258,10 @@ public class LUDecomposition implements Serializable
     {
       throw new IllegalArgumentException ("Matrix must be square.");
     }
-    double d = pivsign;
+    double d = m_nPivSign;
     for (int j = 0; j < m_nCols; j++)
     {
-      d *= LU[j][j];
+      d *= m_aLU[j][j];
     }
     return d;
   }
@@ -331,7 +287,7 @@ public class LUDecomposition implements Serializable
 
     // Copy right hand side with pivoting
     final int nx = B.getColumnDimension ();
-    final Matrix Xmat = B.getMatrix (piv, 0, nx - 1);
+    final Matrix Xmat = B.getMatrix (m_aPivot, 0, nx - 1);
     final double [][] X = Xmat.getArray ();
 
     // Solve L*Y = B(piv,:)
@@ -339,16 +295,16 @@ public class LUDecomposition implements Serializable
     {
       for (int i = k + 1; i < m_nCols; i++)
         for (int j = 0; j < nx; j++)
-          X[i][j] -= X[k][j] * LU[i][k];
+          X[i][j] -= X[k][j] * m_aLU[i][k];
     }
     // Solve U*X = Y;
     for (int k = m_nCols - 1; k >= 0; k--)
     {
       for (int j = 0; j < nx; j++)
-        X[k][j] /= LU[k][k];
+        X[k][j] /= m_aLU[k][k];
       for (int i = 0; i < k; i++)
         for (int j = 0; j < nx; j++)
-          X[i][j] -= X[k][j] * LU[i][k];
+          X[i][j] -= X[k][j] * m_aLU[i][k];
     }
     return Xmat;
   }
