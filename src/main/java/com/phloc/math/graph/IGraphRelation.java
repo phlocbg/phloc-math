@@ -17,6 +17,8 @@
  */
 package com.phloc.math.graph;
 
+import javax.annotation.Nonnull;
+
 import com.phloc.commons.annotations.MustImplementEqualsAndHashcode;
 
 /**
@@ -27,5 +29,27 @@ import com.phloc.commons.annotations.MustImplementEqualsAndHashcode;
 @MustImplementEqualsAndHashcode
 public interface IGraphRelation extends IBaseGraphRelation <IGraphNode, IGraphRelation>
 {
-  /* empty */
+  /**
+   * @return Node1 of this relation. Never <code>null</code>.
+   */
+  @Nonnull
+  IGraphNode getNode1 ();
+
+  /**
+   * @return The ID of node1 of this relation. Never <code>null</code>.
+   */
+  @Nonnull
+  String getNode1ID ();
+
+  /**
+   * @return Node2 of this relation. Never <code>null</code>.
+   */
+  @Nonnull
+  IGraphNode getNode2 ();
+
+  /**
+   * @return The ID of node2 of this relation. Never <code>null</code>.
+   */
+  @Nonnull
+  String getNode2ID ();
 }

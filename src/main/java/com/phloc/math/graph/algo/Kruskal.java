@@ -140,10 +140,7 @@ public final class Kruskal
     for (final IGraphRelation aRelation : aSortedRelations)
     {
       final int nWeight = aRelation.getAttributeAsInt (sRelationCostAttr);
-      final List <String> aNodeIDs = ContainerHelper.newList (aRelation.getAllConnectedNodeIDs ());
-      if (aNodeIDs.size () != 2)
-        throw new IllegalArgumentException ("Having weird number of nodes!");
-      final IGraphRelation aNewRelation = ret.createRelation (aNodeIDs.get (0), aNodeIDs.get (1));
+      final IGraphRelation aNewRelation = ret.createRelation (aRelation.getNode1ID (), aRelation.getNode2ID ());
       aNewRelation.setAttributes (aRelation.getAllAttributes ());
       if (ret.containsCycles ())
       {

@@ -17,7 +17,6 @@
  */
 package com.phloc.math.graph.impl;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -39,22 +38,23 @@ import com.phloc.math.graph.IGraphRelation;
 @NotThreadSafe
 public class GraphRelation extends AbstractBaseGraphObject implements IGraphRelation
 {
-  private final Set <IGraphNode> m_aNodes = new HashSet <IGraphNode> ();
+  private final IGraphNode m_aNode1;
+  private final IGraphNode m_aNode2;
 
-  public GraphRelation (@Nonnull final IGraphNode aFrom, @Nonnull final IGraphNode aTo)
+  public GraphRelation (@Nonnull final IGraphNode aNode1, @Nonnull final IGraphNode aNode2)
   {
-    this (null, aFrom, aTo);
+    this (null, aNode1, aNode2);
   }
 
-  public GraphRelation (@Nullable final String sID, @Nonnull final IGraphNode aFrom, @Nonnull final IGraphNode aTo)
+  public GraphRelation (@Nullable final String sID, @Nonnull final IGraphNode aNode1, @Nonnull final IGraphNode aNode2)
   {
     super (sID);
-    if (aFrom == null)
-      throw new NullPointerException ("from");
-    if (aTo == null)
-      throw new NullPointerException ("to");
-    m_aNodes.add (aFrom);
-    m_aNodes.add (aTo);
+    if (aNode1 == null)
+      throw new NullPointerException ("node1");
+    if (aNode2 == null)
+      throw new NullPointerException ("node2");
+    m_aNode1 = aNode1;
+    m_aNode2 = aNode2;
   }
 
   public final boolean isDirected ()
@@ -64,24 +64,45 @@ public class GraphRelation extends AbstractBaseGraphObject implements IGraphRela
 
   public boolean isRelatedTo (@Nullable final IGraphNode aNode)
   {
-    return m_aNodes.contains (aNode);
+    return aNode != null && (m_aNode1.equals (aNode) || m_aNode2.equals (aNode));
   }
 
   @Nonnull
   @ReturnsMutableCopy
   public Set <IGraphNode> getAllConnectedNodes ()
   {
-    return ContainerHelper.newSet (m_aNodes);
+    return ContainerHelper.newSet (m_aNode1, m_aNode2);
   }
 
   @Nonnull
   @ReturnsMutableCopy
   public Set <String> getAllConnectedNodeIDs ()
   {
-    final Set <String> ret = new HashSet <String> ();
-    for (final IGraphNode aNode : m_aNodes)
-      ret.add (aNode.getID ());
-    return ret;
+    return ContainerHelper.newSet (m_aNode1.getID (), m_aNode2.getID ());
+  }
+
+  @Nonnull
+  public IGraphNode getNode1 ()
+  {
+    return m_aNode1;
+  }
+
+  @Nonnull
+  public String getNode1ID ()
+  {
+    return m_aNode1.getID ();
+  }
+
+  @Nonnull
+  public IGraphNode getNode2 ()
+  {
+    return m_aNode2;
+  }
+
+  @Nonnull
+  public String getNode2ID ()
+  {
+    return m_aNode2.getID ();
   }
 
   @Override
@@ -92,18 +113,21 @@ public class GraphRelation extends AbstractBaseGraphObject implements IGraphRela
     if (!super.equals (o))
       return false;
     final GraphRelation rhs = (GraphRelation) o;
-    return m_aNodes.equals (rhs.m_aNodes);
+    return m_aNode1.equals (rhs.m_aNode1) && m_aNode2.equals (rhs.m_aNode2);
   }
 
   @Override
   public int hashCode ()
   {
-    return HashCodeGenerator.getDerived (super.hashCode ()).append (m_aNodes).getHashCode ();
+    return HashCodeGenerator.getDerived (super.hashCode ()).append (m_aNode1).append (m_aNode2).getHashCode ();
   }
 
   @Override
   public String toString ()
   {
-    return ToStringGenerator.getDerived (super.toString ()).append ("nodes", m_aNodes).toString ();
+    return ToStringGenerator.getDerived (super.toString ())
+                            .append ("node1", m_aNode1)
+                            .append ("node2", m_aNode2)
+                            .toString ();
   }
 }
