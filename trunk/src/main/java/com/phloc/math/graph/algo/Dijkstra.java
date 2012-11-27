@@ -310,7 +310,7 @@ public final class Dijkstra
             final int nNewDistance = aLastMatch.getDistance () +
                                      aRelation.getAttributeAsInt (sRelationCostAttr, Integer.MIN_VALUE);
 
-            // Use only, if distance is better than before!
+            // Use only, if distance is shorter (=better) than before!
             if (nNewDistance < aPrevElement.getDistance ())
               aRow.add (new WorkElement <N> (aLastMatch.getToNode (), nNewDistance, aNode));
             else
@@ -339,14 +339,14 @@ public final class Dijkstra
       aAllRemainingNodes.remove (aClosest.getToNode ());
       aAllMatches.put (aClosest.getToNodeID (), aClosest);
       aLastMatch = aClosest;
+      aLastRow = aRow;
+      ++nIteration;
+
       if (aClosest.getToNode ().equals (aEndNode))
       {
         // We found the shortest way to the end node!
         break;
       }
-
-      aLastRow = aRow;
-      ++nIteration;
     } while (true);
 
     // Now get the result path from back to front
