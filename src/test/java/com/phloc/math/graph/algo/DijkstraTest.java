@@ -24,9 +24,10 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.phloc.math.graph.algo.Dijkstra;
 import com.phloc.math.graph.simple.SimpleDirectedGraph;
+import com.phloc.math.graph.simple.SimpleDirectedGraphObjectFastFactory;
 import com.phloc.math.graph.simple.SimpleGraph;
+import com.phloc.math.graph.simple.SimpleGraphObjectFastFactory;
 
 public final class DijkstraTest
 {
@@ -36,7 +37,7 @@ public final class DijkstraTest
   @Test
   public void testBasic ()
   {
-    final SimpleDirectedGraph g = new SimpleDirectedGraph ();
+    final SimpleDirectedGraph g = new SimpleDirectedGraph (new SimpleDirectedGraphObjectFastFactory ());
     g.createNode ("O");
     g.createNode ("A");
     g.createNode ("B");
@@ -68,7 +69,7 @@ public final class DijkstraTest
   @Test
   public void example1aDirected ()
   {
-    final SimpleDirectedGraph g = new SimpleDirectedGraph ();
+    final SimpleDirectedGraph g = new SimpleDirectedGraph (new SimpleDirectedGraphObjectFastFactory ());
     for (int i = 1; i <= 6; ++i)
       g.createNode (Integer.toString (i));
     g.createRelation ("1", "2").setAttribute (ATTR_WEIGHT, 3);
@@ -91,7 +92,7 @@ public final class DijkstraTest
   @Test
   public void example1aUndirected ()
   {
-    final SimpleGraph g = new SimpleGraph ();
+    final SimpleGraph g = new SimpleGraph (new SimpleGraphObjectFastFactory ());
     for (int i = 1; i <= 6; ++i)
       g.createNode (Integer.toString (i));
     g.createRelation ("1", "2").setAttribute (ATTR_WEIGHT, 3);
@@ -112,7 +113,7 @@ public final class DijkstraTest
   @Test
   public void example2a ()
   {
-    final SimpleDirectedGraph g = new SimpleDirectedGraph ();
+    final SimpleDirectedGraph g = new SimpleDirectedGraph (new SimpleDirectedGraphObjectFastFactory ());
     g.createNode ("O");
     g.createNode ("A");
     g.createNode ("B");
@@ -147,5 +148,38 @@ public final class DijkstraTest
     assertNotNull (r);
     s_aLogger.info (r.getAsString ());
     assertEquals (24, r.getResultDistance ());
+  }
+
+  @Test
+  public void testCities ()
+  {
+    final SimpleGraph g = new SimpleGraph (new SimpleGraphObjectFastFactory ());
+    g.createNode ("Barcelona");
+    g.createNode ("Narbonne");
+    g.createNode ("Marseille");
+    g.createNode ("Toulouse");
+    g.createNode ("Geneve");
+    g.createNode ("Paris");
+    g.createNode ("Lausanne");
+    g.createRelation ("Barcelona", "Narbonne").setAttribute (ATTR_WEIGHT, 250);
+    g.createRelation ("Narbonne", "Marseille").setAttribute (ATTR_WEIGHT, 260);
+    g.createRelation ("Narbonne", "Toulouse").setAttribute (ATTR_WEIGHT, 150);
+    g.createRelation ("Narbonne", "Geneve").setAttribute (ATTR_WEIGHT, 550);
+    g.createRelation ("Marseille", "Geneve").setAttribute (ATTR_WEIGHT, 470);
+    g.createRelation ("Toulouse", "Paris").setAttribute (ATTR_WEIGHT, 680);
+    g.createRelation ("Toulouse", "Geneve").setAttribute (ATTR_WEIGHT, 700);
+    g.createRelation ("Geneve", "Paris").setAttribute (ATTR_WEIGHT, 540);
+    g.createRelation ("Geneve", "Lausanne").setAttribute (ATTR_WEIGHT, 64);
+    g.createRelation ("Lausanne", "Paris").setAttribute (ATTR_WEIGHT, 536);
+
+    Dijkstra.Result <?> r = Dijkstra.applyDijkstra (g, "Barcelona", "Lausanne", ATTR_WEIGHT);
+    assertNotNull (r);
+    s_aLogger.info (r.getAsString ());
+    assertEquals (864, r.getResultDistance ());
+
+    r = Dijkstra.applyDijkstra (g, "Lausanne", "Barcelona", ATTR_WEIGHT);
+    assertNotNull (r);
+    s_aLogger.info (r.getAsString ());
+    assertEquals (864, r.getResultDistance ());
   }
 }

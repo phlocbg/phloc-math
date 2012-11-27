@@ -58,6 +58,14 @@ public final class Dijkstra
     private final int m_nDistance;
     private final N m_aToNode;
 
+    /**
+     * Special constructor for the initial state
+     * 
+     * @param nDistance
+     *        Distance to use
+     * @param aToNode
+     *        to-node to use
+     */
     public WorkElement (@Nonnegative final int nDistance, @Nonnull final N aToNode)
     {
       this (null, nDistance, aToNode);
@@ -224,11 +232,13 @@ public final class Dijkstra
     final N aEndNode = aGraph.getNodeOfID (sToID);
     if (aEndNode == null)
       throw new IllegalArgumentException ("To ID: " + sToID);
-    final Set <N> aAllNodes = ContainerHelper.newOrderedSet (aGraph.getAllNodes ().values ());
+
+    // Ordered set for deterministic results
+    final Set <N> aAllRemainingNodes = ContainerHelper.newOrderedSet (aGraph.getAllNodes ().values ());
 
     if (GlobalDebug.isDebugMode ())
       s_aLogger.info ("Starting Dijkstra on directed graph with " +
-                      aAllNodes.size () +
+                      aAllRemainingNodes.size () +
                       " nodes starting from '" +
                       sFromID +
                       "' and up to '" +
@@ -242,32 +252,46 @@ public final class Dijkstra
     int nIteration = 0;
     do
     {
-      final WorkRow <N> aRow = new WorkRow <N> (aAllNodes.size ());
+      final WorkRow <N> aRow = new WorkRow <N> (aAllRemainingNodes.size ());
       if (aLastRow == null)
       {
         // Initial row - no from node
-        for (final N aNode : aAllNodes)
+        for (final N aNode : aAllRemainingNodes)
           if (aNode.equals (aStartNode))
+          {
+            // Start node has distance 0 to itself
             aRow.add (new WorkElement <N> (0, aNode));
+          }
           else
+          {
+            // All other elements have infinite distance to the start node (for
+            // now)
             aRow.add (new WorkElement <N> (Integer.MAX_VALUE, aNode));
+          }
       }
       else
       {
         // All following rows
-        for (final N aNode : aAllNodes)
+        for (final N aNode : aAllRemainingNodes)
         {
+          // Get the relation from the last match to this node (may be null if
+          // nodes are not connected)
           R aRelation;
           if (aNode.isDirected ())
           {
+            // Directed
+
             // Cast to Object required for JDK command line compiler
-            final Object aDirectedNode = aNode;
-            final Object aDirectedToNode = aLastMatch.getToNode ();
-            final IDirectedGraphRelation r = ((IDirectedGraphNode) aDirectedNode).getIncomingRelationFrom ((IDirectedGraphNode) aDirectedToNode);
+            final Object aDirectedFromNode = aLastMatch.getToNode ();
+            final Object aDirectedToNode = aNode;
+            final IDirectedGraphRelation r = ((IDirectedGraphNode) aDirectedFromNode).getOutgoingRelationTo ((IDirectedGraphNode) aDirectedToNode);
             aRelation = GenericReflection.<IDirectedGraphRelation, R> uncheckedCast (r);
           }
           else
-            aRelation = aNode.getRelation (aLastMatch.getToNode ());
+          {
+            // Undirected
+            aRelation = aLastMatch.getToNode ().getRelation (aNode);
+          }
 
           // Find distance to last match
           final WorkElement <N> aPrevElement = aLastRow.getElement (aNode.getID ());
@@ -285,12 +309,13 @@ public final class Dijkstra
           }
           else
           {
-            // Nodes are not related - use previous result
+            // Nodes are not related - use result from previous row
             aRow.add (aPrevElement);
           }
         }
       }
 
+      // Get the closest element of the current row
       final WorkElement <N> aClosest = aRow.getClosestElement ();
 
       if (GlobalDebug.isDebugMode ())
@@ -302,7 +327,7 @@ public final class Dijkstra
         s_aLogger.info (aSB.toString ());
       }
 
-      aAllNodes.remove (aClosest.getToNode ());
+      aAllRemainingNodes.remove (aClosest.getToNode ());
       aAllMatches.put (aClosest.getToNodeID (), aClosest);
       aLastMatch = aClosest;
       if (aClosest.getToNode ().equals (aEndNode))

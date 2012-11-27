@@ -64,8 +64,8 @@ public class GraphNode extends AbstractBaseGraphObject implements IGraphNode
   {
     if (aRelation == null)
       return EChange.UNCHANGED;
-    if (!aRelation.getAllConnectedNodes ().contains (this))
-      throw new IllegalArgumentException ("Relation is suitable for this node!");
+    if (!aRelation.isRelatedTo (this))
+      throw new IllegalArgumentException ("Relation is not suitable for this node!");
 
     final String sRelationID = aRelation.getID ();
     if (m_aRelations == null)

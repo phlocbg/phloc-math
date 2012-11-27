@@ -128,9 +128,11 @@ public class Graph extends AbstractBaseGraph <IGraphNode, IGraphRelation> implem
       return EChange.UNCHANGED;
 
     // Remove all affected relations from all nodes
-    for (final IGraphRelation aRelation : ContainerHelper.newList (aNode.getAllRelations ()))
+    for (final IGraphRelation aRelation : aNode.getAllRelations ())
       for (final IGraphNode aNode2 : aRelation.getAllConnectedNodes ())
         aNode2.removeRelation (aRelation);
+
+    // Remove the node itself
     if (removeNode (aNode).isUnchanged ())
       throw new IllegalStateException ("Inconsistency removing node and all relations");
     return EChange.CHANGED;
