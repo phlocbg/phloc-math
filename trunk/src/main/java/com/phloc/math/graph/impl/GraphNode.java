@@ -150,7 +150,10 @@ public class GraphNode extends AbstractBaseGraphObject implements IGraphNode
     final Set <IGraphNode> ret = new LinkedHashSet <IGraphNode> ();
     if (m_aRelations != null)
       for (final IGraphRelation aRelation : m_aRelations.values ())
-        ret.addAll (aRelation.getAllConnectedNodes ());
+      {
+        ret.add (aRelation.getNode1 ());
+        ret.add (aRelation.getNode2 ());
+      }
     return ret;
   }
 
@@ -161,7 +164,10 @@ public class GraphNode extends AbstractBaseGraphObject implements IGraphNode
     final Set <String> ret = new LinkedHashSet <String> ();
     if (m_aRelations != null)
       for (final IGraphRelation aRelation : m_aRelations.values ())
-        ret.addAll (aRelation.getAllConnectedNodeIDs ());
+      {
+        ret.add (aRelation.getNode1ID ());
+        ret.add (aRelation.getNode2ID ());
+      }
     return ret;
   }
 

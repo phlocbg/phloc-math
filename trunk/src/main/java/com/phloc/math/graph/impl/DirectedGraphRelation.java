@@ -17,7 +17,6 @@
  */
 package com.phloc.math.graph.impl;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -25,6 +24,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import com.phloc.commons.annotations.ReturnsMutableCopy;
+import com.phloc.commons.collections.ContainerHelper;
 import com.phloc.commons.hash.HashCodeGenerator;
 import com.phloc.commons.string.ToStringGenerator;
 import com.phloc.math.graph.IDirectedGraphNode;
@@ -74,20 +74,14 @@ public class DirectedGraphRelation extends AbstractBaseGraphObject implements ID
   @ReturnsMutableCopy
   public Set <IDirectedGraphNode> getAllConnectedNodes ()
   {
-    final Set <IDirectedGraphNode> ret = new HashSet <IDirectedGraphNode> (2);
-    ret.add (m_aFrom);
-    ret.add (m_aTo);
-    return ret;
+    return ContainerHelper.newSet (m_aFrom, m_aTo);
   }
 
   @Nonnull
   @ReturnsMutableCopy
   public Set <String> getAllConnectedNodeIDs ()
   {
-    final Set <String> ret = new HashSet <String> (2);
-    ret.add (m_aFrom.getID ());
-    ret.add (m_aTo.getID ());
-    return ret;
+    return ContainerHelper.newSet (m_aFrom.getID (), m_aTo.getID ());
   }
 
   @Nonnull
