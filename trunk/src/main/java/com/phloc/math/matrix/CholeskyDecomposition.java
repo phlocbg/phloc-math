@@ -21,6 +21,7 @@ import java.io.Serializable;
 
 import javax.annotation.Nonnull;
 
+import com.phloc.commons.annotations.ReturnsMutableCopy;
 import com.phloc.commons.equals.EqualsUtils;
 
 /**
@@ -66,34 +67,31 @@ public class CholeskyDecomposition implements Serializable
   public CholeskyDecomposition (@Nonnull final Matrix aMatrix)
   {
     // Initialize.
-    final double [][] A = aMatrix.internalGetArray ();
+    final double [][] aArray = aMatrix.internalGetArray ();
     m_nDim = aMatrix.getRowDimension ();
     m_aData = new double [m_nDim] [m_nDim];
     m_bIsSPD = (aMatrix.getColumnDimension () == m_nDim);
     // Main loop.
     for (int j = 0; j < m_nDim; j++)
     {
-      final double [] Lrowj = m_aData[j];
+      final double [] aArrayJ = aArray[j];
+      final double [] aRowJ = m_aData[j];
       double d = 0.0;
       for (int k = 0; k < j; k++)
       {
-        final double [] Lrowk = m_aData[k];
+        final double [] aRowK = m_aData[k];
         double s = 0.0;
         for (int i = 0; i < k; i++)
-        {
-          s += Lrowk[i] * Lrowj[i];
-        }
-        Lrowj[k] = s = (A[j][k] - s) / m_aData[k][k];
-        d = d + s * s;
-        m_bIsSPD = m_bIsSPD && EqualsUtils.equals (A[k][j], A[j][k]);
+          s += aRowK[i] * aRowJ[i];
+        aRowJ[k] = s = (aArrayJ[k] - s) / m_aData[k][k];
+        d += s * s;
+        m_bIsSPD = m_bIsSPD && EqualsUtils.equals (aArray[k][j], aArrayJ[k]);
       }
-      d = A[j][j] - d;
+      d = aArrayJ[j] - d;
       m_bIsSPD = m_bIsSPD && (d > 0.0);
-      m_aData[j][j] = Math.sqrt (Math.max (d, 0.0));
+      aRowJ[j] = Math.sqrt (Math.max (d, 0.0));
       for (int k = j + 1; k < m_nDim; k++)
-      {
-        m_aData[j][k] = 0.0;
-      }
+        aRowJ[k] = 0.0;
     }
   }
 
@@ -125,10 +123,6 @@ public class CholeskyDecomposition implements Serializable
    * ------------------------ End of temporary code. ------------------------
    */
 
-  /*
-   * ------------------------ Public Methods ------------------------
-   */
-
   /**
    * Is the matrix symmetric and positive definite?
    * 
@@ -144,6 +138,8 @@ public class CholeskyDecomposition implements Serializable
    * 
    * @return L
    */
+  @Nonnull
+  @ReturnsMutableCopy
   public Matrix getL ()
   {
     return new Matrix (m_aData, m_nDim, m_nDim);
@@ -152,7 +148,7 @@ public class CholeskyDecomposition implements Serializable
   /**
    * Solve A*X = B
    * 
-   * @param B
+   * @param aMatrix
    *        A Matrix with as many rows as A and any number of columns.
    * @return X so that L*L'*X = B
    * @exception IllegalArgumentException
@@ -161,43 +157,48 @@ public class CholeskyDecomposition implements Serializable
    *            Matrix is not symmetric positive definite.
    */
   @Nonnull
-  public Matrix solve (@Nonnull final Matrix B)
+  @ReturnsMutableCopy
+  public Matrix solve (@Nonnull final Matrix aMatrix)
   {
-    if (B.getRowDimension () != m_nDim)
+    if (aMatrix.getRowDimension () != m_nDim)
       throw new IllegalArgumentException ("Matrix row dimensions must agree.");
     if (!m_bIsSPD)
       throw new RuntimeException ("Matrix is not symmetric positive definite.");
 
     // Copy right hand side.
-    final double [][] X = B.getArrayCopy ();
-    final int nx = B.getColumnDimension ();
+    final double [][] aArray = aMatrix.getArrayCopy ();
+    final int nCols = aMatrix.getColumnDimension ();
 
     // Solve L*Y = B;
     for (int k = 0; k < m_nDim; k++)
     {
-      for (int j = 0; j < nx; j++)
+      final double [] aDataK = m_aData[k];
+      final double [] aArrayK = aArray[k];
+      for (int j = 0; j < nCols; j++)
       {
         for (int i = 0; i < k; i++)
         {
-          X[k][j] -= X[i][j] * m_aData[k][i];
+          aArrayK[j] -= aArray[i][j] * aDataK[i];
         }
-        X[k][j] /= m_aData[k][k];
+        aArrayK[j] /= aDataK[k];
       }
     }
 
     // Solve L'*X = Y;
     for (int k = m_nDim - 1; k >= 0; k--)
     {
-      for (int j = 0; j < nx; j++)
+      final double [] aDataK = m_aData[k];
+      final double [] aArrayK = aArray[k];
+      for (int j = 0; j < nCols; j++)
       {
         for (int i = k + 1; i < m_nDim; i++)
         {
-          X[k][j] -= X[i][j] * m_aData[i][k];
+          aArrayK[j] -= aArray[i][j] * m_aData[i][k];
         }
-        X[k][j] /= m_aData[k][k];
+        aArrayK[j] /= aDataK[k];
       }
     }
 
-    return new Matrix (X, m_nDim, nx);
+    return new Matrix (aArray, m_nDim, nCols);
   }
 }

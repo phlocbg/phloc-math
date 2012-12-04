@@ -17,6 +17,7 @@
  */
 package com.phloc.math.matrix;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.BufferedReader;
@@ -32,9 +33,12 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
+import javax.annotation.Nonnull;
+
 import org.junit.Test;
 
 import com.phloc.commons.io.file.FileOperations;
+import com.phloc.commons.string.StringHelper;
 
 /**
  * TestMatrix tests the functionality of the Jama Matrix class and associated
@@ -71,6 +75,7 @@ import com.phloc.commons.io.file.FileOperations;
 public class TestMatrix
 {
   private static final String FILENAME_JAMA_TEST_MATRIX_OUT = "Jamaout";
+  private static final double EPSILON = Math.pow (2.0, -52.0);
 
   @Test
   public void testMain ()
@@ -134,41 +139,41 @@ public class TestMatrix
     try
     {
       /**
-       * check that exception is thrown in packed constructor with invalid
+       * _check that exception is thrown in packed constructor with invalid
        * length
        **/
       A = new Matrix (columnwise, invalidld);
-      errorCount = try_failure (errorCount,
-                                "Catch invalid length in packed constructor... ",
-                                "exception not thrown for invalid input");
+      errorCount = _try_failure (errorCount,
+                                 "Catch invalid length in packed constructor... ",
+                                 "exception not thrown for invalid input");
     }
     catch (final IllegalArgumentException e)
     {
-      try_success ("Catch invalid length in packed constructor... ", e.getMessage ());
+      _try_success ("Catch invalid length in packed constructor... ", e.getMessage ());
     }
     try
     {
       /**
-       * check that exception is thrown in default constructor if input array is
-       * 'ragged'
+       * _check that exception is thrown in default constructor if input array
+       * is 'ragged'
        **/
       A = new Matrix (rvals);
       tmp = A.get (raggedr, raggedc);
     }
     catch (final IllegalArgumentException e)
     {
-      try_success ("Catch ragged input to default constructor... ", e.getMessage ());
+      _try_success ("Catch ragged input to default constructor... ", e.getMessage ());
     }
     catch (final ArrayIndexOutOfBoundsException e)
     {
-      errorCount = try_failure (errorCount,
-                                "Catch ragged input to constructor... ",
-                                "exception not thrown in construction...ArrayIndexOutOfBoundsException thrown later");
+      errorCount = _try_failure (errorCount,
+                                 "Catch ragged input to constructor... ",
+                                 "exception not thrown in construction...ArrayIndexOutOfBoundsException thrown later");
     }
     try
     {
       /**
-       * check that exception is thrown in constructWithCopy if input array is
+       * _check that exception is thrown in constructWithCopy if input array is
        * 'ragged'
        **/
       A = Matrix.constructWithCopy (rvals);
@@ -176,13 +181,13 @@ public class TestMatrix
     }
     catch (final IllegalArgumentException e)
     {
-      try_success ("Catch ragged input to constructWithCopy... ", e.getMessage ());
+      _try_success ("Catch ragged input to constructWithCopy... ", e.getMessage ());
     }
     catch (final ArrayIndexOutOfBoundsException e)
     {
-      errorCount = try_failure (errorCount,
-                                "Catch ragged input to constructWithCopy... ",
-                                "exception not thrown in construction...ArrayIndexOutOfBoundsException thrown later");
+      errorCount = _try_failure (errorCount,
+                                 "Catch ragged input to constructWithCopy... ",
+                                 "exception not thrown in construction...ArrayIndexOutOfBoundsException thrown later");
     }
 
     A = new Matrix (columnwise, validld);
@@ -196,23 +201,23 @@ public class TestMatrix
     avals[0][0] = 0.0;
     if ((tmp - B.get (0, 0)) != 0.0)
     {
-      /** check that constructWithCopy behaves properly **/
-      errorCount = try_failure (errorCount, "constructWithCopy... ", "copy not effected... data visible outside");
+      /** _check that constructWithCopy behaves properly **/
+      errorCount = _try_failure (errorCount, "constructWithCopy... ", "copy not effected... data visible outside");
     }
     else
     {
-      try_success ("constructWithCopy... ", "");
+      _try_success ("constructWithCopy... ", "");
     }
     avals[0][0] = columnwise[0];
     I = new Matrix (ivals);
     try
     {
-      check (I, Matrix.identity (3, 4));
-      try_success ("identity... ", "");
+      _check (I, Matrix.identity (3, 4));
+      _try_success ("identity... ", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "identity... ", "identity Matrix not successfully created");
+      errorCount = _try_failure (errorCount, "identity... ", "identity Matrix not successfully created");
     }
 
     /**
@@ -233,279 +238,285 @@ public class TestMatrix
     B = new Matrix (avals);
     if (B.getRowDimension () != rows)
     {
-      errorCount = try_failure (errorCount, "getRowDimension... ", "");
+      errorCount = _try_failure (errorCount, "getRowDimension... ", "");
     }
     else
     {
-      try_success ("getRowDimension... ", "");
+      _try_success ("getRowDimension... ", "");
     }
     if (B.getColumnDimension () != cols)
     {
-      errorCount = try_failure (errorCount, "getColumnDimension... ", "");
+      errorCount = _try_failure (errorCount, "getColumnDimension... ", "");
     }
     else
     {
-      try_success ("getColumnDimension... ", "");
+      _try_success ("getColumnDimension... ", "");
     }
     B = new Matrix (avals);
     double [][] barray = B.internalGetArray ();
     if (barray != avals)
     {
-      errorCount = try_failure (errorCount, "getArray... ", "");
+      errorCount = _try_failure (errorCount, "getArray... ", "");
     }
     else
     {
-      try_success ("getArray... ", "");
+      _try_success ("getArray... ", "");
     }
     barray = B.getArrayCopy ();
     if (barray == avals)
     {
-      errorCount = try_failure (errorCount, "getArrayCopy... ", "data not (deep) copied");
+      errorCount = _try_failure (errorCount, "getArrayCopy... ", "data not (deep) copied");
     }
     try
     {
-      check (barray, avals);
-      try_success ("getArrayCopy... ", "");
+      _check (barray, avals);
+      _try_success ("getArrayCopy... ", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "getArrayCopy... ", "data not successfully (deep) copied");
+      errorCount = _try_failure (errorCount, "getArrayCopy... ", "data not successfully (deep) copied");
     }
     double [] bpacked = B.getColumnPackedCopy ();
     try
     {
-      check (bpacked, columnwise);
-      try_success ("getColumnPackedCopy... ", "");
+      _check (bpacked, columnwise);
+      _try_success ("getColumnPackedCopy... ", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "getColumnPackedCopy... ", "data not successfully (deep) copied by columns");
+      errorCount = _try_failure (errorCount,
+                                 "getColumnPackedCopy... ",
+                                 "data not successfully (deep) copied by columns");
     }
     bpacked = B.getRowPackedCopy ();
     try
     {
-      check (bpacked, rowwise);
-      try_success ("getRowPackedCopy... ", "");
+      _check (bpacked, rowwise);
+      _try_success ("getRowPackedCopy... ", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "getRowPackedCopy... ", "data not successfully (deep) copied by rows");
+      errorCount = _try_failure (errorCount, "getRowPackedCopy... ", "data not successfully (deep) copied by rows");
     }
     try
     {
       tmp = B.get (B.getRowDimension (), B.getColumnDimension () - 1);
-      errorCount = try_failure (errorCount, "get(int,int)... ", "OutOfBoundsException expected but not thrown");
+      errorCount = _try_failure (errorCount, "get(int,int)... ", "OutOfBoundsException expected but not thrown");
     }
     catch (final ArrayIndexOutOfBoundsException e)
     {
       try
       {
         tmp = B.get (B.getRowDimension () - 1, B.getColumnDimension ());
-        errorCount = try_failure (errorCount, "get(int,int)... ", "OutOfBoundsException expected but not thrown");
+        errorCount = _try_failure (errorCount, "get(int,int)... ", "OutOfBoundsException expected but not thrown");
       }
       catch (final ArrayIndexOutOfBoundsException e1)
       {
-        try_success ("get(int,int)... OutofBoundsException... ", "");
+        _try_success ("get(int,int)... OutofBoundsException... ", "");
       }
     }
     catch (final IllegalArgumentException e1)
     {
-      errorCount = try_failure (errorCount, "get(int,int)... ", "OutOfBoundsException expected but not thrown");
+      errorCount = _try_failure (errorCount, "get(int,int)... ", "OutOfBoundsException expected but not thrown");
     }
     try
     {
       if (B.get (B.getRowDimension () - 1, B.getColumnDimension () - 1) != avals[B.getRowDimension () - 1][B.getColumnDimension () - 1])
       {
-        errorCount = try_failure (errorCount, "get(int,int)... ", "Matrix entry (i,j) not successfully retreived");
+        errorCount = _try_failure (errorCount, "get(int,int)... ", "Matrix entry (i,j) not successfully retreived");
       }
       else
       {
-        try_success ("get(int,int)... ", "");
+        _try_success ("get(int,int)... ", "");
       }
     }
     catch (final ArrayIndexOutOfBoundsException e)
     {
-      errorCount = try_failure (errorCount, "get(int,int)... ", "Unexpected ArrayIndexOutOfBoundsException");
+      errorCount = _try_failure (errorCount, "get(int,int)... ", "Unexpected ArrayIndexOutOfBoundsException");
     }
     SUB = new Matrix (subavals);
     try
     {
       M = B.getMatrix (ib, ie + B.getRowDimension () + 1, jb, je);
-      errorCount = try_failure (errorCount,
-                                "getMatrix(int,int,int,int)... ",
-                                "ArrayIndexOutOfBoundsException expected but not thrown");
+      errorCount = _try_failure (errorCount,
+                                 "getMatrix(int,int,int,int)... ",
+                                 "ArrayIndexOutOfBoundsException expected but not thrown");
     }
     catch (final ArrayIndexOutOfBoundsException e)
     {
       try
       {
         M = B.getMatrix (ib, ie, jb, je + B.getColumnDimension () + 1);
-        errorCount = try_failure (errorCount,
-                                  "getMatrix(int,int,int,int)... ",
-                                  "ArrayIndexOutOfBoundsException expected but not thrown");
+        errorCount = _try_failure (errorCount,
+                                   "getMatrix(int,int,int,int)... ",
+                                   "ArrayIndexOutOfBoundsException expected but not thrown");
       }
       catch (final ArrayIndexOutOfBoundsException e1)
       {
-        try_success ("getMatrix(int,int,int,int)... ArrayIndexOutOfBoundsException... ", "");
+        _try_success ("getMatrix(int,int,int,int)... ArrayIndexOutOfBoundsException... ", "");
       }
     }
     catch (final IllegalArgumentException e1)
     {
-      errorCount = try_failure (errorCount,
-                                "getMatrix(int,int,int,int)... ",
-                                "ArrayIndexOutOfBoundsException expected but not thrown");
+      errorCount = _try_failure (errorCount,
+                                 "getMatrix(int,int,int,int)... ",
+                                 "ArrayIndexOutOfBoundsException expected but not thrown");
     }
     try
     {
       M = B.getMatrix (ib, ie, jb, je);
       try
       {
-        check (SUB, M);
-        try_success ("getMatrix(int,int,int,int)... ", "");
+        _check (SUB, M);
+        _try_success ("getMatrix(int,int,int,int)... ", "");
       }
       catch (final RuntimeException e)
       {
-        errorCount = try_failure (errorCount, "getMatrix(int,int,int,int)... ", "submatrix not successfully retreived");
+        errorCount = _try_failure (errorCount, "getMatrix(int,int,int,int)... ", "submatrix not successfully retreived");
       }
     }
     catch (final ArrayIndexOutOfBoundsException e)
     {
-      errorCount = try_failure (errorCount,
-                                "getMatrix(int,int,int,int)... ",
-                                "Unexpected ArrayIndexOutOfBoundsException");
+      errorCount = _try_failure (errorCount,
+                                 "getMatrix(int,int,int,int)... ",
+                                 "Unexpected ArrayIndexOutOfBoundsException");
     }
 
     try
     {
       M = B.getMatrix (ib, ie, badcolumnindexset);
-      errorCount = try_failure (errorCount,
-                                "getMatrix(int,int,int[])... ",
-                                "ArrayIndexOutOfBoundsException expected but not thrown");
+      errorCount = _try_failure (errorCount,
+                                 "getMatrix(int,int,int[])... ",
+                                 "ArrayIndexOutOfBoundsException expected but not thrown");
     }
     catch (final ArrayIndexOutOfBoundsException e)
     {
       try
       {
         M = B.getMatrix (ib, ie + B.getRowDimension () + 1, columnindexset);
-        errorCount = try_failure (errorCount,
-                                  "getMatrix(int,int,int[])... ",
-                                  "ArrayIndexOutOfBoundsException expected but not thrown");
+        errorCount = _try_failure (errorCount,
+                                   "getMatrix(int,int,int[])... ",
+                                   "ArrayIndexOutOfBoundsException expected but not thrown");
       }
       catch (final ArrayIndexOutOfBoundsException e1)
       {
-        try_success ("getMatrix(int,int,int[])... ArrayIndexOutOfBoundsException... ", "");
+        _try_success ("getMatrix(int,int,int[])... ArrayIndexOutOfBoundsException... ", "");
       }
     }
     catch (final IllegalArgumentException e1)
     {
-      errorCount = try_failure (errorCount,
-                                "getMatrix(int,int,int[])... ",
-                                "ArrayIndexOutOfBoundsException expected but not thrown");
+      errorCount = _try_failure (errorCount,
+                                 "getMatrix(int,int,int[])... ",
+                                 "ArrayIndexOutOfBoundsException expected but not thrown");
     }
     try
     {
       M = B.getMatrix (ib, ie, columnindexset);
       try
       {
-        check (SUB, M);
-        try_success ("getMatrix(int,int,int[])... ", "");
+        _check (SUB, M);
+        _try_success ("getMatrix(int,int,int[])... ", "");
       }
       catch (final RuntimeException e)
       {
-        errorCount = try_failure (errorCount, "getMatrix(int,int,int[])... ", "submatrix not successfully retreived");
+        errorCount = _try_failure (errorCount, "getMatrix(int,int,int[])... ", "submatrix not successfully retreived");
       }
     }
     catch (final ArrayIndexOutOfBoundsException e)
     {
-      errorCount = try_failure (errorCount, "getMatrix(int,int,int[])... ", "Unexpected ArrayIndexOutOfBoundsException");
+      errorCount = _try_failure (errorCount,
+                                 "getMatrix(int,int,int[])... ",
+                                 "Unexpected ArrayIndexOutOfBoundsException");
     }
     try
     {
       M = B.getMatrix (badrowindexset, jb, je);
-      errorCount = try_failure (errorCount,
-                                "getMatrix(int[],int,int)... ",
-                                "ArrayIndexOutOfBoundsException expected but not thrown");
+      errorCount = _try_failure (errorCount,
+                                 "getMatrix(int[],int,int)... ",
+                                 "ArrayIndexOutOfBoundsException expected but not thrown");
     }
     catch (final ArrayIndexOutOfBoundsException e)
     {
       try
       {
         M = B.getMatrix (rowindexset, jb, je + B.getColumnDimension () + 1);
-        errorCount = try_failure (errorCount,
-                                  "getMatrix(int[],int,int)... ",
-                                  "ArrayIndexOutOfBoundsException expected but not thrown");
+        errorCount = _try_failure (errorCount,
+                                   "getMatrix(int[],int,int)... ",
+                                   "ArrayIndexOutOfBoundsException expected but not thrown");
       }
       catch (final ArrayIndexOutOfBoundsException e1)
       {
-        try_success ("getMatrix(int[],int,int)... ArrayIndexOutOfBoundsException... ", "");
+        _try_success ("getMatrix(int[],int,int)... ArrayIndexOutOfBoundsException... ", "");
       }
     }
     catch (final IllegalArgumentException e1)
     {
-      errorCount = try_failure (errorCount,
-                                "getMatrix(int[],int,int)... ",
-                                "ArrayIndexOutOfBoundsException expected but not thrown");
+      errorCount = _try_failure (errorCount,
+                                 "getMatrix(int[],int,int)... ",
+                                 "ArrayIndexOutOfBoundsException expected but not thrown");
     }
     try
     {
       M = B.getMatrix (rowindexset, jb, je);
       try
       {
-        check (SUB, M);
-        try_success ("getMatrix(int[],int,int)... ", "");
+        _check (SUB, M);
+        _try_success ("getMatrix(int[],int,int)... ", "");
       }
       catch (final RuntimeException e)
       {
-        errorCount = try_failure (errorCount, "getMatrix(int[],int,int)... ", "submatrix not successfully retreived");
+        errorCount = _try_failure (errorCount, "getMatrix(int[],int,int)... ", "submatrix not successfully retreived");
       }
     }
     catch (final ArrayIndexOutOfBoundsException e)
     {
-      errorCount = try_failure (errorCount, "getMatrix(int[],int,int)... ", "Unexpected ArrayIndexOutOfBoundsException");
+      errorCount = _try_failure (errorCount,
+                                 "getMatrix(int[],int,int)... ",
+                                 "Unexpected ArrayIndexOutOfBoundsException");
     }
     try
     {
       M = B.getMatrix (badrowindexset, columnindexset);
-      errorCount = try_failure (errorCount,
-                                "getMatrix(int[],int[])... ",
-                                "ArrayIndexOutOfBoundsException expected but not thrown");
+      errorCount = _try_failure (errorCount,
+                                 "getMatrix(int[],int[])... ",
+                                 "ArrayIndexOutOfBoundsException expected but not thrown");
     }
     catch (final ArrayIndexOutOfBoundsException e)
     {
       try
       {
         M = B.getMatrix (rowindexset, badcolumnindexset);
-        errorCount = try_failure (errorCount,
-                                  "getMatrix(int[],int[])... ",
-                                  "ArrayIndexOutOfBoundsException expected but not thrown");
+        errorCount = _try_failure (errorCount,
+                                   "getMatrix(int[],int[])... ",
+                                   "ArrayIndexOutOfBoundsException expected but not thrown");
       }
       catch (final ArrayIndexOutOfBoundsException e1)
       {
-        try_success ("getMatrix(int[],int[])... ArrayIndexOutOfBoundsException... ", "");
+        _try_success ("getMatrix(int[],int[])... ArrayIndexOutOfBoundsException... ", "");
       }
     }
     catch (final IllegalArgumentException e1)
     {
-      errorCount = try_failure (errorCount,
-                                "getMatrix(int[],int[])... ",
-                                "ArrayIndexOutOfBoundsException expected but not thrown");
+      errorCount = _try_failure (errorCount,
+                                 "getMatrix(int[],int[])... ",
+                                 "ArrayIndexOutOfBoundsException expected but not thrown");
     }
     try
     {
       M = B.getMatrix (rowindexset, columnindexset);
       try
       {
-        check (SUB, M);
-        try_success ("getMatrix(int[],int[])... ", "");
+        _check (SUB, M);
+        _try_success ("getMatrix(int[],int[])... ", "");
       }
       catch (final RuntimeException e)
       {
-        errorCount = try_failure (errorCount, "getMatrix(int[],int[])... ", "submatrix not successfully retreived");
+        errorCount = _try_failure (errorCount, "getMatrix(int[],int[])... ", "submatrix not successfully retreived");
       }
     }
     catch (final ArrayIndexOutOfBoundsException e)
     {
-      errorCount = try_failure (errorCount, "getMatrix(int[],int[])... ", "Unexpected ArrayIndexOutOfBoundsException");
+      errorCount = _try_failure (errorCount, "getMatrix(int[],int[])... ", "Unexpected ArrayIndexOutOfBoundsException");
     }
 
     /**
@@ -515,23 +526,25 @@ public class TestMatrix
     try
     {
       B.set (B.getRowDimension (), B.getColumnDimension () - 1, 0.);
-      errorCount = try_failure (errorCount, "set(int,int,double)... ", "OutOfBoundsException expected but not thrown");
+      errorCount = _try_failure (errorCount, "set(int,int,double)... ", "OutOfBoundsException expected but not thrown");
     }
     catch (final ArrayIndexOutOfBoundsException e)
     {
       try
       {
         B.set (B.getRowDimension () - 1, B.getColumnDimension (), 0.);
-        errorCount = try_failure (errorCount, "set(int,int,double)... ", "OutOfBoundsException expected but not thrown");
+        errorCount = _try_failure (errorCount,
+                                   "set(int,int,double)... ",
+                                   "OutOfBoundsException expected but not thrown");
       }
       catch (final ArrayIndexOutOfBoundsException e1)
       {
-        try_success ("set(int,int,double)... OutofBoundsException... ", "");
+        _try_success ("set(int,int,double)... OutofBoundsException... ", "");
       }
     }
     catch (final IllegalArgumentException e1)
     {
-      errorCount = try_failure (errorCount, "set(int,int,double)... ", "OutOfBoundsException expected but not thrown");
+      errorCount = _try_failure (errorCount, "set(int,int,double)... ", "OutOfBoundsException expected but not thrown");
     }
     try
     {
@@ -539,205 +552,207 @@ public class TestMatrix
       tmp = B.get (ib, jb);
       try
       {
-        check (tmp, 0.);
-        try_success ("set(int,int,double)... ", "");
+        _check (tmp, 0.);
+        _try_success ("set(int,int,double)... ", "");
       }
       catch (final RuntimeException e)
       {
-        errorCount = try_failure (errorCount, "set(int,int,double)... ", "Matrix element not successfully set");
+        errorCount = _try_failure (errorCount, "set(int,int,double)... ", "Matrix element not successfully set");
       }
     }
     catch (final ArrayIndexOutOfBoundsException e1)
     {
-      errorCount = try_failure (errorCount, "set(int,int,double)... ", "Unexpected ArrayIndexOutOfBoundsException");
+      errorCount = _try_failure (errorCount, "set(int,int,double)... ", "Unexpected ArrayIndexOutOfBoundsException");
     }
     M = new Matrix (2, 3, 0.);
     try
     {
       B.setMatrix (ib, ie + B.getRowDimension () + 1, jb, je, M);
-      errorCount = try_failure (errorCount,
-                                "setMatrix(int,int,int,int,Matrix)... ",
-                                "ArrayIndexOutOfBoundsException expected but not thrown");
+      errorCount = _try_failure (errorCount,
+                                 "setMatrix(int,int,int,int,Matrix)... ",
+                                 "ArrayIndexOutOfBoundsException expected but not thrown");
     }
     catch (final ArrayIndexOutOfBoundsException e)
     {
       try
       {
         B.setMatrix (ib, ie, jb, je + B.getColumnDimension () + 1, M);
-        errorCount = try_failure (errorCount,
-                                  "setMatrix(int,int,int,int,Matrix)... ",
-                                  "ArrayIndexOutOfBoundsException expected but not thrown");
+        errorCount = _try_failure (errorCount,
+                                   "setMatrix(int,int,int,int,Matrix)... ",
+                                   "ArrayIndexOutOfBoundsException expected but not thrown");
       }
       catch (final ArrayIndexOutOfBoundsException e1)
       {
-        try_success ("setMatrix(int,int,int,int,Matrix)... ArrayIndexOutOfBoundsException... ", "");
+        _try_success ("setMatrix(int,int,int,int,Matrix)... ArrayIndexOutOfBoundsException... ", "");
       }
     }
     catch (final IllegalArgumentException e1)
     {
-      errorCount = try_failure (errorCount,
-                                "setMatrix(int,int,int,int,Matrix)... ",
-                                "ArrayIndexOutOfBoundsException expected but not thrown");
+      errorCount = _try_failure (errorCount,
+                                 "setMatrix(int,int,int,int,Matrix)... ",
+                                 "ArrayIndexOutOfBoundsException expected but not thrown");
     }
     try
     {
       B.setMatrix (ib, ie, jb, je, M);
       try
       {
-        check (M.minus (B.getMatrix (ib, ie, jb, je)), M);
-        try_success ("setMatrix(int,int,int,int,Matrix)... ", "");
+        _check (M.minus (B.getMatrix (ib, ie, jb, je)), M);
+        _try_success ("setMatrix(int,int,int,int,Matrix)... ", "");
       }
       catch (final RuntimeException e)
       {
-        errorCount = try_failure (errorCount, "setMatrix(int,int,int,int,Matrix)... ", "submatrix not successfully set");
+        errorCount = _try_failure (errorCount,
+                                   "setMatrix(int,int,int,int,Matrix)... ",
+                                   "submatrix not successfully set");
       }
       B.setMatrix (ib, ie, jb, je, SUB);
     }
     catch (final ArrayIndexOutOfBoundsException e1)
     {
-      errorCount = try_failure (errorCount,
-                                "setMatrix(int,int,int,int,Matrix)... ",
-                                "Unexpected ArrayIndexOutOfBoundsException");
+      errorCount = _try_failure (errorCount,
+                                 "setMatrix(int,int,int,int,Matrix)... ",
+                                 "Unexpected ArrayIndexOutOfBoundsException");
     }
     try
     {
       B.setMatrix (ib, ie + B.getRowDimension () + 1, columnindexset, M);
-      errorCount = try_failure (errorCount,
-                                "setMatrix(int,int,int[],Matrix)... ",
-                                "ArrayIndexOutOfBoundsException expected but not thrown");
+      errorCount = _try_failure (errorCount,
+                                 "setMatrix(int,int,int[],Matrix)... ",
+                                 "ArrayIndexOutOfBoundsException expected but not thrown");
     }
     catch (final ArrayIndexOutOfBoundsException e)
     {
       try
       {
         B.setMatrix (ib, ie, badcolumnindexset, M);
-        errorCount = try_failure (errorCount,
-                                  "setMatrix(int,int,int[],Matrix)... ",
-                                  "ArrayIndexOutOfBoundsException expected but not thrown");
+        errorCount = _try_failure (errorCount,
+                                   "setMatrix(int,int,int[],Matrix)... ",
+                                   "ArrayIndexOutOfBoundsException expected but not thrown");
       }
       catch (final ArrayIndexOutOfBoundsException e1)
       {
-        try_success ("setMatrix(int,int,int[],Matrix)... ArrayIndexOutOfBoundsException... ", "");
+        _try_success ("setMatrix(int,int,int[],Matrix)... ArrayIndexOutOfBoundsException... ", "");
       }
     }
     catch (final IllegalArgumentException e1)
     {
-      errorCount = try_failure (errorCount,
-                                "setMatrix(int,int,int[],Matrix)... ",
-                                "ArrayIndexOutOfBoundsException expected but not thrown");
+      errorCount = _try_failure (errorCount,
+                                 "setMatrix(int,int,int[],Matrix)... ",
+                                 "ArrayIndexOutOfBoundsException expected but not thrown");
     }
     try
     {
       B.setMatrix (ib, ie, columnindexset, M);
       try
       {
-        check (M.minus (B.getMatrix (ib, ie, columnindexset)), M);
-        try_success ("setMatrix(int,int,int[],Matrix)... ", "");
+        _check (M.minus (B.getMatrix (ib, ie, columnindexset)), M);
+        _try_success ("setMatrix(int,int,int[],Matrix)... ", "");
       }
       catch (final RuntimeException e)
       {
-        errorCount = try_failure (errorCount, "setMatrix(int,int,int[],Matrix)... ", "submatrix not successfully set");
+        errorCount = _try_failure (errorCount, "setMatrix(int,int,int[],Matrix)... ", "submatrix not successfully set");
       }
       B.setMatrix (ib, ie, jb, je, SUB);
     }
     catch (final ArrayIndexOutOfBoundsException e1)
     {
-      errorCount = try_failure (errorCount,
-                                "setMatrix(int,int,int[],Matrix)... ",
-                                "Unexpected ArrayIndexOutOfBoundsException");
+      errorCount = _try_failure (errorCount,
+                                 "setMatrix(int,int,int[],Matrix)... ",
+                                 "Unexpected ArrayIndexOutOfBoundsException");
     }
     try
     {
       B.setMatrix (rowindexset, jb, je + B.getColumnDimension () + 1, M);
-      errorCount = try_failure (errorCount,
-                                "setMatrix(int[],int,int,Matrix)... ",
-                                "ArrayIndexOutOfBoundsException expected but not thrown");
+      errorCount = _try_failure (errorCount,
+                                 "setMatrix(int[],int,int,Matrix)... ",
+                                 "ArrayIndexOutOfBoundsException expected but not thrown");
     }
     catch (final ArrayIndexOutOfBoundsException e)
     {
       try
       {
         B.setMatrix (badrowindexset, jb, je, M);
-        errorCount = try_failure (errorCount,
-                                  "setMatrix(int[],int,int,Matrix)... ",
-                                  "ArrayIndexOutOfBoundsException expected but not thrown");
+        errorCount = _try_failure (errorCount,
+                                   "setMatrix(int[],int,int,Matrix)... ",
+                                   "ArrayIndexOutOfBoundsException expected but not thrown");
       }
       catch (final ArrayIndexOutOfBoundsException e1)
       {
-        try_success ("setMatrix(int[],int,int,Matrix)... ArrayIndexOutOfBoundsException... ", "");
+        _try_success ("setMatrix(int[],int,int,Matrix)... ArrayIndexOutOfBoundsException... ", "");
       }
     }
     catch (final IllegalArgumentException e1)
     {
-      errorCount = try_failure (errorCount,
-                                "setMatrix(int[],int,int,Matrix)... ",
-                                "ArrayIndexOutOfBoundsException expected but not thrown");
+      errorCount = _try_failure (errorCount,
+                                 "setMatrix(int[],int,int,Matrix)... ",
+                                 "ArrayIndexOutOfBoundsException expected but not thrown");
     }
     try
     {
       B.setMatrix (rowindexset, jb, je, M);
       try
       {
-        check (M.minus (B.getMatrix (rowindexset, jb, je)), M);
-        try_success ("setMatrix(int[],int,int,Matrix)... ", "");
+        _check (M.minus (B.getMatrix (rowindexset, jb, je)), M);
+        _try_success ("setMatrix(int[],int,int,Matrix)... ", "");
       }
       catch (final RuntimeException e)
       {
-        errorCount = try_failure (errorCount, "setMatrix(int[],int,int,Matrix)... ", "submatrix not successfully set");
+        errorCount = _try_failure (errorCount, "setMatrix(int[],int,int,Matrix)... ", "submatrix not successfully set");
       }
       B.setMatrix (ib, ie, jb, je, SUB);
     }
     catch (final ArrayIndexOutOfBoundsException e1)
     {
-      errorCount = try_failure (errorCount,
-                                "setMatrix(int[],int,int,Matrix)... ",
-                                "Unexpected ArrayIndexOutOfBoundsException");
+      errorCount = _try_failure (errorCount,
+                                 "setMatrix(int[],int,int,Matrix)... ",
+                                 "Unexpected ArrayIndexOutOfBoundsException");
     }
     try
     {
       B.setMatrix (rowindexset, badcolumnindexset, M);
-      errorCount = try_failure (errorCount,
-                                "setMatrix(int[],int[],Matrix)... ",
-                                "ArrayIndexOutOfBoundsException expected but not thrown");
+      errorCount = _try_failure (errorCount,
+                                 "setMatrix(int[],int[],Matrix)... ",
+                                 "ArrayIndexOutOfBoundsException expected but not thrown");
     }
     catch (final ArrayIndexOutOfBoundsException e)
     {
       try
       {
         B.setMatrix (badrowindexset, columnindexset, M);
-        errorCount = try_failure (errorCount,
-                                  "setMatrix(int[],int[],Matrix)... ",
-                                  "ArrayIndexOutOfBoundsException expected but not thrown");
+        errorCount = _try_failure (errorCount,
+                                   "setMatrix(int[],int[],Matrix)... ",
+                                   "ArrayIndexOutOfBoundsException expected but not thrown");
       }
       catch (final ArrayIndexOutOfBoundsException e1)
       {
-        try_success ("setMatrix(int[],int[],Matrix)... ArrayIndexOutOfBoundsException... ", "");
+        _try_success ("setMatrix(int[],int[],Matrix)... ArrayIndexOutOfBoundsException... ", "");
       }
     }
     catch (final IllegalArgumentException e1)
     {
-      errorCount = try_failure (errorCount,
-                                "setMatrix(int[],int[],Matrix)... ",
-                                "ArrayIndexOutOfBoundsException expected but not thrown");
+      errorCount = _try_failure (errorCount,
+                                 "setMatrix(int[],int[],Matrix)... ",
+                                 "ArrayIndexOutOfBoundsException expected but not thrown");
     }
     try
     {
       B.setMatrix (rowindexset, columnindexset, M);
       try
       {
-        check (M.minus (B.getMatrix (rowindexset, columnindexset)), M);
-        try_success ("setMatrix(int[],int[],Matrix)... ", "");
+        _check (M.minus (B.getMatrix (rowindexset, columnindexset)), M);
+        _try_success ("setMatrix(int[],int[],Matrix)... ", "");
       }
       catch (final RuntimeException e)
       {
-        errorCount = try_failure (errorCount, "setMatrix(int[],int[],Matrix)... ", "submatrix not successfully set");
+        errorCount = _try_failure (errorCount, "setMatrix(int[],int[],Matrix)... ", "submatrix not successfully set");
       }
     }
     catch (final ArrayIndexOutOfBoundsException e1)
     {
-      errorCount = try_failure (errorCount,
-                                "setMatrix(int[],int[],Matrix)... ",
-                                "Unexpected ArrayIndexOutOfBoundsException");
+      errorCount = _try_failure (errorCount,
+                                 "setMatrix(int[],int[],Matrix)... ",
+                                 "Unexpected ArrayIndexOutOfBoundsException");
     }
 
     /**
@@ -753,21 +768,21 @@ public class TestMatrix
     try
     {
       S = A.minus (S);
-      errorCount = try_failure (errorCount, "minus conformance check... ", "nonconformance not raised");
+      errorCount = _try_failure (errorCount, "minus conformance _check... ", "nonconformance not raised");
     }
     catch (final IllegalArgumentException e)
     {
-      try_success ("minus conformance check... ", "");
+      _try_success ("minus conformance _check... ", "");
     }
     if (A.minus (R).norm1 () != 0.)
     {
-      errorCount = try_failure (errorCount,
-                                "minus... ",
-                                "(difference of identical Matrices is nonzero,\nSubsequent use of minus should be suspect)");
+      errorCount = _try_failure (errorCount,
+                                 "minus... ",
+                                 "(difference of identical Matrices is nonzero,\nSubsequent use of minus should be suspect)");
     }
     else
     {
-      try_success ("minus... ", "");
+      _try_success ("minus... ", "");
     }
     A = R.getClone ();
     A.minusEquals (R);
@@ -775,21 +790,21 @@ public class TestMatrix
     try
     {
       A.minusEquals (S);
-      errorCount = try_failure (errorCount, "minusEquals conformance check... ", "nonconformance not raised");
+      errorCount = _try_failure (errorCount, "minusEquals conformance _check... ", "nonconformance not raised");
     }
     catch (final IllegalArgumentException e)
     {
-      try_success ("minusEquals conformance check... ", "");
+      _try_success ("minusEquals conformance _check... ", "");
     }
     if (A.minus (Z).norm1 () != 0.)
     {
-      errorCount = try_failure (errorCount,
-                                "minusEquals... ",
-                                "(difference of identical Matrices is nonzero,\nSubsequent use of minus should be suspect)");
+      errorCount = _try_failure (errorCount,
+                                 "minusEquals... ",
+                                 "(difference of identical Matrices is nonzero,\nSubsequent use of minus should be suspect)");
     }
     else
     {
-      try_success ("minusEquals... ", "");
+      _try_success ("minusEquals... ", "");
     }
 
     A = R.getClone ();
@@ -798,50 +813,50 @@ public class TestMatrix
     try
     {
       S = A.plus (S);
-      errorCount = try_failure (errorCount, "plus conformance check... ", "nonconformance not raised");
+      errorCount = _try_failure (errorCount, "plus conformance _check... ", "nonconformance not raised");
     }
     catch (final IllegalArgumentException e)
     {
-      try_success ("plus conformance check... ", "");
+      _try_success ("plus conformance _check... ", "");
     }
     try
     {
-      check (C.plus (B), A);
-      try_success ("plus... ", "");
+      _check (C.plus (B), A);
+      _try_success ("plus... ", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "plus... ", "(C = A - B, but C + B != A)");
+      errorCount = _try_failure (errorCount, "plus... ", "(C = A - B, but C + B != A)");
     }
     C = A.minus (B);
     C.plusEquals (B);
     try
     {
       A.plusEquals (S);
-      errorCount = try_failure (errorCount, "plusEquals conformance check... ", "nonconformance not raised");
+      errorCount = _try_failure (errorCount, "plusEquals conformance _check... ", "nonconformance not raised");
     }
     catch (final IllegalArgumentException e)
     {
-      try_success ("plusEquals conformance check... ", "");
+      _try_success ("plusEquals conformance _check... ", "");
     }
     try
     {
-      check (C, A);
-      try_success ("plusEquals... ", "");
+      _check (C, A);
+      _try_success ("plusEquals... ", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "plusEquals... ", "(C = A - B, but C = C + B != A)");
+      errorCount = _try_failure (errorCount, "plusEquals... ", "(C = A - B, but C = C + B != A)");
     }
     A = R.uminus ();
     try
     {
-      check (A.plus (R), Z);
-      try_success ("uminus... ", "");
+      _check (A.plus (R), Z);
+      _try_success ("uminus... ", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "uminus... ", "(-A + A != zeros)");
+      errorCount = _try_failure (errorCount, "uminus... ", "(-A + A != zeros)");
     }
     A = R.getClone ();
     O = new Matrix (A.getRowDimension (), A.getColumnDimension (), 1.0);
@@ -849,118 +864,122 @@ public class TestMatrix
     try
     {
       S = A.arrayLeftDivide (S);
-      errorCount = try_failure (errorCount, "arrayLeftDivide conformance check... ", "nonconformance not raised");
+      errorCount = _try_failure (errorCount, "arrayLeftDivide conformance _check... ", "nonconformance not raised");
     }
     catch (final IllegalArgumentException e)
     {
-      try_success ("arrayLeftDivide conformance check... ", "");
+      _try_success ("arrayLeftDivide conformance _check... ", "");
     }
     try
     {
-      check (C, O);
-      try_success ("arrayLeftDivide... ", "");
+      _check (C, O);
+      _try_success ("arrayLeftDivide... ", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "arrayLeftDivide... ", "(M.\\M != ones)");
+      errorCount = _try_failure (errorCount, "arrayLeftDivide... ", "(M.\\M != ones)");
     }
     try
     {
       A.arrayLeftDivideEquals (S);
-      errorCount = try_failure (errorCount, "arrayLeftDivideEquals conformance check... ", "nonconformance not raised");
+      errorCount = _try_failure (errorCount,
+                                 "arrayLeftDivideEquals conformance _check... ",
+                                 "nonconformance not raised");
     }
     catch (final IllegalArgumentException e)
     {
-      try_success ("arrayLeftDivideEquals conformance check... ", "");
+      _try_success ("arrayLeftDivideEquals conformance _check... ", "");
     }
     A.arrayLeftDivideEquals (R);
     try
     {
-      check (A, O);
-      try_success ("arrayLeftDivideEquals... ", "");
+      _check (A, O);
+      _try_success ("arrayLeftDivideEquals... ", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "arrayLeftDivideEquals... ", "(M.\\M != ones)");
+      errorCount = _try_failure (errorCount, "arrayLeftDivideEquals... ", "(M.\\M != ones)");
     }
     A = R.getClone ();
     try
     {
       A.arrayRightDivide (S);
-      errorCount = try_failure (errorCount, "arrayRightDivide conformance check... ", "nonconformance not raised");
+      errorCount = _try_failure (errorCount, "arrayRightDivide conformance _check... ", "nonconformance not raised");
     }
     catch (final IllegalArgumentException e)
     {
-      try_success ("arrayRightDivide conformance check... ", "");
+      _try_success ("arrayRightDivide conformance _check... ", "");
     }
     C = A.arrayRightDivide (R);
     try
     {
-      check (C, O);
-      try_success ("arrayRightDivide... ", "");
+      _check (C, O);
+      _try_success ("arrayRightDivide... ", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "arrayRightDivide... ", "(M./M != ones)");
+      errorCount = _try_failure (errorCount, "arrayRightDivide... ", "(M./M != ones)");
     }
     try
     {
       A.arrayRightDivideEquals (S);
-      errorCount = try_failure (errorCount, "arrayRightDivideEquals conformance check... ", "nonconformance not raised");
+      errorCount = _try_failure (errorCount,
+                                 "arrayRightDivideEquals conformance _check... ",
+                                 "nonconformance not raised");
     }
     catch (final IllegalArgumentException e)
     {
-      try_success ("arrayRightDivideEquals conformance check... ", "");
+      _try_success ("arrayRightDivideEquals conformance _check... ", "");
     }
     A.arrayRightDivideEquals (R);
     try
     {
-      check (A, O);
-      try_success ("arrayRightDivideEquals... ", "");
+      _check (A, O);
+      _try_success ("arrayRightDivideEquals... ", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "arrayRightDivideEquals... ", "(M./M != ones)");
+      errorCount = _try_failure (errorCount, "arrayRightDivideEquals... ", "(M./M != ones)");
     }
     A = R.getClone ();
     B = Matrix.random (A.getRowDimension (), A.getColumnDimension ());
     try
     {
       S = A.arrayTimes (S);
-      errorCount = try_failure (errorCount, "arrayTimes conformance check... ", "nonconformance not raised");
+      errorCount = _try_failure (errorCount, "arrayTimes conformance _check... ", "nonconformance not raised");
     }
     catch (final IllegalArgumentException e)
     {
-      try_success ("arrayTimes conformance check... ", "");
+      _try_success ("arrayTimes conformance _check... ", "");
     }
     C = A.arrayTimes (B);
     try
     {
-      check (C.arrayRightDivideEquals (B), A);
-      try_success ("arrayTimes... ", "");
+      _check (C.arrayRightDivideEquals (B), A);
+      _try_success ("arrayTimes... ", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "arrayTimes... ", "(A = R, C = A.*B, but C./B != A)");
+      errorCount = _try_failure (errorCount, "arrayTimes... ", "(A = R, C = A.*B, but C./B != A)");
     }
     try
     {
       A.arrayTimesEquals (S);
-      errorCount = try_failure (errorCount, "arrayTimesEquals conformance check... ", "nonconformance not raised");
+      errorCount = _try_failure (errorCount, "arrayTimesEquals conformance _check... ", "nonconformance not raised");
     }
     catch (final IllegalArgumentException e)
     {
-      try_success ("arrayTimesEquals conformance check... ", "");
+      _try_success ("arrayTimesEquals conformance _check... ", "");
     }
     A.arrayTimesEquals (B);
     try
     {
-      check (A.arrayRightDivideEquals (B), R);
-      try_success ("arrayTimesEquals... ", "");
+      _check (A.arrayRightDivideEquals (B), R);
+      _try_success ("arrayTimesEquals... ", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "arrayTimesEquals... ", "(A = R, A = A.*B, but A./B != R)");
+      errorCount = _try_failure (errorCount, "arrayTimesEquals... ", "(A = R, A = A.*B, but A./B != R)");
     }
 
     /**
@@ -980,29 +999,29 @@ public class TestMatrix
       aReader.close ();
       if (A.minus (R).norm1 () < .001)
       {
-        try_success ("print()/read()...", "");
+        _try_success ("print()/read()...", "");
       }
       else
       {
-        errorCount = try_failure (errorCount,
-                                  "print()/read()...",
-                                  "Matrix read from file does not match Matrix printed to file");
+        errorCount = _try_failure (errorCount,
+                                   "print()/read()...",
+                                   "Matrix read from file does not match Matrix printed to file");
       }
     }
     catch (final IOException ioe)
     {
-      warningCount = try_warning (warningCount,
-                                  "print()/read()...",
-                                  "unexpected I/O error, unable to run print/read test;  check write permission in current directory and retry");
+      warningCount = _try_warning (warningCount,
+                                   "print()/read()...",
+                                   "unexpected I/O error, unable to run print/read test;  _check write permission in current directory and retry");
     }
     catch (final Exception e)
     {
       try
       {
         e.printStackTrace (System.out);
-        warningCount = try_warning (warningCount,
-                                    "print()/read()...",
-                                    "Formatting error... will try JDK1.1 reformulation...");
+        warningCount = _try_warning (warningCount,
+                                     "print()/read()...",
+                                     "Formatting error... will try JDK1.1 reformulation...");
         final DecimalFormat fmt = new DecimalFormat ("0.0000");
         final PrintWriter FILE = new PrintWriter (new FileOutputStream (FILENAME_JAMA_TEST_MATRIX_OUT));
         A.print (FILE, fmt, 10);
@@ -1012,20 +1031,20 @@ public class TestMatrix
         aReader.close ();
         if (A.minus (R).norm1 () < .001)
         {
-          try_success ("print()/read()...", "");
+          _try_success ("print()/read()...", "");
         }
         else
         {
-          errorCount = try_failure (errorCount,
-                                    "print()/read() (2nd attempt) ...",
-                                    "Matrix read from file does not match Matrix printed to file");
+          errorCount = _try_failure (errorCount,
+                                     "print()/read() (2nd attempt) ...",
+                                     "Matrix read from file does not match Matrix printed to file");
         }
       }
       catch (final IOException ioe)
       {
-        warningCount = try_warning (warningCount,
-                                    "print()/read()...",
-                                    "unexpected I/O error, unable to run print/read test;  check write permission in current directory and retry");
+        warningCount = _try_warning (warningCount,
+                                     "print()/read()...",
+                                     "unexpected I/O error, unable to run print/read test;  _check write permission in current directory and retry");
       }
     }
     finally
@@ -1046,27 +1065,27 @@ public class TestMatrix
 
       try
       {
-        check (A, R);
-        try_success ("writeObject(Matrix)/readObject(Matrix)...", "");
+        _check (A, R);
+        _try_success ("writeObject(Matrix)/readObject(Matrix)...", "");
       }
       catch (final RuntimeException e)
       {
-        errorCount = try_failure (errorCount,
-                                  "writeObject(Matrix)/readObject(Matrix)...",
-                                  "Matrix not serialized correctly");
+        errorCount = _try_failure (errorCount,
+                                   "writeObject(Matrix)/readObject(Matrix)...",
+                                   "Matrix not serialized correctly");
       }
     }
     catch (final IOException ioe)
     {
-      warningCount = try_warning (warningCount,
-                                  "writeObject()/readObject()...",
-                                  "unexpected I/O error, unable to run serialization test;  check write permission in current directory and retry");
+      warningCount = _try_warning (warningCount,
+                                   "writeObject()/readObject()...",
+                                   "unexpected I/O error, unable to run serialization test;  _check write permission in current directory and retry");
     }
     catch (final Exception e)
     {
-      errorCount = try_failure (errorCount,
-                                "writeObject(Matrix)/readObject(Matrix)...",
-                                "unexpected error in serialization test");
+      errorCount = _try_failure (errorCount,
+                                 "writeObject(Matrix)/readObject(Matrix)...",
+                                 "unexpected error in serialization test");
     }
     finally
     {
@@ -1084,77 +1103,77 @@ public class TestMatrix
     T = A.transpose ();
     try
     {
-      check (A.transpose (), T);
-      try_success ("transpose...", "");
+      _check (A.transpose (), T);
+      _try_success ("transpose...", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "transpose()...", "transpose unsuccessful");
+      errorCount = _try_failure (errorCount, "transpose()...", "transpose unsuccessful");
     }
     A.transpose ();
     try
     {
-      check (A.norm1 (), columnsummax);
-      try_success ("norm1...", "");
+      _check (A.norm1 (), columnsummax);
+      _try_success ("norm1...", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "norm1()...", "incorrect norm calculation");
+      errorCount = _try_failure (errorCount, "norm1()...", "incorrect norm calculation");
     }
     try
     {
-      check (A.normInf (), rowsummax);
-      try_success ("normInf()...", "");
+      _check (A.normInf (), rowsummax);
+      _try_success ("normInf()...", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "normInf()...", "incorrect norm calculation");
+      errorCount = _try_failure (errorCount, "normInf()...", "incorrect norm calculation");
     }
     try
     {
-      check (A.normF (), Math.sqrt (sumofsquares));
-      try_success ("normF...", "");
+      _check (A.normF (), Math.sqrt (sumofsquares));
+      _try_success ("normF...", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "normF()...", "incorrect norm calculation");
+      errorCount = _try_failure (errorCount, "normF()...", "incorrect norm calculation");
     }
     try
     {
-      check (A.trace (), sumofdiagonals);
-      try_success ("trace()...", "");
+      _check (A.trace (), sumofdiagonals);
+      _try_success ("trace()...", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "trace()...", "incorrect trace calculation");
+      errorCount = _try_failure (errorCount, "trace()...", "incorrect trace calculation");
     }
     try
     {
-      check (A.getMatrix (0, A.getRowDimension () - 1, 0, A.getRowDimension () - 1).det (), 0.);
-      try_success ("det()...", "");
+      _check (A.getMatrix (0, A.getRowDimension () - 1, 0, A.getRowDimension () - 1).det (), 0.);
+      _try_success ("det()...", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "det()...", "incorrect determinant calculation");
+      errorCount = _try_failure (errorCount, "det()...", "incorrect determinant calculation");
     }
     SQ = new Matrix (square);
     try
     {
-      check (A.times (A.transpose ()), SQ);
-      try_success ("times(Matrix)...", "");
+      _check (A.times (A.transpose ()), SQ);
+      _try_success ("times(Matrix)...", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "times(Matrix)...", "incorrect Matrix-Matrix product calculation");
+      errorCount = _try_failure (errorCount, "times(Matrix)...", "incorrect Matrix-Matrix product calculation");
     }
     try
     {
-      check (A.times (0.), Z);
-      try_success ("times(double)...", "");
+      _check (A.times (0.), Z);
+      _try_success ("times(double)...", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "times(double)...", "incorrect Matrix-scalar product calculation");
+      errorCount = _try_failure (errorCount, "times(double)...", "incorrect Matrix-scalar product calculation");
     }
 
     A = new Matrix (columnwise, 4);
@@ -1162,47 +1181,47 @@ public class TestMatrix
     R = QR.getR ();
     try
     {
-      check (A, QR.getQ ().times (R));
-      try_success ("QRDecomposition...", "");
+      _check (A, QR.getQ ().times (R));
+      _try_success ("QRDecomposition...", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "QRDecomposition...", "incorrect QR decomposition calculation");
+      errorCount = _try_failure (errorCount, "QRDecomposition...", "incorrect QR decomposition calculation");
     }
     SingularValueDecomposition SVD = A.svd ();
     try
     {
-      check (A, SVD.getU ().times (SVD.getS ().times (SVD.getV ().transpose ())));
-      try_success ("SingularValueDecomposition...", "");
+      _check (A, SVD.getU ().times (SVD.getS ().times (SVD.getV ().transpose ())));
+      _try_success ("SingularValueDecomposition...", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount,
-                                "SingularValueDecomposition...",
-                                "incorrect singular value decomposition calculation");
+      errorCount = _try_failure (errorCount,
+                                 "SingularValueDecomposition...",
+                                 "incorrect singular value decomposition calculation");
     }
     DEF = new Matrix (rankdef);
     try
     {
-      check (DEF.rank (), Math.min (DEF.getRowDimension (), DEF.getColumnDimension ()) - 1);
-      try_success ("rank()...", "");
+      _check (DEF.rank (), Math.min (DEF.getRowDimension (), DEF.getColumnDimension ()) - 1);
+      _try_success ("rank()...", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "rank()...", "incorrect rank calculation");
+      errorCount = _try_failure (errorCount, "rank()...", "incorrect rank calculation");
     }
     B = new Matrix (condmat);
     SVD = B.svd ();
     final double [] singularvalues = SVD.getSingularValues ();
     try
     {
-      check (B.cond (), singularvalues[0] /
-                        singularvalues[Math.min (B.getRowDimension (), B.getColumnDimension ()) - 1]);
-      try_success ("cond()...", "");
+      _check (B.cond (), singularvalues[0] /
+                         singularvalues[Math.min (B.getRowDimension (), B.getColumnDimension ()) - 1]);
+      _try_success ("cond()...", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "cond()...", "incorrect condition number calculation");
+      errorCount = _try_failure (errorCount, "cond()...", "incorrect condition number calculation");
     }
     final int n = A.getColumnDimension ();
     A = A.getMatrix (0, n - 1, 0, n - 1);
@@ -1210,76 +1229,76 @@ public class TestMatrix
     final LUDecomposition LU = A.lu ();
     try
     {
-      check (A.getMatrix (LU.getPivot (), 0, n - 1), LU.getL ().times (LU.getU ()));
-      try_success ("LUDecomposition...", "");
+      _check (A.getMatrix (LU.getPivot (), 0, n - 1), LU.getL ().times (LU.getU ()));
+      _try_success ("LUDecomposition...", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "LUDecomposition...", "incorrect LU decomposition calculation");
+      errorCount = _try_failure (errorCount, "LUDecomposition...", "incorrect LU decomposition calculation");
     }
     X = A.inverse ();
     try
     {
-      check (A.times (X), Matrix.identity (3, 3));
-      try_success ("inverse()...", "");
+      _check (A.times (X), Matrix.identity (3, 3));
+      _try_success ("inverse()...", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "inverse()...", "incorrect inverse calculation");
+      errorCount = _try_failure (errorCount, "inverse()...", "incorrect inverse calculation");
     }
     O = new Matrix (SUB.getRowDimension (), 1, 1.0);
     SOL = new Matrix (sqSolution);
     SQ = SUB.getMatrix (0, SUB.getRowDimension () - 1, 0, SUB.getRowDimension () - 1);
     try
     {
-      check (SQ.solve (SOL), O);
-      try_success ("solve()...", "");
+      _check (SQ.solve (SOL), O);
+      _try_success ("solve()...", "");
     }
     catch (final IllegalArgumentException e1)
     {
-      errorCount = try_failure (errorCount, "solve()...", e1.getMessage ());
+      errorCount = _try_failure (errorCount, "solve()...", e1.getMessage ());
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "solve()...", e.getMessage ());
+      errorCount = _try_failure (errorCount, "solve()...", e.getMessage ());
     }
     A = new Matrix (pvals);
     final CholeskyDecomposition Chol = A.chol ();
     final Matrix L = Chol.getL ();
     try
     {
-      check (A, L.times (L.transpose ()));
-      try_success ("CholeskyDecomposition...", "");
+      _check (A, L.times (L.transpose ()));
+      _try_success ("CholeskyDecomposition...", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "CholeskyDecomposition...", "incorrect Cholesky decomposition calculation");
+      errorCount = _try_failure (errorCount, "CholeskyDecomposition...", "incorrect Cholesky decomposition calculation");
     }
     X = Chol.solve (Matrix.identity (3, 3));
     try
     {
-      check (A.times (X), Matrix.identity (3, 3));
-      try_success ("CholeskyDecomposition solve()...", "");
+      _check (A.times (X), Matrix.identity (3, 3));
+      _try_success ("CholeskyDecomposition solve()...", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount,
-                                "CholeskyDecomposition solve()...",
-                                "incorrect Choleskydecomposition solve calculation");
+      errorCount = _try_failure (errorCount,
+                                 "CholeskyDecomposition solve()...",
+                                 "incorrect Choleskydecomposition solve calculation");
     }
     EigenvalueDecomposition Eig = A.eig ();
     Matrix D = Eig.getD ();
     Matrix V = Eig.getV ();
     try
     {
-      check (A.times (V), V.times (D));
-      try_success ("EigenvalueDecomposition (symmetric)...", "");
+      _check (A.times (V), V.times (D));
+      _try_success ("EigenvalueDecomposition (symmetric)...", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount,
-                                "EigenvalueDecomposition (symmetric)...",
-                                "incorrect symmetric Eigenvalue decomposition calculation");
+      errorCount = _try_failure (errorCount,
+                                 "EigenvalueDecomposition (symmetric)...",
+                                 "incorrect symmetric Eigenvalue decomposition calculation");
     }
     A = new Matrix (evals);
     Eig = A.eig ();
@@ -1287,14 +1306,14 @@ public class TestMatrix
     V = Eig.getV ();
     try
     {
-      check (A.times (V), V.times (D));
-      try_success ("EigenvalueDecomposition (nonsymmetric)...", "");
+      _check (A.times (V), V.times (D));
+      _try_success ("EigenvalueDecomposition (nonsymmetric)...", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount,
-                                "EigenvalueDecomposition (nonsymmetric)...",
-                                "incorrect nonsymmetric Eigenvalue decomposition calculation");
+      errorCount = _try_failure (errorCount,
+                                 "EigenvalueDecomposition (nonsymmetric)...",
+                                 "incorrect nonsymmetric Eigenvalue decomposition calculation");
     }
 
     try
@@ -1303,30 +1322,32 @@ public class TestMatrix
       final Matrix bA = new Matrix (badeigs);
       final EigenvalueDecomposition bEig = bA.eig ();
       assertNotNull (bEig);
-      try_success ("EigenvalueDecomposition (hang)...", "");
+      _try_success ("EigenvalueDecomposition (hang)...", "");
     }
     catch (final RuntimeException e)
     {
-      errorCount = try_failure (errorCount, "EigenvalueDecomposition (hang)...", "incorrect termination");
+      errorCount = _try_failure (errorCount, "EigenvalueDecomposition (hang)...", "incorrect termination");
     }
 
     print ("\nTestMatrix completed.\n");
-    print ("Total errors reported: " + Integer.toString (errorCount) + "\n");
-    print ("Total warnings reported: " + Integer.toString (warningCount) + "\n");
+    print ("Total errors reported: " + errorCount + "\n");
+    print ("Total warnings reported: " + warningCount + "\n");
+
+    assertEquals (0, errorCount);
+    assertEquals (0, warningCount);
   }
 
   /** private utility routines **/
 
   /** Check magnitude of difference of scalars. **/
 
-  private static void check (final double x, final double y)
+  private static void _check (final double x, final double y)
   {
-    final double eps = Math.pow (2.0, -52.0);
-    if (x == 0 && Math.abs (y) < 10 * eps)
+    if (x == 0 && Math.abs (y) < 10 * EPSILON)
       return;
-    if (y == 0 && Math.abs (x) < 10 * eps)
+    if (y == 0 && Math.abs (x) < 10 * EPSILON)
       return;
-    if (Math.abs (x - y) > 10 * eps * Math.max (Math.abs (x), Math.abs (y)))
+    if (Math.abs (x - y) > 10 * EPSILON * Math.max (Math.abs (x), Math.abs (y)))
     {
       throw new RuntimeException ("The difference x-y is too large: x = " +
                                   Double.toString (x) +
@@ -1337,13 +1358,13 @@ public class TestMatrix
 
   /** Check norm of difference of "vectors". **/
 
-  private static void check (final double [] x, final double [] y)
+  private static void _check (final double [] x, final double [] y)
   {
     if (x.length == y.length)
     {
       for (int i = 0; i < x.length; i++)
       {
-        check (x[i], y[i]);
+        _check (x[i], y[i]);
       }
     }
     else
@@ -1354,26 +1375,23 @@ public class TestMatrix
 
   /** Check norm of difference of arrays. **/
 
-  private static void check (final double [][] x, final double [][] y)
+  private static void _check (final double [][] x, final double [][] y)
   {
     final Matrix A = new Matrix (x);
     final Matrix B = new Matrix (y);
-    check (A, B);
+    _check (A, B);
   }
 
   /** Check norm of difference of Matrices. **/
 
-  private static void check (final Matrix X, final Matrix Y)
+  private static void _check (@Nonnull final Matrix X, @Nonnull final Matrix Y)
   {
-    final double eps = Math.pow (2.0, -52.0);
-    if (X.norm1 () == 0. && Y.norm1 () < 10 * eps)
+    if (X.norm1 () == 0. && Y.norm1 () < 10 * EPSILON)
       return;
-    if (Y.norm1 () == 0. && X.norm1 () < 10 * eps)
+    if (Y.norm1 () == 0. && X.norm1 () < 10 * EPSILON)
       return;
-    if (X.minus (Y).norm1 () > 1000 * eps * Math.max (X.norm1 (), Y.norm1 ()))
-    {
+    if (X.minus (Y).norm1 () > 1000 * EPSILON * Math.max (X.norm1 (), Y.norm1 ()))
       throw new RuntimeException ("The norm of (X-Y) is too large: " + Double.toString (X.minus (Y).norm1 ()));
-    }
   }
 
   /** Shorten spelling of print. **/
@@ -1385,18 +1403,16 @@ public class TestMatrix
 
   /** Print appropriate messages for successful outcome try **/
 
-  private static void try_success (final String s, final String e)
+  private static void _try_success (final String s, final String e)
   {
     print (">    " + s + "success\n");
-    if (e != "")
-    {
+    if (StringHelper.hasText (e))
       print (">      Message: " + e + "\n");
-    }
   }
 
   /** Print appropriate messages for unsuccessful outcome try **/
 
-  private static int try_failure (final int count, final String s, final String e)
+  private static int _try_failure (final int count, final String s, final String e)
   {
     print (">    " + s + "*** failure ***\n>      Message: " + e + "\n");
     return count + 1;
@@ -1404,7 +1420,7 @@ public class TestMatrix
 
   /** Print appropriate messages for unsuccessful outcome try **/
 
-  private static int try_warning (final int count, final String s, final String e)
+  private static int _try_warning (final int count, final String s, final String e)
   {
     print (">    " + s + "*** warning ***\n>      Message: " + e + "\n");
     return count + 1;
@@ -1413,7 +1429,7 @@ public class TestMatrix
   /** Print a row vector. **/
 
   @SuppressWarnings ("unused")
-  private static void print (final double [] x, final int w, final int d)
+  private static void _print (final double [] x, final int w, final int d)
   {
     // Use format Fw.d for all elements.
     System.out.print ("\n");

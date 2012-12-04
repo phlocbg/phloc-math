@@ -1107,18 +1107,21 @@ public class Matrix implements Serializable, ICloneable <Matrix>
 
     final Matrix aNewMatrix = new Matrix (m_nRows, aMatrix.m_nCols);
     final double [][] aNewArray = aNewMatrix.internalGetArray ();
-    final double [] Bcolj = new double [m_nCols];
+    final double [] aRhsCol = new double [m_nCols];
     for (int nCol = 0; nCol < aMatrix.m_nCols; nCol++)
     {
       for (int k = 0; k < m_nCols; k++)
-        Bcolj[k] = aMatrix.m_aData[k][nCol];
+        aRhsCol[k] = aMatrix.m_aData[k][nCol];
+
       for (int nRow = 0; nRow < m_nRows; nRow++)
       {
-        final double [] Arowi = m_aData[nRow];
-        double s = 0;
+        final double [] aRow = m_aData[nRow];
+
+        // Build and assign sum
+        double dValue = 0;
         for (int k = 0; k < m_nCols; k++)
-          s += Arowi[k] * Bcolj[k];
-        aNewArray[nRow][nCol] = s;
+          dValue += aRow[k] * aRhsCol[k];
+        aNewArray[nRow][nCol] = dValue;
       }
     }
     return aNewMatrix;

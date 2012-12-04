@@ -19,6 +19,7 @@ package com.phloc.math.matrix;
 
 import javax.annotation.Nonnull;
 
+import com.phloc.commons.annotations.ReturnsMutableCopy;
 import com.phloc.commons.math.MathHelper;
 
 /**
@@ -35,52 +36,48 @@ import com.phloc.commons.math.MathHelper;
 
 public class QRDecomposition implements java.io.Serializable
 {
-
-  /*
-   * ------------------------ Class variables ------------------------
-   */
-
   /**
    * Array for internal storage of decomposition.
    * 
    * @serial internal array storage.
    */
-  private final double [][] QR;
+  private final double [][] m_aQR;
 
   /**
-   * Row and column dimensions.
+   * Row dimension.
    * 
-   * @serial column dimension.
    * @serial row dimension.
    */
-  private final int m_nRows, m_nCols;
+  private final int m_nRows;
+
+  /**
+   * Column dimension.
+   * 
+   * @serial column dimension.
+   */
+  private final int m_nCols;
 
   /**
    * Array for internal storage of diagonal of R.
    * 
    * @serial diagonal of R.
    */
-  private final double [] Rdiag;
-
-  /*
-   * ------------------------ Constructor ------------------------
-   */
+  private final double [] m_aRdiag;
 
   /**
    * QR Decomposition, computed by Householder reflections. Structure to access
    * R and the Householder vectors and compute Q.
    * 
-   * @param A
+   * @param aMatrix
    *        Rectangular matrix
    */
-
-  public QRDecomposition (final Matrix A)
+  public QRDecomposition (@Nonnull final Matrix aMatrix)
   {
     // Initialize.
-    QR = A.getArrayCopy ();
-    m_nRows = A.getRowDimension ();
-    m_nCols = A.getColumnDimension ();
-    Rdiag = new double [m_nCols];
+    m_aQR = aMatrix.getArrayCopy ();
+    m_nRows = aMatrix.getRowDimension ();
+    m_nCols = aMatrix.getColumnDimension ();
+    m_aRdiag = new double [m_nCols];
 
     // Main loop.
     for (int k = 0; k < m_nCols; k++)
@@ -88,20 +85,20 @@ public class QRDecomposition implements java.io.Serializable
       // Compute 2-norm of k-th column without under/overflow.
       double nrm = 0;
       for (int i = k; i < m_nRows; i++)
-        nrm = MathHelper.hypot (nrm, QR[i][k]);
+        nrm = MathHelper.hypot (nrm, m_aQR[i][k]);
 
       if (nrm != 0.0)
       {
         // Form k-th Householder vector.
-        if (QR[k][k] < 0)
+        if (m_aQR[k][k] < 0)
         {
           nrm = -nrm;
         }
         for (int i = k; i < m_nRows; i++)
         {
-          QR[i][k] /= nrm;
+          m_aQR[i][k] /= nrm;
         }
-        QR[k][k] += 1.0;
+        m_aQR[k][k] += 1.0;
 
         // Apply transformation to remaining columns.
         for (int j = k + 1; j < m_nCols; j++)
@@ -109,22 +106,18 @@ public class QRDecomposition implements java.io.Serializable
           double s = 0.0;
           for (int i = k; i < m_nRows; i++)
           {
-            s += QR[i][k] * QR[i][j];
+            s += m_aQR[i][k] * m_aQR[i][j];
           }
-          s = -s / QR[k][k];
+          s = -s / m_aQR[k][k];
           for (int i = k; i < m_nRows; i++)
           {
-            QR[i][j] += s * QR[i][k];
+            m_aQR[i][j] += s * m_aQR[i][k];
           }
         }
       }
-      Rdiag[k] = -nrm;
+      m_aRdiag[k] = -nrm;
     }
   }
-
-  /*
-   * ------------------------ Public Methods ------------------------
-   */
 
   /**
    * Is the matrix full rank?
@@ -134,7 +127,7 @@ public class QRDecomposition implements java.io.Serializable
   public boolean isFullRank ()
   {
     for (int j = 0; j < m_nCols; j++)
-      if (Rdiag[j] == 0)
+      if (m_aRdiag[j] == 0)
         return false;
     return true;
   }
@@ -145,21 +138,21 @@ public class QRDecomposition implements java.io.Serializable
    * @return Lower trapezoidal matrix whose columns define the reflections
    */
   @Nonnull
+  @ReturnsMutableCopy
   public Matrix getH ()
   {
-    final Matrix X = new Matrix (m_nRows, m_nCols);
-    final double [][] H = X.internalGetArray ();
-    for (int i = 0; i < m_nRows; i++)
+    final Matrix aNewMatrix = new Matrix (m_nRows, m_nCols);
+    final double [][] aNewArray = aNewMatrix.internalGetArray ();
+    for (int nRow = 0; nRow < m_nRows; nRow++)
     {
-      for (int j = 0; j < m_nCols; j++)
+      final double [] aSrcRow = m_aQR[nRow];
+      final double [] aDstRow = aNewArray[nRow];
+      for (int nCol = 0; nCol < m_nCols; nCol++)
       {
-        if (i >= j)
-          H[i][j] = QR[i][j];
-        else
-          H[i][j] = 0.0;
+        aDstRow[nCol] = (nRow >= nCol ? aSrcRow[nCol] : 0d);
       }
     }
-    return X;
+    return aNewMatrix;
   }
 
   /**
@@ -167,25 +160,27 @@ public class QRDecomposition implements java.io.Serializable
    * 
    * @return R
    */
-
+  @Nonnull
+  @ReturnsMutableCopy
   public Matrix getR ()
   {
-    final Matrix X = new Matrix (m_nCols, m_nCols);
-    final double [][] R = X.internalGetArray ();
-    for (int i = 0; i < m_nCols; i++)
+    final Matrix aNewMatrix = new Matrix (m_nCols, m_nCols);
+    final double [][] aNewArray = aNewMatrix.internalGetArray ();
+    for (int nRow = 0; nRow < m_nCols; nRow++)
     {
+      final double [] aDstRow = aNewArray[nRow];
       for (int j = 0; j < m_nCols; j++)
       {
-        if (i < j)
-          R[i][j] = QR[i][j];
+        if (nRow < j)
+          aDstRow[j] = m_aQR[nRow][j];
         else
-          if (i == j)
-            R[i][j] = Rdiag[i];
+          if (nRow == j)
+            aDstRow[j] = m_aRdiag[nRow];
           else
-            R[i][j] = 0.0;
+            aDstRow[j] = 0.0;
       }
     }
-    return X;
+    return aNewMatrix;
   }
 
   /**
@@ -193,40 +188,40 @@ public class QRDecomposition implements java.io.Serializable
    * 
    * @return Q
    */
-
+  @Nonnull
+  @ReturnsMutableCopy
   public Matrix getQ ()
   {
-    final Matrix X = new Matrix (m_nRows, m_nCols);
-    final double [][] Q = X.internalGetArray ();
+    final Matrix aNewMatrix = new Matrix (m_nRows, m_nCols);
+    final double [][] aNewArray = aNewMatrix.internalGetArray ();
     for (int k = m_nCols - 1; k >= 0; k--)
     {
-      for (int i = 0; i < m_nRows; i++)
-        Q[i][k] = 0.0;
-      Q[k][k] = 1.0;
+      final double [] aQRk = m_aQR[k];
+      for (int nRow = 0; nRow < m_nRows; nRow++)
+        aNewArray[nRow][k] = 0.0;
+      aNewArray[k][k] = 1.0;
       for (int j = k; j < m_nCols; j++)
       {
-        if (QR[k][k] != 0)
+        if (aQRk[k] != 0)
         {
           double s = 0.0;
           for (int i = k; i < m_nRows; i++)
-          {
-            s += QR[i][k] * Q[i][j];
-          }
-          s = -s / QR[k][k];
+            s += m_aQR[i][k] * aNewArray[i][j];
+          s = -s / aQRk[k];
           for (int i = k; i < m_nRows; i++)
           {
-            Q[i][j] += s * QR[i][k];
+            aNewArray[i][j] += s * m_aQR[i][k];
           }
         }
       }
     }
-    return X;
+    return aNewMatrix;
   }
 
   /**
    * Least squares solution of A*X = B
    * 
-   * @param B
+   * @param aMatrix
    *        A Matrix with as many rows as A and any number of columns.
    * @return X that minimizes the two norm of Q*R*X-B.
    * @exception IllegalArgumentException
@@ -234,55 +229,47 @@ public class QRDecomposition implements java.io.Serializable
    * @exception RuntimeException
    *            Matrix is rank deficient.
    */
-  public Matrix solve (final Matrix B)
+  @Nonnull
+  @ReturnsMutableCopy
+  public Matrix solve (@Nonnull final Matrix aMatrix)
   {
-    if (B.getRowDimension () != m_nRows)
-    {
+    if (aMatrix.getRowDimension () != m_nRows)
       throw new IllegalArgumentException ("Matrix row dimensions must agree.");
-    }
-    if (!this.isFullRank ())
-    {
+    if (!isFullRank ())
       throw new RuntimeException ("Matrix is rank deficient.");
-    }
 
     // Copy right hand side
-    final int nx = B.getColumnDimension ();
-    final double [][] X = B.getArrayCopy ();
+    final int nCols = aMatrix.getColumnDimension ();
+    final double [][] aArray = aMatrix.getArrayCopy ();
 
     // Compute Y = transpose(Q)*B
     for (int k = 0; k < m_nCols; k++)
     {
-      for (int j = 0; j < nx; j++)
+      final double [] aQRk = m_aQR[k];
+      for (int j = 0; j < nCols; j++)
       {
         double s = 0.0;
         for (int i = k; i < m_nRows; i++)
-        {
-          s += QR[i][k] * X[i][j];
-        }
-        s = -s / QR[k][k];
+          s += m_aQR[i][k] * aArray[i][j];
+        s = -s / aQRk[k];
         for (int i = k; i < m_nRows; i++)
-        {
-          X[i][j] += s * QR[i][k];
-        }
+          aArray[i][j] += s * m_aQR[i][k];
       }
     }
     // Solve R*X = Y;
     for (int k = m_nCols - 1; k >= 0; k--)
     {
-      for (int j = 0; j < nx; j++)
-      {
-        X[k][j] /= Rdiag[k];
-      }
+      final double [] aArrayk = aArray[k];
+      for (int j = 0; j < nCols; j++)
+        aArrayk[j] /= m_aRdiag[k];
       for (int i = 0; i < k; i++)
       {
-        for (int j = 0; j < nx; j++)
-        {
-          X[i][j] -= X[k][j] * QR[i][k];
-        }
+        final double [] aSrcRow = m_aQR[i];
+        final double [] aDstRow = aArray[i];
+        for (int j = 0; j < nCols; j++)
+          aDstRow[j] -= aArrayk[j] * aSrcRow[k];
       }
     }
-    return (new Matrix (X, m_nCols, nx).getMatrix (0, m_nCols - 1, 0, nx - 1));
+    return new Matrix (aArray, m_nCols, nCols).getMatrix (0, m_nCols - 1, 0, nCols - 1);
   }
-
-  private static final long serialVersionUID = 1;
 }

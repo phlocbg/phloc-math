@@ -20,6 +20,9 @@ package com.phloc.math.matrix;
 import java.io.Serializable;
 import java.util.Arrays;
 
+import javax.annotation.Nonnull;
+
+import com.phloc.commons.annotations.ReturnsMutableCopy;
 import com.phloc.commons.equals.EqualsUtils;
 import com.phloc.commons.math.MathHelper;
 
@@ -42,6 +45,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  **/
 public class EigenvalueDecomposition implements Serializable
 {
+  private static final double EPSILON = Math.pow (2.0, -52.0);
+
   /**
    * Row and column dimension (square matrix).
    * 
@@ -84,12 +89,9 @@ public class EigenvalueDecomposition implements Serializable
    */
   private double [] m_aOrt;
 
-  /*
-   * ------------------------ Private Methods ------------------------
+  /**
+   * Symmetric Householder reduction to tridiagonal form.
    */
-
-  // Symmetric Householder reduction to tridiagonal form.
-
   private void _tred2 ()
   {
     // This is derived from the Algol procedures tred2 by
@@ -105,15 +107,11 @@ public class EigenvalueDecomposition implements Serializable
 
     for (int i = m_nDim - 1; i > 0; i--)
     {
-
       // Scale to avoid under/overflow.
-
       double scale = 0.0;
       double h = 0.0;
       for (int k = 0; k < i; k++)
-      {
-        scale = scale + Math.abs (m_aEVd[k]);
-      }
+        scale += Math.abs (m_aEVd[k]);
       if (scale == 0.0)
       {
         m_aEVe[i] = m_aEVd[i - 1];
@@ -126,7 +124,6 @@ public class EigenvalueDecomposition implements Serializable
       }
       else
       {
-
         // Generate Householder vector.
 
         for (int k = 0; k < i; k++)
@@ -149,7 +146,6 @@ public class EigenvalueDecomposition implements Serializable
         }
 
         // Apply similarity transformation to remaining columns.
-
         for (int j = 0; j < i; j++)
         {
           f = m_aEVd[j];
@@ -189,7 +185,6 @@ public class EigenvalueDecomposition implements Serializable
     }
 
     // Accumulate transformations.
-
     for (int i = 0; i < m_nDim - 1; i++)
     {
       m_aEigenVector[m_nDim - 1][i] = m_aEigenVector[i][i];
@@ -228,38 +223,30 @@ public class EigenvalueDecomposition implements Serializable
     m_aEVe[0] = 0.0;
   }
 
-  // Symmetric tridiagonal QL algorithm.
-
+  /**
+   * Symmetric tridiagonal QL algorithm.
+   */
   private void _tql2 ()
   {
-
     // This is derived from the Algol procedures tql2, by
     // Bowdler, Martin, Reinsch, and Wilkinson, Handbook for
     // Auto. Comp., Vol.ii-Linear Algebra, and the corresponding
     // Fortran subroutine in EISPACK.
-
     for (int i = 1; i < m_nDim; i++)
-    {
       m_aEVe[i - 1] = m_aEVe[i];
-    }
     m_aEVe[m_nDim - 1] = 0.0;
 
     double f = 0.0;
     double tst1 = 0.0;
-    final double eps = Math.pow (2.0, -52.0);
     for (int l = 0; l < m_nDim; l++)
     {
-
       // Find small subdiagonal element
-
       tst1 = Math.max (tst1, Math.abs (m_aEVd[l]) + Math.abs (m_aEVe[l]));
       int m = l;
       while (m < m_nDim)
       {
-        if (Math.abs (m_aEVe[m]) <= eps * tst1)
-        {
+        if (Math.abs (m_aEVe[m]) <= EPSILON * tst1)
           break;
-        }
         m++;
       }
 
@@ -268,13 +255,14 @@ public class EigenvalueDecomposition implements Serializable
 
       if (m > l)
       {
+        @SuppressWarnings ("unused")
         int iter = 0;
         do
         {
-          iter = iter + 1; // (Could check iteration count here.)
+          // (Could check iteration count here.)
+          iter++;
 
           // Compute implicit shift
-
           double g = m_aEVd[l];
           double p = (m_aEVd[l + 1] - g) / (2.0 * m_aEVe[l]);
           double r = MathHelper.hypot (p, 1.0);
@@ -293,7 +281,6 @@ public class EigenvalueDecomposition implements Serializable
           f = f + h;
 
           // Implicit QL transformation.
-
           p = m_aEVd[m];
           double c = 1.0;
           double c2 = c;
@@ -330,14 +317,13 @@ public class EigenvalueDecomposition implements Serializable
 
           // Check for convergence.
 
-        } while (Math.abs (m_aEVe[l]) > eps * tst1);
+        } while (Math.abs (m_aEVe[l]) > EPSILON * tst1);
       }
       m_aEVd[l] = m_aEVd[l] + f;
       m_aEVe[l] = 0.0;
     }
 
     // Sort eigenvalues and corresponding vectors.
-
     for (int i = 0; i < m_nDim - 1; i++)
     {
       int k = i;
@@ -364,11 +350,11 @@ public class EigenvalueDecomposition implements Serializable
     }
   }
 
-  // Nonsymmetric reduction to Hessenberg form.
-
+  /**
+   * Nonsymmetric reduction to Hessenberg form.
+   */
   private void _orthes ()
   {
-
     // This is derived from the Algol procedures orthes and ortran,
     // by Martin and Wilkinson, Handbook for Auto. Comp.,
     // Vol.ii-Linear Algebra, and the corresponding
@@ -379,19 +365,13 @@ public class EigenvalueDecomposition implements Serializable
 
     for (int m = low + 1; m <= high - 1; m++)
     {
-
       // Scale column.
-
       double scale = 0.0;
       for (int i = m; i <= high; i++)
-      {
-        scale = scale + Math.abs (m_aHessenBerg[i][m - 1]);
-      }
+        scale += Math.abs (m_aHessenBerg[i][m - 1]);
       if (scale != 0.0)
       {
-
         // Compute Householder transformation.
-
         double h = 0.0;
         for (int i = high; i >= m; i--)
         {
@@ -442,12 +422,12 @@ public class EigenvalueDecomposition implements Serializable
     }
 
     // Accumulate transformations (Algol's ortran).
-
     for (int i = 0; i < m_nDim; i++)
     {
+      final double [] aRow = m_aEigenVector[i];
       for (int j = 0; j < m_nDim; j++)
       {
-        m_aEigenVector[i][j] = (i == j ? 1.0 : 0.0);
+        aRow[j] = (i == j ? 1d : 0d);
       }
     }
 
@@ -500,11 +480,11 @@ public class EigenvalueDecomposition implements Serializable
     }
   }
 
-  // Nonsymmetric reduction from Hessenberg to real Schur form.
-
+  /**
+   * Nonsymmetric reduction from Hessenberg to real Schur form.
+   */
   private void _hqr2 ()
   {
-
     // This is derived from the Algol procedure hqr2,
     // by Martin and Wilkinson, Handbook for Auto. Comp.,
     // Vol.ii-Linear Algebra, and the corresponding
@@ -512,16 +492,14 @@ public class EigenvalueDecomposition implements Serializable
 
     // Initialize
 
-    final int nn = this.m_nDim;
+    final int nn = m_nDim;
     int n = nn - 1;
     final int low = 0;
     final int high = nn - 1;
-    final double eps = Math.pow (2.0, -52.0);
     double exshift = 0.0;
     double p = 0, q = 0, r = 0, s = 0, z = 0, t, w, x, y;
 
     // Store roots isolated by balanc and compute matrix norm
-
     double norm = 0.0;
     for (int i = 0; i < nn; i++)
     {
@@ -532,36 +510,28 @@ public class EigenvalueDecomposition implements Serializable
       }
       for (int j = Math.max (i - 1, 0); j < nn; j++)
       {
-        norm = norm + Math.abs (m_aHessenBerg[i][j]);
+        norm += Math.abs (m_aHessenBerg[i][j]);
       }
     }
 
     // Outer loop over eigenvalue index
-
     int iter = 0;
     while (n >= low)
     {
-
       // Look for single small sub-diagonal element
-
       int l = n;
       while (l > low)
       {
         s = Math.abs (m_aHessenBerg[l - 1][l - 1]) + Math.abs (m_aHessenBerg[l][l]);
         if (s == 0.0)
-        {
           s = norm;
-        }
-        if (Math.abs (m_aHessenBerg[l][l - 1]) < eps * s)
-        {
+        if (Math.abs (m_aHessenBerg[l][l - 1]) < EPSILON * s)
           break;
-        }
         l--;
       }
 
       // Check for convergence
       // One root found
-
       if (l == n)
       {
         m_aHessenBerg[n][n] = m_aHessenBerg[n][n] + exshift;
@@ -569,9 +539,7 @@ public class EigenvalueDecomposition implements Serializable
         m_aEVe[n] = 0.0;
         n--;
         iter = 0;
-
         // Two roots found
-
       }
       else
         if (l == n - 1)
@@ -589,19 +557,13 @@ public class EigenvalueDecomposition implements Serializable
           if (q >= 0)
           {
             if (p >= 0)
-            {
               z = p + z;
-            }
             else
-            {
               z = p - z;
-            }
             m_aEVd[n - 1] = x + z;
             m_aEVd[n] = m_aEVd[n - 1];
             if (z != 0.0)
-            {
               m_aEVd[n] = x - w / z;
-            }
             m_aEVe[n - 1] = 0.0;
             m_aEVe[n] = 0.0;
             x = m_aHessenBerg[n][n - 1];
@@ -613,7 +575,6 @@ public class EigenvalueDecomposition implements Serializable
             q = q / r;
 
             // Row modification
-
             for (int j = n - 1; j < nn; j++)
             {
               z = m_aHessenBerg[n - 1][j];
@@ -622,7 +583,6 @@ public class EigenvalueDecomposition implements Serializable
             }
 
             // Column modification
-
             for (int i = 0; i <= n; i++)
             {
               z = m_aHessenBerg[i][n - 1];
@@ -631,7 +591,6 @@ public class EigenvalueDecomposition implements Serializable
             }
 
             // Accumulate transformations
-
             for (int i = low; i <= high; i++)
             {
               z = m_aEigenVector[i][n - 1];
@@ -640,7 +599,6 @@ public class EigenvalueDecomposition implements Serializable
             }
 
             // Complex pair
-
           }
           else
           {
@@ -653,13 +611,10 @@ public class EigenvalueDecomposition implements Serializable
           iter = 0;
 
           // No convergence yet
-
         }
         else
         {
-
           // Form shift
-
           x = m_aHessenBerg[n][n];
           y = 0.0;
           w = 0.0;
@@ -670,7 +625,6 @@ public class EigenvalueDecomposition implements Serializable
           }
 
           // Wilkinson's original ad hoc shift
-
           if (iter == 10)
           {
             exshift += x;
@@ -684,7 +638,6 @@ public class EigenvalueDecomposition implements Serializable
           }
 
           // MATLAB's new ad hoc shift
-
           if (iter == 30)
           {
             s = (y - x) / 2.0;
@@ -693,9 +646,7 @@ public class EigenvalueDecomposition implements Serializable
             {
               s = Math.sqrt (s);
               if (y < x)
-              {
                 s = -s;
-              }
               s = x - w / ((y - x) / 2.0 + s);
               for (int i = low; i <= n; i++)
               {
@@ -709,7 +660,6 @@ public class EigenvalueDecomposition implements Serializable
           iter = iter + 1; // (Could check iteration count here.)
 
           // Look for two consecutive small sub-diagonal elements
-
           int m = n - 2;
           while (m >= l)
           {
@@ -724,10 +674,8 @@ public class EigenvalueDecomposition implements Serializable
             q = q / s;
             r = r / s;
             if (m == l)
-            {
               break;
-            }
-            if (Math.abs (m_aHessenBerg[m][m - 1]) * (Math.abs (q) + Math.abs (r)) < eps *
+            if (Math.abs (m_aHessenBerg[m][m - 1]) * (Math.abs (q) + Math.abs (r)) < EPSILON *
                                                                                      (Math.abs (p) * (Math.abs (m_aHessenBerg[m - 1][m - 1]) +
                                                                                                       Math.abs (z) + Math.abs (m_aHessenBerg[m + 1][m + 1]))))
             {
@@ -876,7 +824,7 @@ public class EigenvalueDecomposition implements Serializable
               }
               else
               {
-                m_aHessenBerg[i][n] = -r / (eps * norm);
+                m_aHessenBerg[i][n] = -r / (EPSILON * norm);
               }
 
               // Solve real equations
@@ -902,7 +850,7 @@ public class EigenvalueDecomposition implements Serializable
             // Overflow control
 
             t = Math.abs (m_aHessenBerg[i][n]);
-            if ((eps * t) * t > 1)
+            if ((EPSILON * t) * t > 1)
             {
               for (int j = i; j <= n; j++)
               {
@@ -973,7 +921,7 @@ public class EigenvalueDecomposition implements Serializable
                 vi = (m_aEVd[i] - p) * 2.0 * q;
                 if (vr == 0.0 & vi == 0.0)
                 {
-                  vr = eps * norm * (Math.abs (w) + Math.abs (q) + Math.abs (x) + Math.abs (y) + Math.abs (z));
+                  vr = EPSILON * norm * (Math.abs (w) + Math.abs (q) + Math.abs (x) + Math.abs (y) + Math.abs (z));
                 }
                 _cdiv (x * r - z * ra + q * sa, x * s - z * sa - q * ra, vr, vi);
                 m_aHessenBerg[i][n - 1] = m_dCdivr;
@@ -994,7 +942,7 @@ public class EigenvalueDecomposition implements Serializable
               // Overflow control
 
               t = Math.max (Math.abs (m_aHessenBerg[i][n - 1]), Math.abs (m_aHessenBerg[i][n]));
-              if ((eps * t) * t > 1)
+              if ((EPSILON * t) * t > 1)
               {
                 for (int j = i; j <= n; j++)
                 {
@@ -1095,10 +1043,6 @@ public class EigenvalueDecomposition implements Serializable
     }
   }
 
-  /*
-   * ------------------------ Public Methods ------------------------
-   */
-
   /**
    * Return the eigenvector matrix
    * 
@@ -1136,20 +1080,25 @@ public class EigenvalueDecomposition implements Serializable
    * 
    * @return D
    */
+  @Nonnull
+  @ReturnsMutableCopy
   public Matrix getD ()
   {
-    final Matrix X = new Matrix (m_nDim, m_nDim);
-    final double [][] D = X.internalGetArray ();
-    for (int i = 0; i < m_nDim; i++)
+    final Matrix aNewMatrix = new Matrix (m_nDim, m_nDim);
+    final double [][] aNewArray = aNewMatrix.internalGetArray ();
+    for (int nRow = 0; nRow < m_nDim; nRow++)
     {
-      Arrays.fill (D[i], 0.0);
-      D[i][i] = m_aEVd[i];
-      if (m_aEVe[i] > 0)
-        D[i][i + 1] = m_aEVe[i];
+      final double [] aDstRow = aNewArray[nRow];
+      Arrays.fill (aDstRow, 0.0);
+      aDstRow[nRow] = m_aEVd[nRow];
+
+      final double dEVe = m_aEVe[nRow];
+      if (dEVe > 0)
+        aDstRow[nRow + 1] = dEVe;
       else
-        if (m_aEVe[i] < 0)
-          D[i][i - 1] = m_aEVe[i];
+        if (dEVe < 0)
+          aDstRow[nRow - 1] = dEVe;
     }
-    return X;
+    return aNewMatrix;
   }
 }
