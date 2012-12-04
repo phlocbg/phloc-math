@@ -184,7 +184,7 @@ public class LUDecomposition implements Serializable
   public Matrix getL ()
   {
     final Matrix X = new Matrix (m_nRows, m_nCols);
-    final double [][] L = X.getArray ();
+    final double [][] L = X.internalGetArray ();
     for (int i = 0; i < m_nRows; i++)
       for (int j = 0; j < m_nCols; j++)
         if (i > j)
@@ -206,7 +206,7 @@ public class LUDecomposition implements Serializable
   public Matrix getU ()
   {
     final Matrix X = new Matrix (m_nCols, m_nCols);
-    final double [][] U = X.getArray ();
+    final double [][] U = X.internalGetArray ();
     for (int i = 0; i < m_nCols; i++)
       for (int j = 0; j < m_nCols; j++)
         if (i <= j)
@@ -288,7 +288,7 @@ public class LUDecomposition implements Serializable
     // Copy right hand side with pivoting
     final int nx = B.getColumnDimension ();
     final Matrix Xmat = B.getMatrix (m_aPivot, 0, nx - 1);
-    final double [][] X = Xmat.getArray ();
+    final double [][] X = Xmat.internalGetArray ();
 
     // Solve L*Y = B(piv,:)
     for (int k = 0; k < m_nCols; k++)
