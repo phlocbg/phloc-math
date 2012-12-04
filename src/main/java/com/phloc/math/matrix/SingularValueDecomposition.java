@@ -22,6 +22,7 @@ import java.util.Arrays;
 
 import javax.annotation.Nonnull;
 
+import com.phloc.commons.annotations.ReturnsMutableCopy;
 import com.phloc.commons.math.MathHelper;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -43,12 +44,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public class SingularValueDecomposition implements Serializable
 {
-  private static final double EPS = Math.pow (2.0, -52.0);
+  private static final double EPSILON = Math.pow (2.0, -52.0);
   private static final double TINY = Math.pow (2.0, -966.0);
-
-  /*
-   * ------------------------ Class variables ------------------------
-   */
 
   /**
    * Arrays for internal storage of U and V.
@@ -82,16 +79,16 @@ public class SingularValueDecomposition implements Serializable
   /**
    * Construct the singular value decomposition Structure to access U, S and V.
    * 
-   * @param Arg
+   * @param aMatrix
    *        Rectangular matrix
    */
-  public SingularValueDecomposition (@Nonnull final Matrix Arg)
+  public SingularValueDecomposition (@Nonnull final Matrix aMatrix)
   {
     // Derived from LINPACK code.
     // Initialize.
-    final double [][] A = Arg.getArrayCopy ();
-    m_nRows = Arg.getRowDimension ();
-    m_nCols = Arg.getColumnDimension ();
+    final double [][] aArray = aMatrix.getArrayCopy ();
+    m_nRows = aMatrix.getRowDimension ();
+    m_nCols = aMatrix.getColumnDimension ();
 
     /*
      * Apparently the failing cases are only a proper subset of (m<n), so let's
@@ -109,7 +106,6 @@ public class SingularValueDecomposition implements Serializable
 
     // Reduce A to bidiagonal form, storing the diagonal elements
     // in s and the super-diagonal elements in e.
-
     final int nct = Math.min (m_nRows - 1, m_nCols);
     final int nrt = Math.max (0, Math.min (m_nCols - 2, m_nRows));
     for (int k = 0; k < Math.max (nct, nrt); k++)
@@ -121,14 +117,14 @@ public class SingularValueDecomposition implements Serializable
         // Compute 2-norm of k-th column without under/overflow.
         m_aData[k] = 0;
         for (int i = k; i < m_nRows; i++)
-          m_aData[k] = MathHelper.hypot (m_aData[k], A[i][k]);
+          m_aData[k] = MathHelper.hypot (m_aData[k], aArray[i][k]);
         if (m_aData[k] != 0.0)
         {
-          if (A[k][k] < 0.0)
+          if (aArray[k][k] < 0.0)
             m_aData[k] = -m_aData[k];
           for (int i = k; i < m_nRows; i++)
-            A[i][k] /= m_aData[k];
-          A[k][k] += 1.0;
+            aArray[i][k] /= m_aData[k];
+          aArray[k][k] += 1.0;
         }
         m_aData[k] = -m_aData[k];
       }
@@ -139,15 +135,15 @@ public class SingularValueDecomposition implements Serializable
           // Apply the transformation.
           double t = 0;
           for (int i = k; i < m_nRows; i++)
-            t += A[i][k] * A[i][j];
-          t = -t / A[k][k];
+            t += aArray[i][k] * aArray[i][j];
+          t = -t / aArray[k][k];
           for (int i = k; i < m_nRows; i++)
-            A[i][j] += t * A[i][k];
+            aArray[i][j] += t * aArray[i][k];
         }
 
         // Place the k-th row of A into e for the
         // subsequent calculation of the row transformation.
-        e[j] = A[k][j];
+        e[j] = aArray[k][j];
       }
       if (wantu && k < nct)
       {
@@ -155,7 +151,7 @@ public class SingularValueDecomposition implements Serializable
         // multiplication.
 
         for (int i = k; i < m_nRows; i++)
-          m_aU[i][k] = A[i][k];
+          m_aU[i][k] = aArray[i][k];
       }
       if (k < nrt)
       {
@@ -182,13 +178,13 @@ public class SingularValueDecomposition implements Serializable
 
           for (int j = k + 1; j < m_nCols; j++)
             for (int i = k + 1; i < m_nRows; i++)
-              work[i] += e[j] * A[i][j];
+              work[i] += e[j] * aArray[i][j];
 
           for (int j = k + 1; j < m_nCols; j++)
           {
             final double t = -e[j] / e[k + 1];
             for (int i = k + 1; i < m_nRows; i++)
-              A[i][j] += t * work[i];
+              aArray[i][j] += t * work[i];
           }
         }
         if (wantv)
@@ -204,11 +200,11 @@ public class SingularValueDecomposition implements Serializable
     // Set up the final bidiagonal matrix or order p.
     int p = Math.min (m_nCols, m_nRows + 1);
     if (nct < m_nCols)
-      m_aData[nct] = A[nct][nct];
+      m_aData[nct] = aArray[nct][nct];
     if (m_nRows < p)
       m_aData[p - 1] = 0.0;
     if (nrt + 1 < p)
-      e[nrt] = A[nrt][p - 1];
+      e[nrt] = aArray[nrt][p - 1];
     e[p - 1] = 0.0;
 
     // If required, generate U.
@@ -294,7 +290,7 @@ public class SingularValueDecomposition implements Serializable
       {
         if (k == -1)
           break;
-        if (Math.abs (e[k]) <= TINY + EPS * (MathHelper.abs (m_aData[k]) + MathHelper.abs (m_aData[k + 1])))
+        if (Math.abs (e[k]) <= TINY + EPSILON * (MathHelper.abs (m_aData[k]) + MathHelper.abs (m_aData[k + 1])))
         {
           e[k] = 0.0;
           break;
@@ -310,7 +306,7 @@ public class SingularValueDecomposition implements Serializable
           if (ks == k)
             break;
           final double t = (ks != p ? MathHelper.abs (e[ks]) : 0.) + (ks != k + 1 ? MathHelper.abs (e[ks - 1]) : 0.);
-          if (MathHelper.abs (m_aData[ks]) <= TINY + EPS * t)
+          if (MathHelper.abs (m_aData[ks]) <= TINY + EPSILON * t)
           {
             m_aData[ks] = 0.0;
             break;
@@ -525,6 +521,7 @@ public class SingularValueDecomposition implements Serializable
    * @return U
    */
   @Nonnull
+  @ReturnsMutableCopy
   public Matrix getU ()
   {
     return new Matrix (m_aU, m_nRows, Math.min (m_nRows + 1, m_nCols));
@@ -536,6 +533,7 @@ public class SingularValueDecomposition implements Serializable
    * @return V
    */
   @Nonnull
+  @ReturnsMutableCopy
   public Matrix getV ()
   {
     return new Matrix (m_aV, m_nCols, m_nCols);
@@ -559,16 +557,17 @@ public class SingularValueDecomposition implements Serializable
    * @return S
    */
   @Nonnull
+  @ReturnsMutableCopy
   public Matrix getS ()
   {
-    final Matrix X = new Matrix (m_nCols, m_nCols);
-    final double [][] S = X.internalGetArray ();
+    final Matrix aNewMatrix = new Matrix (m_nCols, m_nCols);
+    final double [][] aNewArray = aNewMatrix.internalGetArray ();
     for (int i = 0; i < m_nCols; i++)
     {
-      Arrays.fill (S[i], 0.0);
-      S[i][i] = m_aData[i];
+      Arrays.fill (aNewArray[i], 0.0);
+      aNewArray[i][i] = m_aData[i];
     }
-    return X;
+    return aNewMatrix;
   }
 
   /**
@@ -598,7 +597,7 @@ public class SingularValueDecomposition implements Serializable
    */
   public int rank ()
   {
-    final double tol = Math.max (m_nRows, m_nCols) * m_aData[0] * EPS;
+    final double tol = Math.max (m_nRows, m_nCols) * m_aData[0] * EPSILON;
     int r = 0;
     for (final double element : m_aData)
       if (element > tol)
