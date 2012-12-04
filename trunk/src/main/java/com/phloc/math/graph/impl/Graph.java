@@ -36,6 +36,7 @@ import com.phloc.math.graph.IGraphNode;
 import com.phloc.math.graph.IGraphObjectFactory;
 import com.phloc.math.graph.IGraphRelation;
 import com.phloc.math.graph.iterate.GraphIterator;
+import com.phloc.math.matrix.Matrix;
 
 /**
  * A simple graph object that bidirectionally links graph nodes.
@@ -249,6 +250,26 @@ public class Graph extends AbstractBaseGraph <IGraphNode, IGraphRelation> implem
           if (!m_aNodes.containsKey (aRelNode.getID ()))
             return false;
     return true;
+  }
+
+  @Nonnull
+  public Matrix createIncidenceMatrix ()
+  {
+    final int nNodeCount = getNodeCount ();
+    final Matrix ret = new Matrix (nNodeCount, nNodeCount, 0);
+    final IGraphNode [] aNodes = m_aNodes.values ().toArray (new IGraphNode [nNodeCount]);
+    for (int nRow = 0; nRow < nNodeCount; ++nRow)
+    {
+      final IGraphNode aNodeRow = aNodes[nRow];
+      for (int nCol = 0; nCol < nNodeCount; ++nCol)
+        if (nRow != nCol)
+          if (aNodeRow.isConnectedWith (aNodes[nCol]))
+          {
+            ret.set (nRow, nCol, 1);
+            ret.set (nCol, nRow, 1);
+          }
+    }
+    return ret;
   }
 
   @Override
