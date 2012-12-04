@@ -1051,6 +1051,15 @@ public class EigenvalueDecomposition implements Serializable
   }
 
   /**
+   * @return <code>true</code> if the input was symmetric, <code>false</code> if
+   *         not
+   */
+  public boolean isSymmetric ()
+  {
+    return m_bIsSymmetric;
+  }
+
+  /**
    * Return the eigenvector matrix
    * 
    * @return V

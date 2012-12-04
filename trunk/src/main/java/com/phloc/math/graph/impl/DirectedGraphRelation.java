@@ -29,10 +29,9 @@ import com.phloc.commons.hash.HashCodeGenerator;
 import com.phloc.commons.string.ToStringGenerator;
 import com.phloc.math.graph.IDirectedGraphNode;
 import com.phloc.math.graph.IDirectedGraphRelation;
-import com.phloc.math.graph.IGraphRelation;
 
 /**
- * Default implementation of the {@link IGraphRelation} interface
+ * Default implementation of the {@link IDirectedGraphRelation} interface
  * 
  * @author philip
  */

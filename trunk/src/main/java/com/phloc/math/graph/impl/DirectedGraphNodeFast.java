@@ -21,11 +21,10 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import com.phloc.commons.hash.HashCodeGenerator;
-import com.phloc.math.graph.IDirectedGraphNode;
 
 /**
- * Implementation of {@link IDirectedGraphNode} interface with quick and dirty
- * equals and hashCode (on ID only)
+ * Implementation of {@link com.phloc.math.graph.IDirectedGraphNode} interface
+ * with quick and dirty equals and hashCode (on ID only)
  * 
  * @author philip
  */

@@ -410,19 +410,12 @@ public class Matrix implements Serializable, ICloneable <Matrix>
   {
     final Matrix aNewMatrix = new Matrix (nEndRowIndex - nStartRowIndex + 1, nEndColumnIndex - nStartColumnIndex + 1);
     final double [][] aNewArray = aNewMatrix.internalGetArray ();
-    try
+    for (int nRow = nStartRowIndex; nRow <= nEndRowIndex; nRow++)
     {
-      for (int nRow = nStartRowIndex; nRow <= nEndRowIndex; nRow++)
-      {
-        final double [] aSrcRow = m_aData[nRow];
-        final double [] aDstRow = aNewArray[nRow - nStartRowIndex];
-        for (int nCol = nStartColumnIndex; nCol <= nEndColumnIndex; nCol++)
-          aDstRow[nCol - nStartColumnIndex] = aSrcRow[nCol];
-      }
-    }
-    catch (final ArrayIndexOutOfBoundsException e)
-    {
-      throw new ArrayIndexOutOfBoundsException ("Submatrix indices");
+      final double [] aSrcRow = m_aData[nRow];
+      final double [] aDstRow = aNewArray[nRow - nStartRowIndex];
+      for (int nCol = nStartColumnIndex; nCol <= nEndColumnIndex; nCol++)
+        aDstRow[nCol - nStartColumnIndex] = aSrcRow[nCol];
     }
     return aNewMatrix;
   }
@@ -444,20 +437,13 @@ public class Matrix implements Serializable, ICloneable <Matrix>
   {
     final Matrix aNewMatrix = new Matrix (aRows.length, aCols.length);
     final double [][] aNewArray = aNewMatrix.internalGetArray ();
-    try
+    for (int nRow = 0; nRow < aRows.length; nRow++)
     {
-      for (int nRow = 0; nRow < aRows.length; nRow++)
-      {
-        final int nRowIndex = aRows[nRow];
-        final double [] aSrcRow = m_aData[nRowIndex];
-        final double [] aDstRow = aNewArray[nRow];
-        for (int nCol = 0; nCol < aCols.length; nCol++)
-          aDstRow[nCol] = aSrcRow[aCols[nCol]];
-      }
-    }
-    catch (final ArrayIndexOutOfBoundsException e)
-    {
-      throw new ArrayIndexOutOfBoundsException ("Submatrix indices");
+      final int nRowIndex = aRows[nRow];
+      final double [] aSrcRow = m_aData[nRowIndex];
+      final double [] aDstRow = aNewArray[nRow];
+      for (int nCol = 0; nCol < aCols.length; nCol++)
+        aDstRow[nCol] = aSrcRow[aCols[nCol]];
     }
     return aNewMatrix;
   }
@@ -483,18 +469,11 @@ public class Matrix implements Serializable, ICloneable <Matrix>
   {
     final Matrix aNewMatrix = new Matrix (nEndRowIndex - nStartRowIndex + 1, aCols.length);
     final double [][] aNewArray = aNewMatrix.internalGetArray ();
-    try
+    for (int nCol = 0; nCol < aCols.length; nCol++)
     {
-      for (int nCol = 0; nCol < aCols.length; nCol++)
-      {
-        final int nColIndex = aCols[nCol];
-        for (int nRow = nStartRowIndex; nRow <= nEndRowIndex; nRow++)
-          aNewArray[nRow - nStartRowIndex][nCol] = m_aData[nRow][nColIndex];
-      }
-    }
-    catch (final ArrayIndexOutOfBoundsException e)
-    {
-      throw new ArrayIndexOutOfBoundsException ("Submatrix indices");
+      final int nColIndex = aCols[nCol];
+      for (int nRow = nStartRowIndex; nRow <= nEndRowIndex; nRow++)
+        aNewArray[nRow - nStartRowIndex][nCol] = m_aData[nRow][nColIndex];
     }
     return aNewMatrix;
   }
@@ -520,20 +499,13 @@ public class Matrix implements Serializable, ICloneable <Matrix>
   {
     final Matrix aNewMatrix = new Matrix (aRows.length, nEndColumnIndex - nStartColumnIndex + 1);
     final double [][] aNewArray = aNewMatrix.internalGetArray ();
-    try
+    for (int nRow = 0; nRow < aRows.length; nRow++)
     {
-      for (int nRow = 0; nRow < aRows.length; nRow++)
-      {
-        final int nRowIndex = aRows[nRow];
-        final double [] aSrcRow = m_aData[nRowIndex];
-        final double [] aDstRow = aNewArray[nRow];
-        for (int nCol = nStartColumnIndex; nCol <= nEndColumnIndex; nCol++)
-          aDstRow[nCol - nStartColumnIndex] = aSrcRow[nCol];
-      }
-    }
-    catch (final ArrayIndexOutOfBoundsException e)
-    {
-      throw new ArrayIndexOutOfBoundsException ("Submatrix indices");
+      final int nRowIndex = aRows[nRow];
+      final double [] aSrcRow = m_aData[nRowIndex];
+      final double [] aDstRow = aNewArray[nRow];
+      for (int nCol = nStartColumnIndex; nCol <= nEndColumnIndex; nCol++)
+        aDstRow[nCol - nStartColumnIndex] = aSrcRow[nCol];
     }
     return aNewMatrix;
   }
@@ -577,18 +549,11 @@ public class Matrix implements Serializable, ICloneable <Matrix>
                          @Nonnegative final int nEndColumnIndex,
                          @Nonnull final Matrix aMatrix)
   {
-    try
+    for (int nRow = nStartRowIndex; nRow <= nEndRowIndex; nRow++)
     {
-      for (int nRow = nStartRowIndex; nRow <= nEndRowIndex; nRow++)
-      {
-        final double [] aRow = m_aData[nRow];
-        for (int nCol = nStartColumnIndex; nCol <= nEndColumnIndex; nCol++)
-          aRow[nCol] = aMatrix.get (nRow - nStartRowIndex, nCol - nStartColumnIndex);
-      }
-    }
-    catch (final ArrayIndexOutOfBoundsException e)
-    {
-      throw new ArrayIndexOutOfBoundsException ("Submatrix indices");
+      final double [] aRow = m_aData[nRow];
+      for (int nCol = nStartColumnIndex; nCol <= nEndColumnIndex; nCol++)
+        aRow[nCol] = aMatrix.get (nRow - nStartRowIndex, nCol - nStartColumnIndex);
     }
   }
 
@@ -606,19 +571,12 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    */
   public void setMatrix (@Nonnull final int [] aRows, @Nonnull final int [] aCols, @Nonnull final Matrix aMatrix)
   {
-    try
+    for (int nRow = 0; nRow < aRows.length; nRow++)
     {
-      for (int nRow = 0; nRow < aRows.length; nRow++)
-      {
-        final int nRowIndex = aRows[nRow];
-        final double [] aRow = m_aData[nRowIndex];
-        for (int nCol = 0; nCol < aCols.length; nCol++)
-          aRow[aCols[nCol]] = aMatrix.get (nRow, nCol);
-      }
-    }
-    catch (final ArrayIndexOutOfBoundsException e)
-    {
-      throw new ArrayIndexOutOfBoundsException ("Submatrix indices");
+      final int nRowIndex = aRows[nRow];
+      final double [] aRow = m_aData[nRowIndex];
+      for (int nCol = 0; nCol < aCols.length; nCol++)
+        aRow[aCols[nCol]] = aMatrix.get (nRow, nCol);
     }
   }
 
@@ -641,19 +599,12 @@ public class Matrix implements Serializable, ICloneable <Matrix>
                          @Nonnegative final int nEndColumnIndex,
                          @Nonnull final Matrix aMatrix)
   {
-    try
+    for (int nRow = 0; nRow < aRows.length; nRow++)
     {
-      for (int nRow = 0; nRow < aRows.length; nRow++)
-      {
-        final int nRowIndex = aRows[nRow];
-        final double [] aRow = m_aData[nRowIndex];
-        for (int nCol = nStartColumnIndex; nCol <= nEndColumnIndex; nCol++)
-          aRow[nCol] = aMatrix.get (nRow, nCol - nStartColumnIndex);
-      }
-    }
-    catch (final ArrayIndexOutOfBoundsException e)
-    {
-      throw new ArrayIndexOutOfBoundsException ("Submatrix indices");
+      final int nRowIndex = aRows[nRow];
+      final double [] aRow = m_aData[nRowIndex];
+      for (int nCol = nStartColumnIndex; nCol <= nEndColumnIndex; nCol++)
+        aRow[nCol] = aMatrix.get (nRow, nCol - nStartColumnIndex);
     }
   }
 
@@ -676,18 +627,14 @@ public class Matrix implements Serializable, ICloneable <Matrix>
                          @Nonnull final int [] aCols,
                          @Nonnull final Matrix aMatrix)
   {
-    try
+    for (int nRow = nStartRowIndex; nRow <= nEndRowIndex; nRow++)
     {
+      final double [] aRow = m_aData[nRow];
       for (int nCol = 0; nCol < aCols.length; nCol++)
       {
         final int nColIndex = aCols[nCol];
-        for (int nRow = nStartRowIndex; nRow <= nEndRowIndex; nRow++)
-          m_aData[nRow][nColIndex] = aMatrix.get (nRow - nStartRowIndex, nCol);
+        aRow[nColIndex] = aMatrix.get (nRow - nStartRowIndex, nCol);
       }
-    }
-    catch (final ArrayIndexOutOfBoundsException e)
-    {
-      throw new ArrayIndexOutOfBoundsException ("Submatrix indices");
     }
   }
 
