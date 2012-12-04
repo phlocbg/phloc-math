@@ -135,7 +135,7 @@ public class TestMatrix
      * random(int,int) identity(int)
      **/
 
-    print ("\nTesting constructors and constructor-like methods...\n");
+    _print ("\nTesting constructors and constructor-like methods...\n");
     try
     {
       /**
@@ -229,7 +229,7 @@ public class TestMatrix
      * setMatrix(int[],int,int,Matrix) setMatrix(int[],int[],Matrix)
      **/
 
-    print ("\nTesting access methods...\n");
+    _print ("\nTesting access methods...\n");
 
     /**
      * Various get methods:
@@ -761,7 +761,7 @@ public class TestMatrix
      * arrayTimesEquals uminus
      **/
 
-    print ("\nTesting array-like methods...\n");
+    _print ("\nTesting array-like methods...\n");
     S = new Matrix (columnwise, nonconformld);
     R = Matrix.random (A.getRowDimension (), A.getColumnDimension ());
     A = R;
@@ -985,7 +985,7 @@ public class TestMatrix
     /**
      * I/O methods: read print serializable: writeObject readObject
      **/
-    print ("\nTesting I/O methods...\n");
+    _print ("\nTesting I/O methods...\n");
     try
     {
       final DecimalFormat fmt = new DecimalFormat ("0.0000E00");
@@ -1097,7 +1097,7 @@ public class TestMatrix
      * solve solveTranspose inverse chol eig lu qr svd
      **/
 
-    print ("\nTesting linear algebra methods...\n");
+    _print ("\nTesting linear algebra methods...\n");
     A = new Matrix (columnwise, 3);
     T = new Matrix (tvals);
     T = A.transpose ();
@@ -1318,7 +1318,7 @@ public class TestMatrix
 
     try
     {
-      print ("\nTesting Eigenvalue; If this hangs, we've failed\n");
+      _print ("\nTesting Eigenvalue; If this hangs, we've failed\n");
       final Matrix bA = new Matrix (badeigs);
       final EigenvalueDecomposition bEig = bA.eig ();
       assertNotNull (bEig);
@@ -1329,9 +1329,9 @@ public class TestMatrix
       errorCount = _try_failure (errorCount, "EigenvalueDecomposition (hang)...", "incorrect termination");
     }
 
-    print ("\nTestMatrix completed.\n");
-    print ("Total errors reported: " + errorCount + "\n");
-    print ("Total warnings reported: " + warningCount + "\n");
+    _print ("\nTestMatrix completed.\n");
+    _print ("Total errors reported: " + errorCount + "\n");
+    _print ("Total warnings reported: " + warningCount + "\n");
 
     assertEquals (0, errorCount);
     assertEquals (0, warningCount);
@@ -1396,7 +1396,7 @@ public class TestMatrix
 
   /** Shorten spelling of print. **/
 
-  private static void print (final String s)
+  private static void _print (final String s)
   {
     System.out.print (s);
   }
@@ -1405,16 +1405,16 @@ public class TestMatrix
 
   private static void _try_success (final String s, final String e)
   {
-    print (">    " + s + "success\n");
+    _print (">    " + s + "success\n");
     if (StringHelper.hasText (e))
-      print (">      Message: " + e + "\n");
+      _print (">      Message: " + e + "\n");
   }
 
   /** Print appropriate messages for unsuccessful outcome try **/
 
   private static int _try_failure (final int count, final String s, final String e)
   {
-    print (">    " + s + "*** failure ***\n>      Message: " + e + "\n");
+    _print (">    " + s + "*** failure ***\n>      Message: " + e + "\n");
     return count + 1;
   }
 
@@ -1422,7 +1422,7 @@ public class TestMatrix
 
   private static int _try_warning (final int count, final String s, final String e)
   {
-    print (">    " + s + "*** warning ***\n>      Message: " + e + "\n");
+    _print (">    " + s + "*** warning ***\n>      Message: " + e + "\n");
     return count + 1;
   }
 
@@ -1434,6 +1434,6 @@ public class TestMatrix
     // Use format Fw.d for all elements.
     System.out.print ("\n");
     new Matrix (x, 1).print (w, d);
-    print ("\n");
+    _print ("\n");
   }
 }
