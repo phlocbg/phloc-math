@@ -70,6 +70,8 @@ import com.phloc.commons.io.file.FileOperations;
  **/
 public class TestMatrix
 {
+  private static final String FILENAME_JAMA_TEST_MATRIX_OUT = "Jamaout";
+
   @Test
   public void testMain ()
   {
@@ -246,7 +248,7 @@ public class TestMatrix
       try_success ("getColumnDimension... ", "");
     }
     B = new Matrix (avals);
-    double [][] barray = B.getArray ();
+    double [][] barray = B.internalGetArray ();
     if (barray != avals)
     {
       errorCount = try_failure (errorCount, "getArray... ", "");
@@ -970,10 +972,10 @@ public class TestMatrix
       final DecimalFormat fmt = new DecimalFormat ("0.0000E00");
       fmt.setDecimalFormatSymbols (new DecimalFormatSymbols (Locale.US));
 
-      final PrintWriter FILE = new PrintWriter (new FileOutputStream ("JamaTestMatrix.out"));
-      A.print (FILE, fmt, 10);
-      FILE.close ();
-      final BufferedReader aReader = new BufferedReader (new FileReader ("JamaTestMatrix.out"));
+      final PrintWriter aPW = new PrintWriter (new FileOutputStream (FILENAME_JAMA_TEST_MATRIX_OUT));
+      A.print (aPW, fmt, 10);
+      aPW.close ();
+      final BufferedReader aReader = new BufferedReader (new FileReader (FILENAME_JAMA_TEST_MATRIX_OUT));
       R = Matrix.read (aReader);
       aReader.close ();
       if (A.minus (R).norm1 () < .001)
@@ -1002,10 +1004,10 @@ public class TestMatrix
                                     "print()/read()...",
                                     "Formatting error... will try JDK1.1 reformulation...");
         final DecimalFormat fmt = new DecimalFormat ("0.0000");
-        final PrintWriter FILE = new PrintWriter (new FileOutputStream ("JamaTestMatrix.out"));
+        final PrintWriter FILE = new PrintWriter (new FileOutputStream (FILENAME_JAMA_TEST_MATRIX_OUT));
         A.print (FILE, fmt, 10);
         FILE.close ();
-        final BufferedReader aReader = new BufferedReader (new FileReader ("JamaTestMatrix.out"));
+        final BufferedReader aReader = new BufferedReader (new FileReader (FILENAME_JAMA_TEST_MATRIX_OUT));
         R = Matrix.read (aReader);
         aReader.close ();
         if (A.minus (R).norm1 () < .001)
@@ -1028,7 +1030,7 @@ public class TestMatrix
     }
     finally
     {
-      FileOperations.deleteFile (new File ("JamaTestMatrix.out"));
+      FileOperations.deleteFile (new File (FILENAME_JAMA_TEST_MATRIX_OUT));
     }
 
     R = Matrix.random (A.getRowDimension (), A.getColumnDimension ());

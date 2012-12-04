@@ -20,6 +20,7 @@ package com.phloc.math.matrix;
 import java.io.Serializable;
 import java.util.Arrays;
 
+import com.phloc.commons.equals.EqualsUtils;
 import com.phloc.commons.math.MathHelper;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -1048,7 +1049,7 @@ public class EigenvalueDecomposition implements Serializable
    */
   public EigenvalueDecomposition (final Matrix Arg)
   {
-    final double [][] A = Arg.getArray ();
+    final double [][] A = Arg.internalGetArray ();
     m_nDim = Arg.getColumnDimension ();
     m_aEigenVector = new double [m_nDim] [m_nDim];
     m_aEVd = new double [m_nDim];
@@ -1057,7 +1058,7 @@ public class EigenvalueDecomposition implements Serializable
     m_bIsSymmetric = true;
     for (int j = 0; j < m_nDim; j++)
       for (int i = 0; i < m_nDim; i++)
-        if (A[i][j] != A[j][i])
+        if (!EqualsUtils.equals (A[i][j], A[j][i]))
         {
           m_bIsSymmetric = false;
           break;
@@ -1138,7 +1139,7 @@ public class EigenvalueDecomposition implements Serializable
   public Matrix getD ()
   {
     final Matrix X = new Matrix (m_nDim, m_nDim);
-    final double [][] D = X.getArray ();
+    final double [][] D = X.internalGetArray ();
     for (int i = 0; i < m_nDim; i++)
     {
       Arrays.fill (D[i], 0.0);

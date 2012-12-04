@@ -562,7 +562,7 @@ public class SingularValueDecomposition implements Serializable
   public Matrix getS ()
   {
     final Matrix X = new Matrix (m_nCols, m_nCols);
-    final double [][] S = X.getArray ();
+    final double [][] S = X.internalGetArray ();
     for (int i = 0; i < m_nCols; i++)
     {
       Arrays.fill (S[i], 0.0);

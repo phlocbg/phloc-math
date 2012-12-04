@@ -19,6 +19,10 @@ package com.phloc.math.matrix;
 
 import java.io.Serializable;
 
+import javax.annotation.Nonnull;
+
+import com.phloc.commons.equals.EqualsUtils;
+
 /**
  * Cholesky Decomposition.
  * <P>
@@ -29,7 +33,6 @@ import java.io.Serializable;
  * a partial decomposition and sets an internal flag that may be queried by the
  * isSPD() method.
  */
-
 public class CholeskyDecomposition implements Serializable
 {
   /**
@@ -53,25 +56,20 @@ public class CholeskyDecomposition implements Serializable
    */
   private boolean m_bIsSPD;
 
-  /*
-   * ------------------------ Constructor ------------------------
-   */
-
   /**
    * Cholesky algorithm for symmetric and positive definite matrix. Structure to
    * access L and isspd flag.
    * 
-   * @param Arg
+   * @param aMatrix
    *        Square, symmetric matrix.
    */
-
-  public CholeskyDecomposition (final Matrix Arg)
+  public CholeskyDecomposition (@Nonnull final Matrix aMatrix)
   {
     // Initialize.
-    final double [][] A = Arg.getArray ();
-    m_nDim = Arg.getRowDimension ();
+    final double [][] A = aMatrix.internalGetArray ();
+    m_nDim = aMatrix.getRowDimension ();
     m_aData = new double [m_nDim] [m_nDim];
-    m_bIsSPD = (Arg.getColumnDimension () == m_nDim);
+    m_bIsSPD = (aMatrix.getColumnDimension () == m_nDim);
     // Main loop.
     for (int j = 0; j < m_nDim; j++)
     {
@@ -87,7 +85,7 @@ public class CholeskyDecomposition implements Serializable
         }
         Lrowj[k] = s = (A[j][k] - s) / m_aData[k][k];
         d = d + s * s;
-        m_bIsSPD = m_bIsSPD && (A[k][j] == A[j][k]);
+        m_bIsSPD = m_bIsSPD && EqualsUtils.equals (A[k][j], A[j][k]);
       }
       d = A[j][j] - d;
       m_bIsSPD = m_bIsSPD && (d > 0.0);
@@ -136,7 +134,6 @@ public class CholeskyDecomposition implements Serializable
    * 
    * @return true if A is symmetric and positive definite.
    */
-
   public boolean isSPD ()
   {
     return m_bIsSPD;
@@ -147,7 +144,6 @@ public class CholeskyDecomposition implements Serializable
    * 
    * @return L
    */
-
   public Matrix getL ()
   {
     return new Matrix (m_aData, m_nDim, m_nDim);
@@ -164,17 +160,13 @@ public class CholeskyDecomposition implements Serializable
    * @exception RuntimeException
    *            Matrix is not symmetric positive definite.
    */
-
-  public Matrix solve (final Matrix B)
+  @Nonnull
+  public Matrix solve (@Nonnull final Matrix B)
   {
     if (B.getRowDimension () != m_nDim)
-    {
       throw new IllegalArgumentException ("Matrix row dimensions must agree.");
-    }
     if (!m_bIsSPD)
-    {
       throw new RuntimeException ("Matrix is not symmetric positive definite.");
-    }
 
     // Copy right hand side.
     final double [][] X = B.getArrayCopy ();
@@ -208,7 +200,4 @@ public class CholeskyDecomposition implements Serializable
 
     return new Matrix (X, m_nDim, nx);
   }
-
-  private static final long serialVersionUID = 1;
-
 }

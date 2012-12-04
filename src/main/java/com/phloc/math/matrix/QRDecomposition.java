@@ -148,7 +148,7 @@ public class QRDecomposition implements java.io.Serializable
   public Matrix getH ()
   {
     final Matrix X = new Matrix (m_nRows, m_nCols);
-    final double [][] H = X.getArray ();
+    final double [][] H = X.internalGetArray ();
     for (int i = 0; i < m_nRows; i++)
     {
       for (int j = 0; j < m_nCols; j++)
@@ -171,7 +171,7 @@ public class QRDecomposition implements java.io.Serializable
   public Matrix getR ()
   {
     final Matrix X = new Matrix (m_nCols, m_nCols);
-    final double [][] R = X.getArray ();
+    final double [][] R = X.internalGetArray ();
     for (int i = 0; i < m_nCols; i++)
     {
       for (int j = 0; j < m_nCols; j++)
@@ -197,7 +197,7 @@ public class QRDecomposition implements java.io.Serializable
   public Matrix getQ ()
   {
     final Matrix X = new Matrix (m_nRows, m_nCols);
-    final double [][] Q = X.getArray ();
+    final double [][] Q = X.internalGetArray ();
     for (int k = m_nCols - 1; k >= 0; k--)
     {
       for (int i = 0; i < m_nRows; i++)
