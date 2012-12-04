@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.phloc.commons.annotations.ReturnsMutableCopy;
+import com.phloc.math.matrix.Matrix;
 
 /**
  * Base interface for a read-only graph.
@@ -104,4 +105,14 @@ public interface IReadonlyBaseGraph <N extends IBaseGraphNode <N, R>, R extends 
    *         <code>false</code> if not.
    */
   boolean isSelfContained ();
+
+  /**
+   * @return A new incidence matrix (Symmetric matrix where 1/-1 is set if a
+   *         relation is present, 0 if no relation is present; Number of rows
+   *         and columns is equal to the number of nodes).
+   * @throws IllegalArgumentException
+   *         If this graph contains no node
+   */
+  @Nonnull
+  Matrix createIncidenceMatrix ();
 }

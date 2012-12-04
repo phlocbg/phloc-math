@@ -27,6 +27,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
@@ -36,7 +37,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.WillNotClose;
 
 import com.phloc.commons.ICloneable;
+import com.phloc.commons.hash.HashCodeGenerator;
 import com.phloc.commons.math.MathHelper;
+import com.phloc.commons.string.StringHelper;
 import com.phloc.commons.system.SystemHelper;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -124,6 +127,10 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    */
   public Matrix (@Nonnegative final int nRows, @Nonnegative final int nCols)
   {
+    if (nRows <= 0)
+      throw new IllegalArgumentException ("rows may not be negative!");
+    if (nCols <= 0)
+      throw new IllegalArgumentException ("cols may not be negative!");
     m_nRows = nRows;
     m_nCols = nCols;
     m_aData = new double [nRows] [nCols];
@@ -139,7 +146,6 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * @param dValue
    *        Fill the matrix with this scalar value.
    */
-
   public Matrix (@Nonnegative final int nRows, @Nonnegative final int nCols, final double dValue)
   {
     if (nRows <= 0)
@@ -149,9 +155,8 @@ public class Matrix implements Serializable, ICloneable <Matrix>
     m_nRows = nRows;
     m_nCols = nCols;
     m_aData = new double [nRows] [nCols];
-    for (int i = 0; i < nRows; i++)
-      for (int j = 0; j < nCols; j++)
-        m_aData[i][j] = dValue;
+    for (int nRow = 0; nRow < nRows; nRow++)
+      Arrays.fill (m_aData[nRow], 0);
   }
 
   /**
@@ -168,11 +173,15 @@ public class Matrix implements Serializable, ICloneable <Matrix>
   {
     if (aOther == null)
       throw new NullPointerException ("other");
+    if (aOther.length <= 0)
+      throw new IllegalArgumentException ("rows may not be negative!");
+    if (aOther[0].length <= 0)
+      throw new IllegalArgumentException ("cols may not be negative!");
 
     m_nRows = aOther.length;
     m_nCols = aOther[0].length;
-    for (int i = 0; i < m_nRows; i++)
-      if (aOther[i].length != m_nCols)
+    for (int nRow = 0; nRow < m_nRows; nRow++)
+      if (aOther[nRow].length != m_nCols)
         throw new IllegalArgumentException ("All rows must have the same length.");
     m_aData = aOther;
   }
@@ -181,7 +190,7 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * Construct a matrix quickly without checking arguments.
    * 
    * @param aOther
-   *        Two-dimensional array of doubles.
+   *        Two-dimensional array of doubles. Is directly reused!
    * @param nRows
    *        Number of rows.
    * @param nCols
@@ -198,8 +207,8 @@ public class Matrix implements Serializable, ICloneable <Matrix>
       throw new IllegalArgumentException ("cols may not be negative!");
     if (aOther.length < nRows)
       throw new IllegalArgumentException ("array is too short");
-    for (int i = 0; i < nRows; i++)
-      if (aOther[i].length < nCols)
+    for (int nRow = 0; nRow < nRows; nRow++)
+      if (aOther[nRow].length < nCols)
         throw new IllegalArgumentException ("All rows must have the same length.");
 
     m_aData = aOther;
@@ -225,9 +234,9 @@ public class Matrix implements Serializable, ICloneable <Matrix>
       throw new IllegalArgumentException ("Array length must be a multiple of nRows.");
 
     m_aData = new double [nRows] [m_nCols];
-    for (int i = 0; i < nRows; i++)
-      for (int j = 0; j < m_nCols; j++)
-        m_aData[i][j] = aVals[i + j * nRows];
+    for (int nRow = 0; nRow < nRows; nRow++)
+      for (int nCol = 0; nCol < m_nCols; nCol++)
+        m_aData[nRow][nCol] = aVals[nRow + nCol * nRows];
   }
 
   /*
@@ -249,12 +258,12 @@ public class Matrix implements Serializable, ICloneable <Matrix>
     final int nCols = A[0].length;
     final Matrix X = new Matrix (nRows, nCols);
     final double [][] C = X.getArray ();
-    for (int i = 0; i < nRows; i++)
+    for (int nRow = 0; nRow < nRows; nRow++)
     {
-      if (A[i].length != nCols)
+      if (A[nRow].length != nCols)
         throw new IllegalArgumentException ("All rows must have the same length.");
-      for (int j = 0; j < nCols; j++)
-        C[i][j] = A[i][j];
+      for (int nCol = 0; nCol < nCols; nCol++)
+        C[nRow][nCol] = A[nRow][nCol];
     }
     return X;
   }
@@ -267,10 +276,10 @@ public class Matrix implements Serializable, ICloneable <Matrix>
   {
     final Matrix X = new Matrix (m_nRows, m_nCols);
     final double [][] C = X.m_aData;
-    for (int i = 0; i < m_nRows; i++)
+    for (int nRow = 0; nRow < m_nRows; nRow++)
     {
-      final double [] aCol = m_aData[i];
-      System.arraycopy (aCol, 0, C[i], 0, aCol.length);
+      final double [] aCol = m_aData[nRow];
+      System.arraycopy (aCol, 0, C[nRow], 0, aCol.length);
     }
     return X;
   }
@@ -281,6 +290,7 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * @return Pointer to the two-dimensional array of matrix elements.
    */
   @SuppressFBWarnings ("EI_EXPOSE_REP")
+  @Nonnull
   double [][] getArray ()
   {
     return m_aData;
@@ -291,17 +301,13 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * 
    * @return Two-dimensional array copy of matrix elements.
    */
-
+  @Nonnull
   public double [][] getArrayCopy ()
   {
     final double [][] C = new double [m_nRows] [m_nCols];
-    for (int i = 0; i < m_nRows; i++)
-    {
-      for (int j = 0; j < m_nCols; j++)
-      {
-        C[i][j] = m_aData[i][j];
-      }
-    }
+    for (int nRow = 0; nRow < m_nRows; nRow++)
+      for (int nCol = 0; nCol < m_nCols; nCol++)
+        C[nRow][nCol] = m_aData[nRow][nCol];
     return C;
   }
 
@@ -314,11 +320,11 @@ public class Matrix implements Serializable, ICloneable <Matrix>
   public double [] getColumnPackedCopy ()
   {
     final double [] vals = new double [m_nRows * m_nCols];
-    for (int j = 0; j < m_nCols; j++)
+    for (int nCol = 0; nCol < m_nCols; nCol++)
     {
-      final int nRowIndex = j * m_nRows;
-      for (int i = 0; i < m_nRows; i++)
-        vals[i + nRowIndex] = m_aData[i][j];
+      final int nRowIndex = nCol * m_nRows;
+      for (int nRow = 0; nRow < m_nRows; nRow++)
+        vals[nRow + nRowIndex] = m_aData[nRow][nCol];
     }
     return vals;
   }
@@ -332,9 +338,9 @@ public class Matrix implements Serializable, ICloneable <Matrix>
   public double [] getRowPackedCopy ()
   {
     final double [] vals = new double [m_nRows * m_nCols];
-    for (int i = 0; i < m_nRows; i++)
-      for (int j = 0; j < m_nCols; j++)
-        vals[i * m_nCols + j] = m_aData[i][j];
+    for (int nRow = 0; nRow < m_nRows; nRow++)
+      for (int nCol = 0; nCol < m_nCols; nCol++)
+        vals[nRow * m_nCols + nCol] = m_aData[nRow][nCol];
     return vals;
   }
 
@@ -363,16 +369,16 @@ public class Matrix implements Serializable, ICloneable <Matrix>
   /**
    * Get a single element.
    * 
-   * @param i
+   * @param nRow
    *        Row index.
-   * @param j
+   * @param nCol
    *        Column index.
-   * @return A(i,j)
+   * @return A(nRow,nCol)
    * @exception ArrayIndexOutOfBoundsException
    */
-  public double get (@Nonnegative final int i, @Nonnegative final int j)
+  public double get (@Nonnegative final int nRow, @Nonnegative final int nCol)
   {
-    return m_aData[i][j];
+    return m_aData[nRow][nCol];
   }
 
   /**
@@ -390,18 +396,19 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * @exception ArrayIndexOutOfBoundsException
    *            Submatrix indices
    */
-  public Matrix getMatrix (final int nStartRowIndex,
-                           final int nEndRowIndex,
-                           final int nStartColumnIndex,
-                           final int nEndColumnIndex)
+  @Nonnull
+  public Matrix getMatrix (@Nonnegative final int nStartRowIndex,
+                           @Nonnegative final int nEndRowIndex,
+                           @Nonnegative final int nStartColumnIndex,
+                           @Nonnegative final int nEndColumnIndex)
   {
     final Matrix X = new Matrix (nEndRowIndex - nStartRowIndex + 1, nEndColumnIndex - nStartColumnIndex + 1);
     final double [][] B = X.getArray ();
     try
     {
-      for (int i = nStartRowIndex; i <= nEndRowIndex; i++)
-        for (int j = nStartColumnIndex; j <= nEndColumnIndex; j++)
-          B[i - nStartRowIndex][j - nStartColumnIndex] = m_aData[i][j];
+      for (int nRow = nStartRowIndex; nRow <= nEndRowIndex; nRow++)
+        for (int nCol = nStartColumnIndex; nCol <= nEndColumnIndex; nCol++)
+          B[nRow - nStartRowIndex][nCol - nStartColumnIndex] = m_aData[nRow][nCol];
     }
     catch (final ArrayIndexOutOfBoundsException e)
     {
@@ -422,17 +429,17 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    *            Submatrix indices
    */
   @Nonnull
-  public Matrix getMatrix (final int [] aRows, final int [] aCols)
+  public Matrix getMatrix (@Nonnull final int [] aRows, @Nonnull final int [] aCols)
   {
     final Matrix X = new Matrix (aRows.length, aCols.length);
     final double [][] B = X.getArray ();
     try
     {
-      for (int i = 0; i < aRows.length; i++)
+      for (int nRow = 0; nRow < aRows.length; nRow++)
       {
-        final int nRowIndex = aRows[i];
-        for (int j = 0; j < aCols.length; j++)
-          B[i][j] = m_aData[nRowIndex][aCols[j]];
+        final int nRowIndex = aRows[nRow];
+        for (int nCol = 0; nCol < aCols.length; nCol++)
+          B[nRow][nCol] = m_aData[nRowIndex][aCols[nCol]];
       }
     }
     catch (final ArrayIndexOutOfBoundsException e)
@@ -456,17 +463,19 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    *            Submatrix indices
    */
   @Nonnull
-  public Matrix getMatrix (final int nStartRowIndex, final int nEndRowIndex, final int [] aCols)
+  public Matrix getMatrix (@Nonnegative final int nStartRowIndex,
+                           @Nonnegative final int nEndRowIndex,
+                           @Nonnull final int [] aCols)
   {
     final Matrix X = new Matrix (nEndRowIndex - nStartRowIndex + 1, aCols.length);
     final double [][] B = X.getArray ();
     try
     {
-      for (int j = 0; j < aCols.length; j++)
+      for (int nCol = 0; nCol < aCols.length; nCol++)
       {
-        final int nColIndex = aCols[j];
-        for (int i = nStartRowIndex; i <= nEndRowIndex; i++)
-          B[i - nStartRowIndex][j] = m_aData[i][nColIndex];
+        final int nColIndex = aCols[nCol];
+        for (int nRow = nStartRowIndex; nRow <= nEndRowIndex; nRow++)
+          B[nRow - nStartRowIndex][nCol] = m_aData[nRow][nColIndex];
       }
     }
     catch (final ArrayIndexOutOfBoundsException e)
@@ -498,11 +507,11 @@ public class Matrix implements Serializable, ICloneable <Matrix>
     final double [][] B = X.getArray ();
     try
     {
-      for (int i = 0; i < aRows.length; i++)
+      for (int nRow = 0; nRow < aRows.length; nRow++)
       {
-        final int nRowIndex = aRows[i];
-        for (int j = nStartColumnIndex; j <= nEndColumnIndex; j++)
-          B[i][j - nStartColumnIndex] = m_aData[nRowIndex][j];
+        final int nRowIndex = aRows[nRow];
+        for (int nCol = nStartColumnIndex; nCol <= nEndColumnIndex; nCol++)
+          B[nRow][nCol - nStartColumnIndex] = m_aData[nRowIndex][nCol];
       }
     }
     catch (final ArrayIndexOutOfBoundsException e)
@@ -515,17 +524,17 @@ public class Matrix implements Serializable, ICloneable <Matrix>
   /**
    * Set a single element.
    * 
-   * @param i
+   * @param nRow
    *        Row index.
-   * @param j
+   * @param nCol
    *        Column index.
-   * @param s
-   *        A(i,j).
+   * @param dValue
+   *        A(nRow,nCol).
    * @exception ArrayIndexOutOfBoundsException
    */
-  public void set (@Nonnegative final int i, @Nonnegative final int j, final double s)
+  public void set (@Nonnegative final int nRow, @Nonnegative final int nCol, final double dValue)
   {
-    m_aData[i][j] = s;
+    m_aData[nRow][nCol] = dValue;
   }
 
   /**
@@ -544,17 +553,17 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * @exception ArrayIndexOutOfBoundsException
    *            Submatrix indices
    */
-  public void setMatrix (final int nStartRowIndex,
-                         final int nEndRowIndex,
-                         final int nStartColumnIndex,
-                         final int nEndColumnIndex,
+  public void setMatrix (@Nonnegative final int nStartRowIndex,
+                         @Nonnegative final int nEndRowIndex,
+                         @Nonnegative final int nStartColumnIndex,
+                         @Nonnegative final int nEndColumnIndex,
                          @Nonnull final Matrix X)
   {
     try
     {
-      for (int i = nStartRowIndex; i <= nEndRowIndex; i++)
-        for (int j = nStartColumnIndex; j <= nEndColumnIndex; j++)
-          m_aData[i][j] = X.get (i - nStartRowIndex, j - nStartColumnIndex);
+      for (int nRow = nStartRowIndex; nRow <= nEndRowIndex; nRow++)
+        for (int nCol = nStartColumnIndex; nCol <= nEndColumnIndex; nCol++)
+          m_aData[nRow][nCol] = X.get (nRow - nStartRowIndex, nCol - nStartColumnIndex);
     }
     catch (final ArrayIndexOutOfBoundsException e)
     {
@@ -574,15 +583,15 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * @exception ArrayIndexOutOfBoundsException
    *            Submatrix indices
    */
-  public void setMatrix (final int [] aRows, final int [] aCols, final Matrix X)
+  public void setMatrix (@Nonnull final int [] aRows, @Nonnull final int [] aCols, @Nonnull final Matrix X)
   {
     try
     {
-      for (int i = 0; i < aRows.length; i++)
+      for (int nRow = 0; nRow < aRows.length; nRow++)
       {
-        final int nRowIndex = aRows[i];
-        for (int j = 0; j < aCols.length; j++)
-          m_aData[nRowIndex][aCols[j]] = X.get (i, j);
+        final int nRowIndex = aRows[nRow];
+        for (int nCol = 0; nCol < aCols.length; nCol++)
+          m_aData[nRowIndex][aCols[nCol]] = X.get (nRow, nCol);
       }
     }
     catch (final ArrayIndexOutOfBoundsException e)
@@ -606,17 +615,17 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    *            Submatrix indices
    */
   public void setMatrix (@Nonnull final int [] aRows,
-                         final int nStartColumnIndex,
-                         final int nEndColumnIndex,
-                         final Matrix X)
+                         @Nonnegative final int nStartColumnIndex,
+                         @Nonnegative final int nEndColumnIndex,
+                         @Nonnull final Matrix X)
   {
     try
     {
-      for (int i = 0; i < aRows.length; i++)
+      for (int nRow = 0; nRow < aRows.length; nRow++)
       {
-        final int nRowIndex = aRows[i];
-        for (int j = nStartColumnIndex; j <= nEndColumnIndex; j++)
-          m_aData[nRowIndex][j] = X.get (i, j - nStartColumnIndex);
+        final int nRowIndex = aRows[nRow];
+        for (int nCol = nStartColumnIndex; nCol <= nEndColumnIndex; nCol++)
+          m_aData[nRowIndex][nCol] = X.get (nRow, nCol - nStartColumnIndex);
       }
     }
     catch (final ArrayIndexOutOfBoundsException e)
@@ -639,15 +648,18 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * @exception ArrayIndexOutOfBoundsException
    *            Submatrix indices
    */
-  public void setMatrix (final int nStartRowIndex, final int nEndRowIndex, final int [] aCols, final Matrix X)
+  public void setMatrix (@Nonnegative final int nStartRowIndex,
+                         @Nonnegative final int nEndRowIndex,
+                         @Nonnull final int [] aCols,
+                         @Nonnull final Matrix X)
   {
     try
     {
-      for (int j = 0; j < aCols.length; j++)
+      for (int nCol = 0; nCol < aCols.length; nCol++)
       {
-        final int nColIndex = aCols[j];
-        for (int i = nStartRowIndex; i <= nEndRowIndex; i++)
-          m_aData[i][nColIndex] = X.get (i - nStartRowIndex, j);
+        final int nColIndex = aCols[nCol];
+        for (int nRow = nStartRowIndex; nRow <= nEndRowIndex; nRow++)
+          m_aData[nRow][nColIndex] = X.get (nRow - nStartRowIndex, nCol);
       }
     }
     catch (final ArrayIndexOutOfBoundsException e)
@@ -666,9 +678,9 @@ public class Matrix implements Serializable, ICloneable <Matrix>
   {
     final Matrix X = new Matrix (m_nCols, m_nRows);
     final double [][] C = X.getArray ();
-    for (int i = 0; i < m_nRows; i++)
-      for (int j = 0; j < m_nCols; j++)
-        C[j][i] = m_aData[i][j];
+    for (int nRow = 0; nRow < m_nRows; nRow++)
+      for (int nCol = 0; nCol < m_nCols; nCol++)
+        C[nCol][nRow] = m_aData[nRow][nCol];
     return X;
   }
 
@@ -680,11 +692,11 @@ public class Matrix implements Serializable, ICloneable <Matrix>
   public double norm1 ()
   {
     double dRet = 0;
-    for (int j = 0; j < m_nCols; j++)
+    for (int nCol = 0; nCol < m_nCols; nCol++)
     {
       double dSum = 0;
-      for (int i = 0; i < m_nRows; i++)
-        dSum += MathHelper.abs (m_aData[i][j]);
+      for (int nRow = 0; nRow < m_nRows; nRow++)
+        dSum += MathHelper.abs (m_aData[nRow][nCol]);
       dRet = Math.max (dRet, dSum);
     }
     return dRet;
@@ -708,11 +720,11 @@ public class Matrix implements Serializable, ICloneable <Matrix>
   public double normInf ()
   {
     double ret = 0;
-    for (int i = 0; i < m_nRows; i++)
+    for (int nRow = 0; nRow < m_nRows; nRow++)
     {
       double dSum = 0;
-      for (int j = 0; j < m_nCols; j++)
-        dSum += Math.abs (m_aData[i][j]);
+      for (int nCol = 0; nCol < m_nCols; nCol++)
+        dSum += Math.abs (m_aData[nRow][nCol]);
       ret = Math.max (ret, dSum);
     }
     return ret;
@@ -726,9 +738,9 @@ public class Matrix implements Serializable, ICloneable <Matrix>
   public double normF ()
   {
     double f = 0;
-    for (int i = 0; i < m_nRows; i++)
-      for (int j = 0; j < m_nCols; j++)
-        f = MathHelper.hypot (f, m_aData[i][j]);
+    for (int nRow = 0; nRow < m_nRows; nRow++)
+      for (int nCol = 0; nCol < m_nCols; nCol++)
+        f = MathHelper.hypot (f, m_aData[nRow][nCol]);
     return f;
   }
 
@@ -737,13 +749,14 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * 
    * @return -A
    */
+  @Nonnull
   public Matrix uminus ()
   {
     final Matrix X = new Matrix (m_nRows, m_nCols);
     final double [][] C = X.getArray ();
-    for (int i = 0; i < m_nRows; i++)
-      for (int j = 0; j < m_nCols; j++)
-        C[i][j] = -m_aData[i][j];
+    for (int nRow = 0; nRow < m_nRows; nRow++)
+      for (int nCol = 0; nCol < m_nCols; nCol++)
+        C[nRow][nCol] = -m_aData[nRow][nCol];
     return X;
   }
 
@@ -764,14 +777,14 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * @return A + B
    */
   @Nonnull
-  public Matrix plus (final Matrix B)
+  public Matrix plus (@Nonnull final Matrix B)
   {
     _checkMatrixDimensions (B);
     final Matrix X = new Matrix (m_nRows, m_nCols);
     final double [][] C = X.getArray ();
-    for (int i = 0; i < m_nRows; i++)
-      for (int j = 0; j < m_nCols; j++)
-        C[i][j] = m_aData[i][j] + B.m_aData[i][j];
+    for (int nRow = 0; nRow < m_nRows; nRow++)
+      for (int nCol = 0; nCol < m_nCols; nCol++)
+        C[nRow][nCol] = m_aData[nRow][nCol] + B.m_aData[nRow][nCol];
     return X;
   }
 
@@ -783,12 +796,12 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * @return A + B
    */
   @Nonnull
-  public Matrix plusEquals (final Matrix B)
+  public Matrix plusEquals (@Nonnull final Matrix B)
   {
     _checkMatrixDimensions (B);
-    for (int i = 0; i < m_nRows; i++)
-      for (int j = 0; j < m_nCols; j++)
-        m_aData[i][j] += B.m_aData[i][j];
+    for (int nRow = 0; nRow < m_nRows; nRow++)
+      for (int nCol = 0; nCol < m_nCols; nCol++)
+        m_aData[nRow][nCol] += B.m_aData[nRow][nCol];
     return this;
   }
 
@@ -800,14 +813,14 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * @return A - B
    */
   @Nonnull
-  public Matrix minus (final Matrix B)
+  public Matrix minus (@Nonnull final Matrix B)
   {
     _checkMatrixDimensions (B);
     final Matrix X = new Matrix (m_nRows, m_nCols);
     final double [][] C = X.getArray ();
-    for (int i = 0; i < m_nRows; i++)
-      for (int j = 0; j < m_nCols; j++)
-        C[i][j] = m_aData[i][j] - B.m_aData[i][j];
+    for (int nRow = 0; nRow < m_nRows; nRow++)
+      for (int nCol = 0; nCol < m_nCols; nCol++)
+        C[nRow][nCol] = m_aData[nRow][nCol] - B.m_aData[nRow][nCol];
     return X;
   }
 
@@ -819,12 +832,12 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * @return A - B
    */
   @Nonnull
-  public Matrix minusEquals (final Matrix B)
+  public Matrix minusEquals (@Nonnull final Matrix B)
   {
     _checkMatrixDimensions (B);
-    for (int i = 0; i < m_nRows; i++)
-      for (int j = 0; j < m_nCols; j++)
-        m_aData[i][j] -= B.m_aData[i][j];
+    for (int nRow = 0; nRow < m_nRows; nRow++)
+      for (int nCol = 0; nCol < m_nCols; nCol++)
+        m_aData[nRow][nCol] -= B.m_aData[nRow][nCol];
     return this;
   }
 
@@ -836,14 +849,14 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * @return A.*B
    */
   @Nonnull
-  public Matrix arrayTimes (final Matrix B)
+  public Matrix arrayTimes (@Nonnull final Matrix B)
   {
     _checkMatrixDimensions (B);
     final Matrix X = new Matrix (m_nRows, m_nCols);
     final double [][] C = X.getArray ();
-    for (int i = 0; i < m_nRows; i++)
-      for (int j = 0; j < m_nCols; j++)
-        C[i][j] = m_aData[i][j] * B.m_aData[i][j];
+    for (int nRow = 0; nRow < m_nRows; nRow++)
+      for (int nCol = 0; nCol < m_nCols; nCol++)
+        C[nRow][nCol] = m_aData[nRow][nCol] * B.m_aData[nRow][nCol];
     return X;
   }
 
@@ -855,12 +868,12 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * @return A.*B
    */
   @Nonnull
-  public Matrix arrayTimesEquals (final Matrix B)
+  public Matrix arrayTimesEquals (@Nonnull final Matrix B)
   {
     _checkMatrixDimensions (B);
-    for (int i = 0; i < m_nRows; i++)
-      for (int j = 0; j < m_nCols; j++)
-        m_aData[i][j] *= B.m_aData[i][j];
+    for (int nRow = 0; nRow < m_nRows; nRow++)
+      for (int nCol = 0; nCol < m_nCols; nCol++)
+        m_aData[nRow][nCol] *= B.m_aData[nRow][nCol];
     return this;
   }
 
@@ -872,14 +885,14 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * @return A./B
    */
   @Nonnull
-  public Matrix arrayRightDivide (final Matrix B)
+  public Matrix arrayRightDivide (@Nonnull final Matrix B)
   {
     _checkMatrixDimensions (B);
     final Matrix X = new Matrix (m_nRows, m_nCols);
     final double [][] C = X.getArray ();
-    for (int i = 0; i < m_nRows; i++)
-      for (int j = 0; j < m_nCols; j++)
-        C[i][j] = m_aData[i][j] / B.m_aData[i][j];
+    for (int nRow = 0; nRow < m_nRows; nRow++)
+      for (int nCol = 0; nCol < m_nCols; nCol++)
+        C[nRow][nCol] = m_aData[nRow][nCol] / B.m_aData[nRow][nCol];
     return X;
   }
 
@@ -891,12 +904,12 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * @return A./B
    */
   @Nonnull
-  public Matrix arrayRightDivideEquals (final Matrix B)
+  public Matrix arrayRightDivideEquals (@Nonnull final Matrix B)
   {
     _checkMatrixDimensions (B);
-    for (int i = 0; i < m_nRows; i++)
-      for (int j = 0; j < m_nCols; j++)
-        m_aData[i][j] = m_aData[i][j] / B.m_aData[i][j];
+    for (int nRow = 0; nRow < m_nRows; nRow++)
+      for (int nCol = 0; nCol < m_nCols; nCol++)
+        m_aData[nRow][nCol] = m_aData[nRow][nCol] / B.m_aData[nRow][nCol];
     return this;
   }
 
@@ -908,14 +921,14 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * @return B.\A
    */
   @Nonnull
-  public Matrix arrayLeftDivide (final Matrix B)
+  public Matrix arrayLeftDivide (@Nonnull final Matrix B)
   {
     _checkMatrixDimensions (B);
     final Matrix X = new Matrix (m_nRows, m_nCols);
     final double [][] C = X.getArray ();
-    for (int i = 0; i < m_nRows; i++)
-      for (int j = 0; j < m_nCols; j++)
-        C[i][j] = B.m_aData[i][j] / m_aData[i][j];
+    for (int nRow = 0; nRow < m_nRows; nRow++)
+      for (int nCol = 0; nCol < m_nCols; nCol++)
+        C[nRow][nCol] = B.m_aData[nRow][nCol] / m_aData[nRow][nCol];
     return X;
   }
 
@@ -926,13 +939,13 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    *        another matrix
    * @return B.\A
    */
-
-  public Matrix arrayLeftDivideEquals (final Matrix B)
+  @Nonnull
+  public Matrix arrayLeftDivideEquals (@Nonnull final Matrix B)
   {
     _checkMatrixDimensions (B);
-    for (int i = 0; i < m_nRows; i++)
-      for (int j = 0; j < m_nCols; j++)
-        m_aData[i][j] = B.m_aData[i][j] / m_aData[i][j];
+    for (int nRow = 0; nRow < m_nRows; nRow++)
+      for (int nCol = 0; nCol < m_nCols; nCol++)
+        m_aData[nRow][nCol] = B.m_aData[nRow][nCol] / m_aData[nRow][nCol];
     return this;
   }
 
@@ -948,9 +961,9 @@ public class Matrix implements Serializable, ICloneable <Matrix>
   {
     final Matrix X = new Matrix (m_nRows, m_nCols);
     final double [][] C = X.getArray ();
-    for (int i = 0; i < m_nRows; i++)
-      for (int j = 0; j < m_nCols; j++)
-        C[i][j] = s * m_aData[i][j];
+    for (int nRow = 0; nRow < m_nRows; nRow++)
+      for (int nCol = 0; nCol < m_nCols; nCol++)
+        C[nRow][nCol] = s * m_aData[nRow][nCol];
     return X;
   }
 
@@ -964,9 +977,9 @@ public class Matrix implements Serializable, ICloneable <Matrix>
   @Nonnull
   public Matrix timesEquals (final double s)
   {
-    for (int i = 0; i < m_nRows; i++)
-      for (int j = 0; j < m_nCols; j++)
-        m_aData[i][j] *= s;
+    for (int nRow = 0; nRow < m_nRows; nRow++)
+      for (int nCol = 0; nCol < m_nCols; nCol++)
+        m_aData[nRow][nCol] *= s;
     return this;
   }
 
@@ -980,7 +993,7 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    *            Matrix inner dimensions must agree.
    */
   @Nonnull
-  public Matrix times (final Matrix B)
+  public Matrix times (@Nonnull final Matrix B)
   {
     if (B.m_nRows != m_nCols)
       throw new IllegalArgumentException ("Matrix inner dimensions must agree.");
@@ -988,19 +1001,19 @@ public class Matrix implements Serializable, ICloneable <Matrix>
     final Matrix X = new Matrix (m_nRows, B.m_nCols);
     final double [][] C = X.getArray ();
     final double [] Bcolj = new double [m_nCols];
-    for (int j = 0; j < B.m_nCols; j++)
+    for (int nCol = 0; nCol < B.m_nCols; nCol++)
     {
       for (int k = 0; k < m_nCols; k++)
-        Bcolj[k] = B.m_aData[k][j];
-      for (int i = 0; i < m_nRows; i++)
+        Bcolj[k] = B.m_aData[k][nCol];
+      for (int nRow = 0; nRow < m_nRows; nRow++)
       {
-        final double [] Arowi = m_aData[i];
+        final double [] Arowi = m_aData[nRow];
         double s = 0;
         for (int k = 0; k < m_nCols; k++)
         {
           s += Arowi[k] * Bcolj[k];
         }
-        C[i][j] = s;
+        C[nRow][nCol] = s;
       }
     }
     return X;
@@ -1012,7 +1025,7 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * @return LUDecomposition
    * @see LUDecomposition
    */
-
+  @Nonnull
   public LUDecomposition lu ()
   {
     return new LUDecomposition (this);
@@ -1024,7 +1037,7 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * @return QRDecomposition
    * @see QRDecomposition
    */
-
+  @Nonnull
   public QRDecomposition qr ()
   {
     return new QRDecomposition (this);
@@ -1036,7 +1049,7 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * @return CholeskyDecomposition
    * @see CholeskyDecomposition
    */
-
+  @Nonnull
   public CholeskyDecomposition chol ()
   {
     return new CholeskyDecomposition (this);
@@ -1048,7 +1061,7 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * @return SingularValueDecomposition
    * @see SingularValueDecomposition
    */
-
+  @Nonnull
   public SingularValueDecomposition svd ()
   {
     return new SingularValueDecomposition (this);
@@ -1060,7 +1073,7 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * @return EigenvalueDecomposition
    * @see EigenvalueDecomposition
    */
-
+  @Nonnull
   public EigenvalueDecomposition eig ()
   {
     return new EigenvalueDecomposition (this);
@@ -1073,10 +1086,10 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    *        right hand side
    * @return solution if A is square, least squares solution otherwise
    */
-
-  public Matrix solve (final Matrix B)
+  @Nonnull
+  public Matrix solve (@Nonnull final Matrix B)
   {
-    return (m_nRows == m_nCols ? (new LUDecomposition (this)).solve (B) : (new QRDecomposition (this)).solve (B));
+    return m_nRows == m_nCols ? new LUDecomposition (this).solve (B) : new QRDecomposition (this).solve (B);
   }
 
   /**
@@ -1086,8 +1099,8 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    *        right hand side
    * @return solution if A is square, least squares solution otherwise.
    */
-
-  public Matrix solveTranspose (final Matrix B)
+  @Nonnull
+  public Matrix solveTranspose (@Nonnull final Matrix B)
   {
     return transpose ().solve (B.transpose ());
   }
@@ -1097,7 +1110,7 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * 
    * @return inverse(A) if A is square, pseudoinverse otherwise.
    */
-
+  @Nonnull
   public Matrix inverse ()
   {
     return solve (identity (m_nRows, m_nRows));
@@ -1108,7 +1121,6 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * 
    * @return determinant
    */
-
   public double det ()
   {
     return new LUDecomposition (this).det ();
@@ -1119,7 +1131,6 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * 
    * @return effective numerical rank, obtained from SVD.
    */
-
   public int rank ()
   {
     return new SingularValueDecomposition (this).rank ();
@@ -1130,7 +1141,6 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * 
    * @return ratio of largest to smallest singular value.
    */
-
   public double cond ()
   {
     return new SingularValueDecomposition (this).cond ();
@@ -1141,14 +1151,12 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * 
    * @return sum of the diagonal elements.
    */
-
   public double trace ()
   {
     double t = 0;
-    for (int i = 0; i < Math.min (m_nRows, m_nCols); i++)
-    {
-      t += m_aData[i][i];
-    }
+    final int nMin = Math.min (m_nRows, m_nCols);
+    for (int nRow = 0; nRow < nMin; nRow++)
+      t += m_aData[nRow][nRow];
     return t;
   }
 
@@ -1158,22 +1166,18 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * @param nRows
    *        Number of rows.
    * @param nCols
-   *        Number of colums.
+   *        Number of columns.
    * @return An nRows-by-nCols matrix with uniformly distributed random
    *         elements.
    */
-
-  public static Matrix random (final int nRows, final int nCols)
+  @Nonnull
+  public static Matrix random (@Nonnegative final int nRows, @Nonnegative final int nCols)
   {
     final Matrix A = new Matrix (nRows, nCols);
     final double [][] X = A.getArray ();
-    for (int i = 0; i < nRows; i++)
-    {
-      for (int j = 0; j < nCols; j++)
-      {
-        X[i][j] = Math.random ();
-      }
-    }
+    for (int nRow = 0; nRow < nRows; nRow++)
+      for (int nCol = 0; nCol < nCols; nCol++)
+        X[nRow][nCol] = Math.random ();
     return A;
   }
 
@@ -1183,22 +1187,18 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * @param nRows
    *        Number of rows.
    * @param nCols
-   *        Number of colums.
+   *        Number of columns.
    * @return An nRows-by-nCols matrix with ones on the diagonal and zeros
    *         elsewhere.
    */
-
-  public static Matrix identity (final int nRows, final int nCols)
+  @Nonnull
+  public static Matrix identity (@Nonnegative final int nRows, @Nonnegative final int nCols)
   {
     final Matrix A = new Matrix (nRows, nCols);
     final double [][] X = A.getArray ();
-    for (int i = 0; i < nRows; i++)
-    {
-      for (int j = 0; j < nCols; j++)
-      {
-        X[i][j] = (i == j ? 1.0 : 0.0);
-      }
-    }
+    for (int nRow = 0; nRow < nRows; nRow++)
+      for (int nCol = 0; nCol < nCols; nCol++)
+        X[nRow][nCol] = (nRow == nCol ? 1.0 : 0.0);
     return A;
   }
 
@@ -1206,37 +1206,40 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * Print the matrix to stdout. Line the elements up in columns with a
    * Fortran-like 'Fw.d' style format.
    * 
-   * @param w
+   * @param nWidth
    *        Column width.
-   * @param d
+   * @param nFractionDigits
    *        Number of digits after the decimal.
    */
-  public void print (final int w, final int d)
+  public void print (@Nonnegative final int nWidth, @Nonnegative final int nFractionDigits)
   {
-    print (new PrintWriter (new OutputStreamWriter (System.out, SystemHelper.getSystemCharset ()), true), w, d);
+    print (new PrintWriter (new OutputStreamWriter (System.out, SystemHelper.getSystemCharset ()), true),
+           nWidth,
+           nFractionDigits);
   }
 
   /**
    * Print the matrix to the output stream. Line the elements up in columns with
    * a Fortran-like 'Fw.d' style format.
    * 
-   * @param output
+   * @param aPW
    *        Output stream.
-   * @param w
+   * @param nWidth
    *        Column width.
-   * @param d
+   * @param nFractionDigits
    *        Number of digits after the decimal.
    */
-
-  public void print (final PrintWriter output, final int w, final int d)
+  public void print (@Nonnull final PrintWriter aPW,
+                     @Nonnegative final int nWidth,
+                     @Nonnegative final int nFractionDigits)
   {
     final DecimalFormat format = new DecimalFormat ();
     format.setDecimalFormatSymbols (new DecimalFormatSymbols (Locale.US));
     format.setMinimumIntegerDigits (1);
-    format.setMaximumFractionDigits (d);
-    format.setMinimumFractionDigits (d);
+    format.setMaximumFractionDigits (nFractionDigits);
+    format.setMinimumFractionDigits (nFractionDigits);
     format.setGroupingUsed (false);
-    print (output, format, w + 2);
+    print (aPW, format, nWidth + 2);
   }
 
   /**
@@ -1245,16 +1248,17 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * the matrix is to be read back in, you probably will want to use a
    * NumberFormat that is set to US Locale.
    * 
-   * @param format
+   * @param aFormat
    *        A Formatting object for individual elements.
-   * @param width
+   * @param nWidth
    *        Field width for each column.
    * @see java.text.DecimalFormat#setDecimalFormatSymbols
    */
-
-  public void print (final NumberFormat format, final int width)
+  public void print (@Nonnull final NumberFormat aFormat, @Nonnegative final int nWidth)
   {
-    print (new PrintWriter (new OutputStreamWriter (System.out, SystemHelper.getSystemCharset ()), true), format, width);
+    print (new PrintWriter (new OutputStreamWriter (System.out, SystemHelper.getSystemCharset ()), true),
+           aFormat,
+           nWidth);
   }
 
   // DecimalFormat is a little disappointing coming from Fortran or C's printf.
@@ -1268,32 +1272,57 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * Note that is the matrix is to be read back in, you probably will want to
    * use a NumberFormat that is set to US Locale.
    * 
-   * @param output
+   * @param aPW
    *        the output stream.
-   * @param format
+   * @param aFormat
    *        A formatting object to format the matrix elements
-   * @param width
+   * @param nWidth
    *        Column width.
    * @see java.text.DecimalFormat#setDecimalFormatSymbols
    */
-
-  public void print (final PrintWriter output, final NumberFormat format, final int width)
+  public void print (@Nonnull final PrintWriter aPW, @Nonnull final NumberFormat aFormat, @Nonnegative final int nWidth)
   {
-    output.println (); // start on new line.
-    for (int i = 0; i < m_nRows; i++)
+    aPW.println (); // start on new line.
+    for (int nRow = 0; nRow < m_nRows; nRow++)
     {
-      for (int j = 0; j < m_nCols; j++)
+      for (int nCol = 0; nCol < m_nCols; nCol++)
       {
-        final String s = format.format (m_aData[i][j]); // format the number
-        final int padding = Math.max (1, width - s.length ()); // At _least_ 1
-                                                               // space
-        for (int k = 0; k < padding; k++)
-          output.print (' ');
-        output.print (s);
+        // format the number
+        final String s = aFormat.format (m_aData[nRow][nCol]);
+        // At _least_ 1 space
+        final int padding = Math.max (1, nWidth - s.length ());
+        aPW.print (StringHelper.getRepeated (' ', padding));
+        aPW.print (s);
       }
-      output.println ();
+      aPW.println ();
     }
-    output.println (); // end with blank line.
+    // end with blank line.
+    aPW.println ();
+  }
+
+  @Override
+  public boolean equals (final Object o)
+  {
+    if (o == this)
+      return true;
+    if (o == null || !getClass ().equals (o.getClass ()))
+      return false;
+    final Matrix rhs = (Matrix) o;
+    if (m_nRows != rhs.m_nRows || m_nCols != rhs.m_nCols)
+      return false;
+    for (int nRow = 0; nRow < m_nRows; ++nRow)
+      if (!Arrays.equals (m_aData[nRow], rhs.m_aData[nRow]))
+        return false;
+    return true;
+  }
+
+  @Override
+  public int hashCode ()
+  {
+    final HashCodeGenerator aHC = new HashCodeGenerator (this).append (m_nRows).append (m_nCols);
+    for (int nRow = 0; nRow < m_nRows; ++nRow)
+      aHC.append (m_aData[nRow]);
+    return aHC.getHashCode ();
   }
 
   /**
@@ -1302,13 +1331,13 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * Locale). Elements are separated by whitespace, all the elements for each
    * row appear on a single line, the last row is followed by a blank line.
    * 
-   * @param input
+   * @param aReader
    *        the input stream.
    */
-
-  public static Matrix read (@WillNotClose final BufferedReader input) throws java.io.IOException
+  @Nonnull
+  public static Matrix read (@Nonnull @WillNotClose final BufferedReader aReader) throws java.io.IOException
   {
-    final StreamTokenizer tokenizer = new StreamTokenizer (input);
+    final StreamTokenizer tokenizer = new StreamTokenizer (aReader);
 
     // Although StreamTokenizer will parse numbers, it doesn't recognize
     // scientific notation (E or D); however, Double.valueOf does.
@@ -1334,9 +1363,9 @@ public class Matrix implements Serializable, ICloneable <Matrix>
 
     final int nCols = vD.size (); // Now we've got the number of columns!
     double row[] = new double [nCols];
-    for (int j = 0; j < nCols; j++)
+    for (int nCol = 0; nCol < nCols; nCol++)
       // extract the elements of the 1st row.
-      row[j] = vD.get (j).doubleValue ();
+      row[nCol] = vD.get (nCol).doubleValue ();
     final Vector <double []> v = new Vector <double []> ();
     v.add (row); // Start storing rows instead of columns.
     while (tokenizer.nextToken () == StreamTokenizer.TT_WORD)
@@ -1344,14 +1373,14 @@ public class Matrix implements Serializable, ICloneable <Matrix>
       // While non-empty lines
       row = new double [nCols];
       v.add (row);
-      int j = 0;
+      int nCol = 0;
       do
       {
-        if (j >= nCols)
+        if (nCol >= nCols)
           throw new IOException ("Row " + v.size () + " is too long.");
-        row[j++] = Double.valueOf (tokenizer.sval).doubleValue ();
+        row[nCol++] = Double.valueOf (tokenizer.sval).doubleValue ();
       } while (tokenizer.nextToken () == StreamTokenizer.TT_WORD);
-      if (j < nCols)
+      if (nCol < nCols)
         throw new IOException ("Row " + v.size () + " is too short.");
     }
     final int nRows = v.size (); // Now we've got the number of rows.

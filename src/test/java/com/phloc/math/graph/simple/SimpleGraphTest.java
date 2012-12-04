@@ -31,8 +31,7 @@ import com.phloc.math.graph.AbstractGraphTestCase;
 import com.phloc.math.graph.IGraphNode;
 import com.phloc.math.graph.IReadonlyGraph;
 import com.phloc.math.graph.impl.GraphNode;
-import com.phloc.math.graph.simple.ISimpleGraph;
-import com.phloc.math.graph.simple.SimpleGraph;
+import com.phloc.math.matrix.Matrix;
 
 /**
  * Test class for class {@link SimpleGraph}.
@@ -48,6 +47,15 @@ public final class SimpleGraphTest extends AbstractGraphTestCase
     assertTrue (sg.getAllNodes ().isEmpty ());
     assertTrue (sg.getAllRelations ().isEmpty ());
     assertNotNull (sg.toString ());
+
+    try
+    {
+      // No nodes
+      sg.createIncidenceMatrix ();
+      fail ();
+    }
+    catch (final IllegalArgumentException ex)
+    {}
   }
 
   @Test
@@ -85,6 +93,9 @@ public final class SimpleGraphTest extends AbstractGraphTestCase
     assertNotNull (sg.createNode ());
     assertNotNull (sg.createNode ("id4711"));
     assertNull (sg.createNode ("id4711"));
+
+    // No relations
+    assertEquals (sg.createIncidenceMatrix (), new Matrix (4, 4, 0));
   }
 
   @Test
@@ -149,6 +160,8 @@ public final class SimpleGraphTest extends AbstractGraphTestCase
     assertTrue (sg.containsCycles ());
     sg.createRelation ("6", "4");
     assertTrue (sg.containsCycles ());
+
+    sg.createIncidenceMatrix ().print (2, 0);
   }
 
   @Test

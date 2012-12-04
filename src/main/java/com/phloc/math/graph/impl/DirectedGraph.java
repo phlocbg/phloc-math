@@ -36,6 +36,7 @@ import com.phloc.math.graph.IDirectedGraphNode;
 import com.phloc.math.graph.IDirectedGraphObjectFactory;
 import com.phloc.math.graph.IDirectedGraphRelation;
 import com.phloc.math.graph.iterate.DirectedGraphIteratorForward;
+import com.phloc.math.matrix.Matrix;
 
 /**
  * A simple graph object that bidirectionally links graph nodes.
@@ -293,6 +294,26 @@ public class DirectedGraph extends AbstractBaseGraph <IDirectedGraphNode, IDirec
           return false;
     }
     return true;
+  }
+
+  @Nonnull
+  public Matrix createIncidenceMatrix ()
+  {
+    final int nNodeCount = getNodeCount ();
+    final Matrix ret = new Matrix (nNodeCount, nNodeCount, 0);
+    final IDirectedGraphNode [] aNodes = m_aNodes.values ().toArray (new IDirectedGraphNode [nNodeCount]);
+    for (int nRow = 0; nRow < nNodeCount; ++nRow)
+    {
+      final IDirectedGraphNode aNodeRow = aNodes[nRow];
+      for (int nCol = 0; nCol < nNodeCount; ++nCol)
+        if (nRow != nCol)
+          if (aNodeRow.isToNode (aNodes[nCol]))
+          {
+            ret.set (nRow, nCol, 1);
+            ret.set (nCol, nRow, -1);
+          }
+    }
+    return ret;
   }
 
   @Override
