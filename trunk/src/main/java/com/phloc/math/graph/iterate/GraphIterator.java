@@ -45,7 +45,7 @@ public final class GraphIterator implements IIterableIterator <IGraphNode>
    */
   private final Set <String> m_aHandledObjects = new HashSet <String> ();
 
-  private final Iterator <IGraphNode> m_it;
+  private final Iterator <IGraphNode> m_aIter;
 
   /**
    * Does the graph have cycles?
@@ -60,7 +60,7 @@ public final class GraphIterator implements IIterableIterator <IGraphNode>
     // Collect all nodes, depth first
     final List <IGraphNode> aList = new ArrayList <IGraphNode> ();
     _traverseDFS (aStartNode, aList);
-    m_it = aList.iterator ();
+    m_aIter = aList.iterator ();
   }
 
   private void _traverseDFS (@Nonnull final IGraphNode aStartNode, @Nonnull final List <IGraphNode> aList)
@@ -88,13 +88,13 @@ public final class GraphIterator implements IIterableIterator <IGraphNode>
 
   public boolean hasNext ()
   {
-    return m_it.hasNext ();
+    return m_aIter.hasNext ();
   }
 
   @Nullable
   public IGraphNode next ()
   {
-    return m_it.next ();
+    return m_aIter.next ();
   }
 
   /**

@@ -236,7 +236,7 @@ public class QRDecomposition implements java.io.Serializable
     if (aMatrix.getRowDimension () != m_nRows)
       throw new IllegalArgumentException ("Matrix row dimensions must agree.");
     if (!isFullRank ())
-      throw new RuntimeException ("Matrix is rank deficient.");
+      throw new IllegalStateException ("Matrix is rank deficient.");
 
     // Copy right hand side
     final int nCols = aMatrix.getColumnDimension ();

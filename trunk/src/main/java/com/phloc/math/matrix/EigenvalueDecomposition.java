@@ -23,6 +23,7 @@ import java.util.Arrays;
 import javax.annotation.Nonnull;
 
 import com.phloc.commons.annotations.ReturnsMutableCopy;
+import com.phloc.commons.annotations.ReturnsMutableObject;
 import com.phloc.commons.equals.EqualsUtils;
 import com.phloc.commons.math.MathHelper;
 
@@ -92,7 +93,7 @@ public class EigenvalueDecomposition implements Serializable
   /**
    * Symmetric Householder reduction to tridiagonal form.
    */
-  private void _tred2 ()
+  private void _symmetricTred2 ()
   {
     // This is derived from the Algol procedures tred2 by
     // Bowdler, Martin, Reinsch, and Wilkinson, Handbook for
@@ -226,7 +227,7 @@ public class EigenvalueDecomposition implements Serializable
   /**
    * Symmetric tridiagonal QL algorithm.
    */
-  private void _tql2 ()
+  private void _symmetricTql2 ()
   {
     // This is derived from the Algol procedures tql2, by
     // Bowdler, Martin, Reinsch, and Wilkinson, Handbook for
@@ -353,7 +354,7 @@ public class EigenvalueDecomposition implements Serializable
   /**
    * Nonsymmetric reduction to Hessenberg form.
    */
-  private void _orthes ()
+  private void _nonsymetricOrthes ()
   {
     // This is derived from the Algol procedures orthes and ortran,
     // by Martin and Wilkinson, Handbook for Auto. Comp.,
@@ -483,7 +484,7 @@ public class EigenvalueDecomposition implements Serializable
   /**
    * Nonsymmetric reduction from Hessenberg to real Schur form.
    */
-  private void _hqr2 ()
+  private void _nonsymetricHqr2 ()
   {
     // This is derived from the Algol procedure hqr2,
     // by Martin and Wilkinson, Handbook for Auto. Comp.,
@@ -503,7 +504,7 @@ public class EigenvalueDecomposition implements Serializable
     double norm = 0.0;
     for (int i = 0; i < nn; i++)
     {
-      if (i < low | i > high)
+      if (i < low || i > high)
       {
         m_aEVd[i] = m_aHessenBerg[i][i];
         m_aEVe[i] = 0.0;
@@ -633,7 +634,8 @@ public class EigenvalueDecomposition implements Serializable
               m_aHessenBerg[i][i] -= x;
             }
             s = Math.abs (m_aHessenBerg[n][n - 1]) + Math.abs (m_aHessenBerg[n - 1][n - 2]);
-            x = y = 0.75 * s;
+            x = 0.75 * s;
+            y = x;
             w = -0.4375 * s * s;
           }
 
@@ -653,7 +655,9 @@ public class EigenvalueDecomposition implements Serializable
                 m_aHessenBerg[i][i] -= s;
               }
               exshift += s;
-              x = y = w = 0.964;
+              x = 0.964;
+              y = x;
+              w = x;
             }
           }
 
@@ -984,62 +988,65 @@ public class EigenvalueDecomposition implements Serializable
     }
   }
 
-  /*
-   * ------------------------ Constructor ------------------------
-   */
-
   /**
    * Check for symmetry, then construct the eigenvalue decomposition Structure
    * to access D and V.
    * 
-   * @param Arg
+   * @param aMatrix
    *        Square matrix
    */
-  public EigenvalueDecomposition (final Matrix Arg)
+  public EigenvalueDecomposition (@Nonnull final Matrix aMatrix)
   {
-    final double [][] A = Arg.internalGetArray ();
-    m_nDim = Arg.getColumnDimension ();
+    final double [][] aArray = aMatrix.internalGetArray ();
+    m_nDim = aMatrix.getColumnDimension ();
     m_aEigenVector = new double [m_nDim] [m_nDim];
     m_aEVd = new double [m_nDim];
     m_aEVe = new double [m_nDim];
 
     m_bIsSymmetric = true;
-    for (int j = 0; j < m_nDim; j++)
-      for (int i = 0; i < m_nDim; i++)
-        if (!EqualsUtils.equals (A[i][j], A[j][i]))
+    for (int nRow = 0; nRow < m_nDim; nRow++)
+    {
+      final double [] aRow = aArray[nRow];
+      for (int nCol = 0; nCol < m_nDim; nCol++)
+        if (!EqualsUtils.equals (aRow[nCol], aArray[nCol][nRow]))
         {
           m_bIsSymmetric = false;
           break;
         }
+    }
 
     if (m_bIsSymmetric)
     {
-      for (int i = 0; i < m_nDim; i++)
+      for (int nRow = 0; nRow < m_nDim; nRow++)
       {
-        final double [] aRow = A[i];
-        System.arraycopy (aRow, 0, m_aEigenVector[i], 0, aRow.length);
+        final double [] aSrcRow = aArray[nRow];
+        System.arraycopy (aSrcRow, 0, m_aEigenVector[nRow], 0, aSrcRow.length);
       }
 
       // Tridiagonalize.
-      _tred2 ();
+      _symmetricTred2 ();
 
       // Diagonalize.
-      _tql2 ();
+      _symmetricTql2 ();
     }
     else
     {
       m_aHessenBerg = new double [m_nDim] [m_nDim];
       m_aOrt = new double [m_nDim];
 
-      for (int j = 0; j < m_nDim; j++)
-        for (int i = 0; i < m_nDim; i++)
-          m_aHessenBerg[i][j] = A[i][j];
+      for (int nRow = 0; nRow < m_nDim; nRow++)
+      {
+        final double [] aSrcRow = aArray[nRow];
+        final double [] aDstRow = m_aHessenBerg[nRow];
+        for (int nCol = 0; nCol < m_nDim; nCol++)
+          aDstRow[nCol] = aSrcRow[nCol];
+      }
 
       // Reduce to Hessenberg form.
-      _orthes ();
+      _nonsymetricOrthes ();
 
       // Reduce Hessenberg to real Schur form.
-      _hqr2 ();
+      _nonsymetricHqr2 ();
     }
   }
 
@@ -1048,6 +1055,8 @@ public class EigenvalueDecomposition implements Serializable
    * 
    * @return V
    */
+  @Nonnull
+  @ReturnsMutableCopy
   public Matrix getV ()
   {
     return new Matrix (m_aEigenVector, m_nDim, m_nDim);
@@ -1059,6 +1068,8 @@ public class EigenvalueDecomposition implements Serializable
    * @return real(diag(D))
    */
   @SuppressFBWarnings ("EI_EXPOSE_REP")
+  @Nonnull
+  @ReturnsMutableObject (reason = "took code as is")
   public double [] getRealEigenvalues ()
   {
     return m_aEVd;
@@ -1070,6 +1081,8 @@ public class EigenvalueDecomposition implements Serializable
    * @return imag(diag(D))
    */
   @SuppressFBWarnings ("EI_EXPOSE_REP")
+  @Nonnull
+  @ReturnsMutableObject (reason = "took code as is")
   public double [] getImagEigenvalues ()
   {
     return m_aEVe;
