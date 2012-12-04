@@ -72,25 +72,25 @@ public class CholeskyDecomposition implements Serializable
     m_aData = new double [m_nDim] [m_nDim];
     m_bIsSPD = (aMatrix.getColumnDimension () == m_nDim);
     // Main loop.
-    for (int j = 0; j < m_nDim; j++)
+    for (int nRow = 0; nRow < m_nDim; nRow++)
     {
-      final double [] aArrayJ = aArray[j];
-      final double [] aRowJ = m_aData[j];
+      final double [] aArrayJ = aArray[nRow];
+      final double [] aRowJ = m_aData[nRow];
       double d = 0.0;
-      for (int k = 0; k < j; k++)
+      for (int nCol = 0; nCol < nRow; nCol++)
       {
-        final double [] aRowK = m_aData[k];
+        final double [] aRowK = m_aData[nCol];
         double s = 0.0;
-        for (int i = 0; i < k; i++)
+        for (int i = 0; i < nCol; i++)
           s += aRowK[i] * aRowJ[i];
-        aRowJ[k] = s = (aArrayJ[k] - s) / m_aData[k][k];
+        aRowJ[nCol] = s = (aArrayJ[nCol] - s) / aRowK[nCol];
         d += s * s;
-        m_bIsSPD = m_bIsSPD && EqualsUtils.equals (aArray[k][j], aArrayJ[k]);
+        m_bIsSPD = m_bIsSPD && EqualsUtils.equals (aArray[nCol][nRow], aArrayJ[nCol]);
       }
-      d = aArrayJ[j] - d;
+      d = aArrayJ[nRow] - d;
       m_bIsSPD = m_bIsSPD && (d > 0.0);
-      aRowJ[j] = Math.sqrt (Math.max (d, 0.0));
-      for (int k = j + 1; k < m_nDim; k++)
+      aRowJ[nRow] = Math.sqrt (Math.max (d, 0.0));
+      for (int k = nRow + 1; k < m_nDim; k++)
         aRowJ[k] = 0.0;
     }
   }
@@ -163,7 +163,7 @@ public class CholeskyDecomposition implements Serializable
     if (aMatrix.getRowDimension () != m_nDim)
       throw new IllegalArgumentException ("Matrix row dimensions must agree.");
     if (!m_bIsSPD)
-      throw new RuntimeException ("Matrix is not symmetric positive definite.");
+      throw new IllegalStateException ("Matrix is not symmetric positive definite.");
 
     // Copy right hand side.
     final double [][] aArray = aMatrix.getArrayCopy ();

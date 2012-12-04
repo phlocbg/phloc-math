@@ -225,6 +225,9 @@ public final class Dijkstra
     }
   }
 
+  private Dijkstra ()
+  {}
+
   @Nullable
   private static <N extends IBaseGraphNode <N, R>, R extends IBaseGraphRelation <N, R>> R _getRelationFromLastMatch (@Nonnull final WorkElement <N> aLastMatch,
                                                                                                                      @Nonnull final N aNode)

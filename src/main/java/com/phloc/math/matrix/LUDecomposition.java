@@ -21,6 +21,8 @@ import java.io.Serializable;
 
 import javax.annotation.Nonnull;
 
+import com.phloc.commons.annotations.ReturnsMutableCopy;
+
 /**
  * LU Decomposition.
  * <P>
@@ -64,62 +66,58 @@ public class LUDecomposition implements Serializable
   /**
    * LU Decomposition Structure to access L, U and piv.
    * 
-   * @param A
+   * @param aMatrix
    *        Rectangular matrix
    */
 
-  public LUDecomposition (@Nonnull final Matrix A)
+  public LUDecomposition (@Nonnull final Matrix aMatrix)
   {
     // Use a "left-looking", dot-product, Crout/Doolittle algorithm.
-
-    m_aLU = A.getArrayCopy ();
-    m_nRows = A.getRowDimension ();
-    m_nCols = A.getColumnDimension ();
+    m_aLU = aMatrix.getArrayCopy ();
+    m_nRows = aMatrix.getRowDimension ();
+    m_nCols = aMatrix.getColumnDimension ();
     m_aPivot = new int [m_nRows];
     for (int i = 0; i < m_nRows; i++)
       m_aPivot[i] = i;
     m_nPivSign = 1;
-    double [] LUrowi;
-    final double [] LUcolj = new double [m_nRows];
+    double [] aLUrowi;
+    final double [] aLUcolj = new double [m_nRows];
 
     // Outer loop.
-
     for (int j = 0; j < m_nCols; j++)
     {
       // Make a copy of the j-th column to localize references.
-
       for (int i = 0; i < m_nRows; i++)
-        LUcolj[i] = m_aLU[i][j];
+        aLUcolj[i] = m_aLU[i][j];
 
       // Apply previous transformations.
-
       for (int i = 0; i < m_nRows; i++)
       {
-        LUrowi = m_aLU[i];
+        aLUrowi = m_aLU[i];
 
         // Most of the time is spent in the following dot product.
-
         final int kmax = Math.min (i, j);
         double s = 0.0;
         for (int k = 0; k < kmax; k++)
-          s += LUrowi[k] * LUcolj[k];
+          s += aLUrowi[k] * aLUcolj[k];
 
-        LUrowi[j] = LUcolj[i] -= s;
+        aLUrowi[j] = aLUcolj[i] -= s;
       }
 
       // Find pivot and exchange if necessary.
-
       int p = j;
       for (int i = j + 1; i < m_nRows; i++)
-        if (Math.abs (LUcolj[i]) > Math.abs (LUcolj[p]))
+        if (Math.abs (aLUcolj[i]) > Math.abs (aLUcolj[p]))
           p = i;
+      final double [] aLUj = m_aLU[j];
       if (p != j)
       {
+        final double [] aLUp = m_aLU[p];
         for (int k = 0; k < m_nCols; k++)
         {
-          final double t = m_aLU[p][k];
-          m_aLU[p][k] = m_aLU[j][k];
-          m_aLU[j][k] = t;
+          final double t = aLUp[k];
+          aLUp[k] = aLUj[k];
+          aLUj[k] = t;
         }
         final int k = m_aPivot[p];
         m_aPivot[p] = m_aPivot[j];
@@ -128,9 +126,9 @@ public class LUDecomposition implements Serializable
       }
 
       // Compute multipliers.
-      if (j < m_nRows && m_aLU[j][j] != 0.0)
+      if (j < m_nRows && aLUj[j] != 0.0)
         for (int i = j + 1; i < m_nRows; i++)
-          m_aLU[i][j] /= m_aLU[j][j];
+          m_aLU[i][j] /= aLUj[j];
     }
   }
 
@@ -158,10 +156,6 @@ public class LUDecomposition implements Serializable
    * ------------------------
    */
 
-  /*
-   * ------------------------ Public Methods ------------------------
-   */
-
   /**
    * Is the matrix nonsingular?
    * 
@@ -181,20 +175,25 @@ public class LUDecomposition implements Serializable
    * @return L
    */
   @Nonnull
+  @ReturnsMutableCopy
   public Matrix getL ()
   {
-    final Matrix X = new Matrix (m_nRows, m_nCols);
-    final double [][] L = X.internalGetArray ();
-    for (int i = 0; i < m_nRows; i++)
-      for (int j = 0; j < m_nCols; j++)
-        if (i > j)
-          L[i][j] = m_aLU[i][j];
+    final Matrix aNewMatrix = new Matrix (m_nRows, m_nCols);
+    final double [][] aNewArray = aNewMatrix.internalGetArray ();
+    for (int nRow = 0; nRow < m_nRows; nRow++)
+    {
+      final double [] aSrcRow = m_aLU[nRow];
+      final double [] aDstRow = aNewArray[nRow];
+      for (int nCol = 0; nCol < m_nCols; nCol++)
+        if (nRow > nCol)
+          aDstRow[nCol] = aSrcRow[nCol];
         else
-          if (i == j)
-            L[i][j] = 1.0;
+          if (nRow == nCol)
+            aDstRow[nCol] = 1.0;
           else
-            L[i][j] = 0.0;
-    return X;
+            aDstRow[nCol] = 0.0;
+    }
+    return aNewMatrix;
   }
 
   /**
@@ -205,15 +204,19 @@ public class LUDecomposition implements Serializable
   @Nonnull
   public Matrix getU ()
   {
-    final Matrix X = new Matrix (m_nCols, m_nCols);
-    final double [][] U = X.internalGetArray ();
-    for (int i = 0; i < m_nCols; i++)
-      for (int j = 0; j < m_nCols; j++)
-        if (i <= j)
-          U[i][j] = m_aLU[i][j];
+    final Matrix aNewMatrix = new Matrix (m_nCols, m_nCols);
+    final double [][] aNewArray = aNewMatrix.internalGetArray ();
+    for (int nRow = 0; nRow < m_nCols; nRow++)
+    {
+      final double [] aSrcRow = m_aLU[nRow];
+      final double [] aDstRow = aNewArray[nRow];
+      for (int nCol = 0; nCol < m_nCols; nCol++)
+        if (nRow <= nCol)
+          aDstRow[nCol] = aSrcRow[nCol];
         else
-          U[i][j] = 0.0;
-    return X;
+          aDstRow[nCol] = 0.0;
+    }
+    return aNewMatrix;
   }
 
   /**
@@ -251,25 +254,20 @@ public class LUDecomposition implements Serializable
    * @exception IllegalArgumentException
    *            Matrix must be square
    */
-
   public double det ()
   {
     if (m_nRows != m_nCols)
-    {
       throw new IllegalArgumentException ("Matrix must be square.");
-    }
     double d = m_nPivSign;
     for (int j = 0; j < m_nCols; j++)
-    {
       d *= m_aLU[j][j];
-    }
     return d;
   }
 
   /**
    * Solve A*X = B
    * 
-   * @param B
+   * @param aMatrix
    *        A Matrix with as many rows as A and any number of columns.
    * @return X so that L*U*X = B(piv,:)
    * @exception IllegalArgumentException
@@ -277,35 +275,47 @@ public class LUDecomposition implements Serializable
    * @exception RuntimeException
    *            Matrix is singular.
    */
-
-  public Matrix solve (final Matrix B)
+  @Nonnull
+  @ReturnsMutableCopy
+  public Matrix solve (@Nonnull final Matrix aMatrix)
   {
-    if (B.getRowDimension () != m_nRows)
+    if (aMatrix.getRowDimension () != m_nRows)
       throw new IllegalArgumentException ("Matrix row dimensions must agree.");
-    if (!this.isNonsingular ())
-      throw new RuntimeException ("Matrix is singular.");
+    if (!isNonsingular ())
+      throw new IllegalStateException ("Matrix is singular.");
 
     // Copy right hand side with pivoting
-    final int nx = B.getColumnDimension ();
-    final Matrix Xmat = B.getMatrix (m_aPivot, 0, nx - 1);
-    final double [][] X = Xmat.internalGetArray ();
+    final int nCols = aMatrix.getColumnDimension ();
+    final Matrix aNewMatrix = aMatrix.getMatrix (m_aPivot, 0, nCols - 1);
+    final double [][] aNewArray = aNewMatrix.internalGetArray ();
 
     // Solve L*Y = B(piv,:)
     for (int k = 0; k < m_nCols; k++)
     {
+      final double [] aNewk = aNewArray[k];
       for (int i = k + 1; i < m_nCols; i++)
-        for (int j = 0; j < nx; j++)
-          X[i][j] -= X[k][j] * m_aLU[i][k];
+      {
+        final double [] aLUi = m_aLU[i];
+        final double [] aNewi = aNewArray[i];
+        for (int j = 0; j < nCols; j++)
+          aNewi[j] -= aNewk[j] * aLUi[k];
+      }
     }
     // Solve U*X = Y;
     for (int k = m_nCols - 1; k >= 0; k--)
     {
-      for (int j = 0; j < nx; j++)
-        X[k][j] /= m_aLU[k][k];
+      final double [] aLUk = m_aLU[k];
+      final double [] aNewk = aNewArray[k];
+      for (int j = 0; j < nCols; j++)
+        aNewk[j] /= aLUk[k];
       for (int i = 0; i < k; i++)
-        for (int j = 0; j < nx; j++)
-          X[i][j] -= X[k][j] * m_aLU[i][k];
+      {
+        final double [] aLUi = m_aLU[i];
+        final double [] aNewi = aNewArray[i];
+        for (int j = 0; j < nCols; j++)
+          aNewi[j] -= aNewk[j] * aLUi[k];
+      }
     }
-    return Xmat;
+    return aNewMatrix;
   }
 }
