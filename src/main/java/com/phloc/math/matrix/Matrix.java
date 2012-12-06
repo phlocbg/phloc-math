@@ -31,7 +31,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.WillNotClose;
@@ -645,7 +644,6 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    */
   @Nonnull
   @ReturnsMutableCopy
-  @CheckReturnValue
   public Matrix transpose ()
   {
     final Matrix aNewMatrix = new Matrix (m_nCols, m_nRows);
@@ -730,7 +728,6 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    */
   @Nonnull
   @ReturnsMutableCopy
-  @CheckReturnValue
   public Matrix uminus ()
   {
     final Matrix aNewMatrix = new Matrix (m_nRows, m_nCols);
@@ -765,7 +762,6 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    */
   @Nonnull
   @ReturnsMutableCopy
-  @CheckReturnValue
   public Matrix plus (@Nonnull final Matrix aMatrix)
   {
     _checkMatrixDimensions (aMatrix);
@@ -812,7 +808,6 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    */
   @Nonnull
   @ReturnsMutableCopy
-  @CheckReturnValue
   public Matrix minus (@Nonnull final Matrix aMatrix)
   {
     _checkMatrixDimensions (aMatrix);
@@ -859,7 +854,6 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    */
   @Nonnull
   @ReturnsMutableCopy
-  @CheckReturnValue
   public Matrix arrayTimes (@Nonnull final Matrix aMatrix)
   {
     _checkMatrixDimensions (aMatrix);
@@ -906,7 +900,6 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    */
   @Nonnull
   @ReturnsMutableCopy
-  @CheckReturnValue
   public Matrix arrayRightDivide (@Nonnull final Matrix aMatrix)
   {
     _checkMatrixDimensions (aMatrix);
@@ -953,7 +946,6 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    */
   @Nonnull
   @ReturnsMutableCopy
-  @CheckReturnValue
   public Matrix arrayLeftDivide (@Nonnull final Matrix aMatrix)
   {
     _checkMatrixDimensions (aMatrix);
@@ -1001,7 +993,6 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    */
   @Nonnull
   @ReturnsMutableCopy
-  @CheckReturnValue
   public Matrix times (final double s)
   {
     final Matrix aNewMatrix = new Matrix (m_nRows, m_nCols);
@@ -1046,7 +1037,6 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    */
   @Nonnull
   @ReturnsMutableCopy
-  @CheckReturnValue
   public Matrix times (@Nonnull final Matrix aMatrix)
   {
     if (aMatrix.m_nRows != m_nCols)
@@ -1236,7 +1226,6 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    */
   @Nonnull
   @ReturnsMutableCopy
-  @CheckReturnValue
   public static Matrix random (@Nonnegative final int nRows, @Nonnegative final int nCols)
   {
     final Matrix aNewMatrix = new Matrix (nRows, nCols);
@@ -1262,7 +1251,6 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    */
   @Nonnull
   @ReturnsMutableCopy
-  @CheckReturnValue
   public static Matrix identity (@Nonnegative final int nRows, @Nonnegative final int nCols)
   {
     final Matrix aNewMatrix = new Matrix (nRows, nCols);
