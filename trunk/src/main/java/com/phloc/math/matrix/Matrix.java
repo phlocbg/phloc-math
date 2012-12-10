@@ -286,7 +286,7 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    */
   @SuppressFBWarnings ("EI_EXPOSE_REP")
   @Nonnull
-  double [][] internalGetArray ()
+  public double [][] internalGetArray ()
   {
     return m_aData;
   }
@@ -366,6 +366,15 @@ public class Matrix implements Serializable, ICloneable <Matrix>
   public int getColumnDimension ()
   {
     return m_nCols;
+  }
+
+  /**
+   * @return <code>true</code> if the matrix is symmetrical, meaning number of
+   *         rows and columns is identical.
+   */
+  public boolean isSymmetrical ()
+  {
+    return m_nRows == m_nCols;
   }
 
   /**
