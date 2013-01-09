@@ -306,7 +306,7 @@ public final class Dijkstra
 
           // Get the relation from the last match to this node (may be null if
           // nodes are not connected)
-          final R aRelation = _getRelationFromLastMatch (aLastMatch, aNode);
+          final R aRelation = Dijkstra.<N, R> _getRelationFromLastMatch (aLastMatch, aNode);
           if (aRelation != null)
           {
             // Nodes are related - check weight
