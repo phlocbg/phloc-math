@@ -1100,7 +1100,7 @@ public class MatrixInt implements Serializable, ICloneable <MatrixInt>
     {
       final int [] aDstRow = aNewArray[nRow];
       for (int nCol = 0; nCol < nCols; nCol++)
-        aDstRow[nCol] = VerySecureRandom.getInstance ().nextInt (100);
+        aDstRow[nCol] = 1 + VerySecureRandom.getInstance ().nextInt (100);
     }
     return aNewMatrix;
   }
