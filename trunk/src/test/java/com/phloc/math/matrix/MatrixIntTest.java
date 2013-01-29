@@ -869,7 +869,7 @@ public class MatrixIntTest
     }
     catch (final RuntimeException e)
     {
-      fail ("(A = R, C = A.*B, but C./B != A) " + e.getMessage ());
+      fail ("(A = R, C = A.*B, but C./B != A)");
     }
     try
     {
