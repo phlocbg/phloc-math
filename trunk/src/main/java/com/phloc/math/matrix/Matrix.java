@@ -24,7 +24,6 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StreamTokenizer;
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,6 +37,7 @@ import javax.annotation.WillNotClose;
 import com.phloc.commons.ICloneable;
 import com.phloc.commons.annotations.ReturnsMutableCopy;
 import com.phloc.commons.hash.HashCodeGenerator;
+import com.phloc.commons.lang.DecimalFormatSymbolsFactory;
 import com.phloc.commons.math.MathHelper;
 import com.phloc.commons.string.StringHelper;
 import com.phloc.commons.system.SystemHelper;
@@ -1305,7 +1305,7 @@ public class Matrix implements Serializable, ICloneable <Matrix>
                      @Nonnegative final int nFractionDigits)
   {
     final DecimalFormat format = new DecimalFormat ();
-    format.setDecimalFormatSymbols (new DecimalFormatSymbols (Locale.US));
+    format.setDecimalFormatSymbols (DecimalFormatSymbolsFactory.getInstance (Locale.US));
     format.setMinimumIntegerDigits (1);
     format.setMaximumFractionDigits (nFractionDigits);
     format.setMinimumFractionDigits (nFractionDigits);

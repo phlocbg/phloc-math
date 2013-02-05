@@ -31,7 +31,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
 import javax.annotation.Nonnull;
@@ -39,6 +38,7 @@ import javax.annotation.Nonnull;
 import org.junit.Test;
 
 import com.phloc.commons.io.file.FileOperations;
+import com.phloc.commons.lang.DecimalFormatSymbolsFactory;
 import com.phloc.commons.string.StringHelper;
 
 /**
@@ -909,7 +909,7 @@ public class MatrixTest
     try
     {
       final DecimalFormat fmt = new DecimalFormat ("0.0000E00");
-      fmt.setDecimalFormatSymbols (new DecimalFormatSymbols (Locale.US));
+      fmt.setDecimalFormatSymbols (DecimalFormatSymbolsFactory.getInstance (Locale.US));
 
       final PrintWriter aPW = new PrintWriter (new FileOutputStream (FILENAME_JAMA_TEST_MATRIX_OUT));
       A.print (aPW, fmt, 10);
