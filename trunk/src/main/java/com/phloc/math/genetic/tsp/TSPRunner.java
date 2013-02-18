@@ -163,6 +163,21 @@ public class TSPRunner
    *        Symmetric distance matrix
    * @param dOptimumDistance
    *        The optimum, known length. May be -1 to indicate unknown.
+   * @param ff
+   *        fitness function
+   * @param aEventHandler
+   *        event handler
+   * @param aContinuation
+   *        continuation condition
+   * @param aPopulationCreator
+   *        population creator
+   * @param aSelector
+   *        chromosome selector
+   * @param aCrossover
+   *        crossover algorithm
+   * @param aMutation
+   *        mutation algorithm
+   * @return Best matching {@link IChromosome}
    */
   @Nonnull
   public IChromosome run (@Nonnull final Matrix aDistances,

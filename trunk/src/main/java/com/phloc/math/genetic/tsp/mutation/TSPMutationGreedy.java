@@ -17,7 +17,6 @@
  */
 package com.phloc.math.genetic.tsp.mutation;
 
-import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
 
@@ -118,11 +117,6 @@ public class TSPMutationGreedy extends AbstractMutation
       aSelectedIndices[i] = aGenes.get (nStartIndex + i).intValue ();
 
     final int [] aOrderedIndices = getGreedyOrder (m_aDistanceMatrix.getMatrix (aSelectedIndices, aSelectedIndices));
-    if (false)
-    {
-      System.out.println (Arrays.toString (aSelectedIndices));
-      System.out.println (Arrays.toString (aOrderedIndices));
-    }
 
     for (int i = 0; i < aOrderedIndices.length; ++i)
       aGenes.set (nStartIndex + i, new GeneInt (aSelectedIndices[aOrderedIndices[i]]));

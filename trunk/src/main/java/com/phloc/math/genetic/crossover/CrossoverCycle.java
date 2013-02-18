@@ -17,8 +17,6 @@
  */
 package com.phloc.math.genetic.crossover;
 
-import java.util.Arrays;
-
 import javax.annotation.Nonnull;
 
 import com.phloc.commons.annotations.Nonempty;
@@ -103,21 +101,7 @@ public class CrossoverCycle extends AbstractCrossover
       final int nOld1 = aGenes1.getOldValue (nIndex);
       aGenes0.setNewValue (nIndex, nOld0);
       aGenes1.setNewValue (nIndex, nOld1);
-      if (false)
-      {
-        System.out.println ("[" + nIndex + "] " + nOld0 + " -> " + nOld1);
-        System.out.println ("New0: " + Arrays.toString (aGenes0.getNewGenes ()));
-        System.out.println ("New1: " + Arrays.toString (aGenes1.getNewGenes ()));
-      }
       nLastValue = nOld1;
-    }
-
-    if (false)
-    {
-      System.out.println ("Old0: " + Arrays.toString (aGenes0.getOldGenes ()));
-      System.out.println ("Old1: " + Arrays.toString (aGenes1.getOldGenes ()));
-      System.out.println ("New0: " + Arrays.toString (aGenes0.getNewGenes ()));
-      System.out.println ("New1: " + Arrays.toString (aGenes1.getNewGenes ()));
     }
 
     // Copy all remaining genes from 1 to 0 and vice versa
@@ -125,13 +109,6 @@ public class CrossoverCycle extends AbstractCrossover
     {
       aGenes0.setNewValue (i, aGenes1.getOldValue (i));
       aGenes1.setNewValue (i, aGenes0.getOldValue (i));
-    }
-
-    if (false)
-    {
-      System.out.println ("New0: " + Arrays.toString (aGenes0.getNewGenes ()));
-      System.out.println ("New1: " + Arrays.toString (aGenes1.getNewGenes ()));
-      System.out.println ("---");
     }
 
     final IChromosome aNew0 = Chromosome.createGenesInt (aChromosomes[0], aGenes0.getNewGenes ());

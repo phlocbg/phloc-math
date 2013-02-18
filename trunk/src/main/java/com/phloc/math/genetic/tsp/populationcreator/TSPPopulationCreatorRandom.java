@@ -66,7 +66,7 @@ public final class TSPPopulationCreatorRandom extends AbstractPopulationCreator
     m_aChromosomeValidator = aChromosomeValidator;
   }
 
-  private void _swapRandom (@Nonnull final int [] aCities)
+  private static void _swapRandom (@Nonnull final int [] aCities)
   {
     final int [] aIndices = RandomGenerator.getMultipleUniqueIntsInRange (2, aCities.length);
     final int nIndex1 = aIndices[0];

@@ -17,8 +17,6 @@
  */
 package com.phloc.math.genetic.crossover;
 
-import java.util.Arrays;
-
 import javax.annotation.Nonnull;
 
 import com.phloc.commons.annotations.Nonempty;
@@ -114,12 +112,6 @@ public class CrossoverPartiallyMapped extends AbstractCrossover
         if (!aGenes1.isNewValueUsed (nOldGene1))
           aGenes1.setNewValue (i, nOldGene1);
       }
-
-    if (false)
-    {
-      System.out.println ("New0: " + Arrays.toString (aGenes0.getNewGenes ()));
-      System.out.println ("New1: " + Arrays.toString (aGenes1.getNewGenes ()));
-    }
 
     // Fill missing elements
     for (int i = aGenes0.getNextNewUnusedIndex (0); i < nGenes; i = aGenes0.getNextNewUnusedIndex (i + 1))

@@ -40,10 +40,9 @@ import com.phloc.math.graph.IBaseGraphRelation;
  * @author philip
  */
 @NotThreadSafe
-public abstract class AbstractBaseGraph <N extends IBaseGraphNode <N, R>, R extends IBaseGraphRelation <N, R>> extends
-                                                                                                               AbstractBaseGraphObject implements
-                                                                                                                                      IBaseGraph <N, R>
+public abstract class AbstractBaseGraph <N extends IBaseGraphNode <N, R>, R extends IBaseGraphRelation <N, R>> extends AbstractBaseGraphObject implements IBaseGraph <N, R>
 {
+  /** By default this is allowed */
   public static final boolean DEFAULT_CHANGING_CONNECTED_OBJECTS_ALLOWED = true;
 
   protected final Map <String, N> m_aNodes = new LinkedHashMap <String, N> ();

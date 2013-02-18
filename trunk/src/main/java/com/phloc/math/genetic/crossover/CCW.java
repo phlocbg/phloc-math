@@ -52,6 +52,7 @@ class CCW
   @ReturnsMutableObject (reason = "Design")
   public final int [] getOldGenes ()
   {
+    // ESCA-JAVA0259:
     return m_aOldGenes;
   }
 
