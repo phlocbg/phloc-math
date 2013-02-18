@@ -49,7 +49,7 @@ final class CCWWithIndex extends CCW
   }
 
   @Nonnegative
-  public final int getIndexOfOldValue (@Nonnegative final int nValue)
+  public int getIndexOfOldValue (@Nonnegative final int nValue)
   {
     return m_aOldGenesValueToIndex[nValue];
   }
