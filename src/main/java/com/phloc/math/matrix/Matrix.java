@@ -240,6 +240,7 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * 
    * @param aArray
    *        Two-dimensional array of doubles.
+   * @return The new matrix
    * @exception IllegalArgumentException
    *            All rows must have the same length
    */
@@ -262,7 +263,7 @@ public class Matrix implements Serializable, ICloneable <Matrix>
   }
 
   /**
-   * Make a deep copy of a matrix
+   * @return a deep copy of a matrix
    */
   @Nonnull
   @ReturnsMutableCopy
@@ -288,6 +289,7 @@ public class Matrix implements Serializable, ICloneable <Matrix>
   @Nonnull
   public double [][] internalGetArray ()
   {
+    // ESCA-JAVA0259:
     return m_aData;
   }
 
@@ -753,7 +755,10 @@ public class Matrix implements Serializable, ICloneable <Matrix>
 
   /**
    * Check if size(A) == size(B)
-   **/
+   * 
+   * @param aMatrix
+   *        Matrix to check
+   */
   private void _checkMatrixDimensions (@Nonnull final Matrix aMatrix)
   {
     if (aMatrix.m_nRows != m_nRows)
@@ -1284,6 +1289,7 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    */
   public void print (@Nonnegative final int nWidth, @Nonnegative final int nFractionDigits)
   {
+    // ESCA-JAVA0266:
     print (new PrintWriter (new OutputStreamWriter (System.out, SystemHelper.getSystemCharset ()), true),
            nWidth,
            nFractionDigits);
@@ -1404,9 +1410,12 @@ public class Matrix implements Serializable, ICloneable <Matrix>
    * 
    * @param aReader
    *        the input stream.
+   * @return The read matrix
+   * @throws IOException
+   *         In case of an I/O error
    */
   @Nonnull
-  public static Matrix read (@Nonnull @WillNotClose final BufferedReader aReader) throws java.io.IOException
+  public static Matrix read (@Nonnull @WillNotClose final BufferedReader aReader) throws IOException
   {
     final StreamTokenizer aTokenizer = new StreamTokenizer (aReader);
 

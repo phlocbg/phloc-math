@@ -30,6 +30,7 @@ public abstract class AbstractDecisionMakerRandom implements IDecisionMaker
    */
   public abstract boolean useRandomNumber (double dRandom);
 
+  // ESCA-JAVA0130:
   public final int getNextRandom ()
   {
     return RandomGenerator.getIntInRange (10000 + 1);

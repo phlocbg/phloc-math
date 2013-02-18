@@ -23,11 +23,16 @@ import java.util.Date;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.phloc.math.genetic.IEventHandler;
 import com.phloc.math.genetic.model.IChromosome;
 
 public class EventHandlerLogging extends EventHandlerDefault
 {
+  private static final Logger s_aLogger = LoggerFactory.getLogger (EventHandlerLogging.class);
+
   public EventHandlerLogging ()
   {
     this (null);
@@ -41,10 +46,10 @@ public class EventHandlerLogging extends EventHandlerDefault
   @Override
   protected void internalOnNewFittestChromosome (@Nonnull final IChromosome aCurrentFittest)
   {
-    System.out.println (new Date ().toString () +
-                        ": New fittest [" +
-                        aCurrentFittest.getFitness () +
-                        "]: " +
-                        Arrays.toString (aCurrentFittest.getGeneIntArray ()));
+    s_aLogger.info (new Date ().toString () +
+                    ": New fittest [" +
+                    aCurrentFittest.getFitness () +
+                    "]: " +
+                    Arrays.toString (aCurrentFittest.getGeneIntArray ()));
   }
 }

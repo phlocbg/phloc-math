@@ -64,6 +64,7 @@ public class Population implements IMutablePopulation
   @ReturnsMutableObject (reason = "speed")
   public List <IChromosome> directGetAllChromosomes ()
   {
+    // ESCA-JAVA0259:
     return m_aChromosomes;
   }
 

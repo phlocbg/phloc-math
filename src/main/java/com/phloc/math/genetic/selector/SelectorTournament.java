@@ -18,7 +18,6 @@
 package com.phloc.math.genetic.selector;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -62,9 +61,6 @@ public class SelectorTournament extends AbstractSelector
     // Unify fitness value between 0 and 1
     for (int i = 0; i < aFitnesses.length; ++i)
       aFitnesses[i] /= dTotalFitness;
-
-    if (false)
-      System.out.println (Arrays.toString (aFitnesses));
 
     final List <IChromosome> ret = new ArrayList <IChromosome> (nChromosomes);
     for (int i = 0; i < nChromosomes; ++i)

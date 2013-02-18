@@ -247,6 +247,7 @@ public final class Dijkstra
     return aLastMatch.getToNode ().getRelation (aNode);
   }
 
+  // ESCA-JAVA0285:
   @Nonnull
   public static <N extends IBaseGraphNode <N, R>, R extends IBaseGraphRelation <N, R>> Dijkstra.Result <N> applyDijkstra (@Nonnull final IBaseGraph <N, R> aGraph,
                                                                                                                           @Nonnull @Nonempty final String sFromID,

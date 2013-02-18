@@ -241,6 +241,7 @@ public class MatrixInt implements Serializable, ICloneable <MatrixInt>
    * 
    * @param aArray
    *        Two-dimensional array of doubles.
+   * @return The new matrix
    * @exception IllegalArgumentException
    *            All rows must have the same length
    */
@@ -263,7 +264,7 @@ public class MatrixInt implements Serializable, ICloneable <MatrixInt>
   }
 
   /**
-   * Make a deep copy of a matrix
+   * @return a deep copy of a matrix
    */
   @Nonnull
   @ReturnsMutableCopy
@@ -289,6 +290,7 @@ public class MatrixInt implements Serializable, ICloneable <MatrixInt>
   @Nonnull
   public int [][] internalGetArray ()
   {
+    // ESCA-JAVA0259:
     return m_aData;
   }
 
@@ -746,7 +748,10 @@ public class MatrixInt implements Serializable, ICloneable <MatrixInt>
 
   /**
    * Check if size(A) == size(B)
-   **/
+   * 
+   * @param aMatrix
+   *        MAtrix to check
+   */
   private void _checkMatrixDimensions (@Nonnull final MatrixInt aMatrix)
   {
     if (aMatrix.m_nRows != m_nRows)
@@ -1141,6 +1146,7 @@ public class MatrixInt implements Serializable, ICloneable <MatrixInt>
    */
   public void print (@Nonnegative final int nWidth, @Nonnegative final int nFractionDigits)
   {
+    // ESCA-JAVA0266:
     print (new PrintWriter (new OutputStreamWriter (System.out, SystemHelper.getSystemCharset ()), true),
            nWidth,
            nFractionDigits);
@@ -1261,9 +1267,12 @@ public class MatrixInt implements Serializable, ICloneable <MatrixInt>
    * 
    * @param aReader
    *        the input stream.
+   * @return The read matrix
+   * @throws IOException
+   *         in case of an I/O error
    */
   @Nonnull
-  public static MatrixInt read (@Nonnull @WillNotClose final BufferedReader aReader) throws java.io.IOException
+  public static MatrixInt read (@Nonnull @WillNotClose final BufferedReader aReader) throws IOException
   {
     final StreamTokenizer aTokenizer = new StreamTokenizer (aReader);
 
@@ -1315,7 +1324,7 @@ public class MatrixInt implements Serializable, ICloneable <MatrixInt>
       {
         if (nCol >= nCols)
           throw new IOException ("Row " + v.size () + " is too long.");
-        aRow[nCol++] = Integer.valueOf (aTokenizer.sval).intValue ();
+        aRow[nCol++] = Integer.parseInt (aTokenizer.sval);
       } while (aTokenizer.nextToken () == StreamTokenizer.TT_WORD);
       if (nCol < nCols)
         throw new IOException ("Row " + v.size () + " is too short.");
