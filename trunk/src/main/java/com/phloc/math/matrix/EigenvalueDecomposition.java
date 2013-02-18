@@ -139,7 +139,7 @@ public class EigenvalueDecomposition implements Serializable
           g = -g;
         }
         m_aEVe[i] = scale * g;
-        h = h - f * g;
+        h -= f * g;
         m_aEVd[i - 1] = f - g;
         for (int j = 0; j < i; j++)
         {
@@ -279,7 +279,7 @@ public class EigenvalueDecomposition implements Serializable
           {
             m_aEVd[i] -= h;
           }
-          f = f + h;
+          f += h;
 
           // Implicit QL transformation.
           p = m_aEVd[m];
@@ -384,7 +384,7 @@ public class EigenvalueDecomposition implements Serializable
         {
           g = -g;
         }
-        h = h - m_aOrt[m] * g;
+        h -= m_aOrt[m] * g;
         m_aOrt[m] = m_aOrt[m] - g;
 
         // Apply Householder similarity transformation
@@ -397,7 +397,7 @@ public class EigenvalueDecomposition implements Serializable
           {
             f += m_aOrt[i] * m_aHessenBerg[i][j];
           }
-          f = f / h;
+          f /= h;
           for (int i = m; i <= high; i++)
           {
             m_aHessenBerg[i][j] -= f * m_aOrt[i];
@@ -411,7 +411,7 @@ public class EigenvalueDecomposition implements Serializable
           {
             f += m_aOrt[j] * m_aHessenBerg[i][j];
           }
-          f = f / h;
+          f /= h;
           for (int j = m; j <= high; j++)
           {
             m_aHessenBerg[i][j] -= f * m_aOrt[j];
@@ -572,8 +572,8 @@ public class EigenvalueDecomposition implements Serializable
             p = x / s;
             q = z / s;
             r = Math.sqrt (p * p + q * q);
-            p = p / r;
-            q = q / r;
+            p /= r;
+            q /= r;
 
             // Row modification
             for (int j = n - 1; j < nn; j++)
@@ -608,7 +608,7 @@ public class EigenvalueDecomposition implements Serializable
             m_aEVe[n - 1] = z;
             m_aEVe[n] = -z;
           }
-          n = n - 2;
+          n -= 2;
           iter = 0;
 
           // No convergence yet
@@ -661,7 +661,7 @@ public class EigenvalueDecomposition implements Serializable
             }
           }
 
-          iter = iter + 1; // (Could check iteration count here.)
+          iter++; // (Could check iteration count here.)
 
           // Look for two consecutive small sub-diagonal elements
           int m = n - 2;
@@ -674,9 +674,9 @@ public class EigenvalueDecomposition implements Serializable
             q = m_aHessenBerg[m + 1][m + 1] - z - r - s;
             r = m_aHessenBerg[m + 2][m + 1];
             s = Math.abs (p) + Math.abs (q) + Math.abs (r);
-            p = p / s;
-            q = q / s;
-            r = r / s;
+            p /= s;
+            q /= s;
+            r /= s;
             if (m == l)
               break;
             if (Math.abs (m_aHessenBerg[m][m - 1]) * (Math.abs (q) + Math.abs (r)) < EPSILON *
@@ -712,9 +712,9 @@ public class EigenvalueDecomposition implements Serializable
               {
                 continue;
               }
-              p = p / x;
-              q = q / x;
-              r = r / x;
+              p /= x;
+              q /= x;
+              r /= x;
             }
 
             s = Math.sqrt (p * p + q * q + r * r);
@@ -733,12 +733,12 @@ public class EigenvalueDecomposition implements Serializable
                 {
                   m_aHessenBerg[k][k - 1] = -m_aHessenBerg[k][k - 1];
                 }
-              p = p + s;
+              p += s;
               x = p / s;
               y = q / s;
               z = r / s;
-              q = q / p;
-              r = r / p;
+              q /= p;
+              r /= p;
 
               // Row modification
 
@@ -747,7 +747,7 @@ public class EigenvalueDecomposition implements Serializable
                 p = m_aHessenBerg[k][j] + q * m_aHessenBerg[k + 1][j];
                 if (notlast)
                 {
-                  p = p + r * m_aHessenBerg[k + 2][j];
+                  p += r * m_aHessenBerg[k + 2][j];
                   m_aHessenBerg[k + 2][j] = m_aHessenBerg[k + 2][j] - p * z;
                 }
                 m_aHessenBerg[k][j] = m_aHessenBerg[k][j] - p * x;
@@ -761,7 +761,7 @@ public class EigenvalueDecomposition implements Serializable
                 p = x * m_aHessenBerg[i][k] + y * m_aHessenBerg[i][k + 1];
                 if (notlast)
                 {
-                  p = p + z * m_aHessenBerg[i][k + 2];
+                  p += z * m_aHessenBerg[i][k + 2];
                   m_aHessenBerg[i][k + 2] = m_aHessenBerg[i][k + 2] - p * r;
                 }
                 m_aHessenBerg[i][k] = m_aHessenBerg[i][k] - p;
@@ -775,7 +775,7 @@ public class EigenvalueDecomposition implements Serializable
                 p = x * m_aEigenVector[i][k] + y * m_aEigenVector[i][k + 1];
                 if (notlast)
                 {
-                  p = p + z * m_aEigenVector[i][k + 2];
+                  p += z * m_aEigenVector[i][k + 2];
                   m_aEigenVector[i][k + 2] = m_aEigenVector[i][k + 2] - p * r;
                 }
                 m_aEigenVector[i][k] = m_aEigenVector[i][k] - p;
@@ -810,7 +810,7 @@ public class EigenvalueDecomposition implements Serializable
           r = 0.0;
           for (int j = l; j <= n; j++)
           {
-            r = r + m_aHessenBerg[i][j] * m_aHessenBerg[j][n];
+            r += m_aHessenBerg[i][j] * m_aHessenBerg[j][n];
           }
           if (m_aEVe[i] < 0.0)
           {
@@ -894,8 +894,8 @@ public class EigenvalueDecomposition implements Serializable
             sa = 0.0;
             for (int j = l; j <= n; j++)
             {
-              ra = ra + m_aHessenBerg[i][j] * m_aHessenBerg[j][n - 1];
-              sa = sa + m_aHessenBerg[i][j] * m_aHessenBerg[j][n];
+              ra += m_aHessenBerg[i][j] * m_aHessenBerg[j][n - 1];
+              sa += m_aHessenBerg[i][j] * m_aHessenBerg[j][n];
             }
             w = m_aHessenBerg[i][i] - p;
 
@@ -981,7 +981,7 @@ public class EigenvalueDecomposition implements Serializable
         z = 0.0;
         for (int k = low; k <= Math.min (j, high); k++)
         {
-          z = z + m_aEigenVector[i][k] * m_aHessenBerg[k][j];
+          z += m_aEigenVector[i][k] * m_aHessenBerg[k][j];
         }
         m_aEigenVector[i][j] = z;
       }
@@ -1081,6 +1081,7 @@ public class EigenvalueDecomposition implements Serializable
   @ReturnsMutableObject (reason = "took code as is")
   public double [] getRealEigenvalues ()
   {
+    // ESCA-JAVA0259:
     return m_aEVd;
   }
 
@@ -1094,6 +1095,7 @@ public class EigenvalueDecomposition implements Serializable
   @ReturnsMutableObject (reason = "took code as is")
   public double [] getImagEigenvalues ()
   {
+    // ESCA-JAVA0259:
     return m_aEVe;
   }
 

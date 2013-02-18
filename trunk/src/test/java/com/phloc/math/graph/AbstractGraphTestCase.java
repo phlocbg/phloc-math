@@ -20,11 +20,6 @@ package com.phloc.math.graph;
 import javax.annotation.Nonnull;
 
 import com.phloc.commons.mock.AbstractPhlocTestCase;
-import com.phloc.math.graph.IBaseGraphNode;
-import com.phloc.math.graph.IDirectedGraphNode;
-import com.phloc.math.graph.IGraphNode;
-import com.phloc.math.graph.IReadonlyDirectedGraph;
-import com.phloc.math.graph.IReadonlyGraph;
 import com.phloc.math.graph.simple.SimpleDirectedGraph;
 import com.phloc.math.graph.simple.SimpleGraph;
 

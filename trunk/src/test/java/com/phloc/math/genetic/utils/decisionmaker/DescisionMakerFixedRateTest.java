@@ -22,8 +22,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.phloc.math.genetic.utils.decisionmaker.DecisionMakerFixedRate;
-
 public final class DescisionMakerFixedRateTest
 {
   @Test

@@ -30,7 +30,6 @@ import org.junit.Test;
 import com.phloc.math.graph.AbstractGraphTestCase;
 import com.phloc.math.graph.IGraphNode;
 import com.phloc.math.graph.IReadonlyGraph;
-import com.phloc.math.graph.iterate.GraphIterator;
 
 /**
  * Test class for class {@link GraphIterator}.

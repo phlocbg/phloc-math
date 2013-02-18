@@ -24,7 +24,6 @@ import org.junit.Test;
 
 import com.phloc.commons.idfactory.IIDFactory;
 import com.phloc.commons.idfactory.StringIDFromGlobalIntIDFactory;
-import com.phloc.math.graph.impl.GraphObjectIDFactory;
 
 /**
  * Test class for class {@link GraphObjectIDFactory}.

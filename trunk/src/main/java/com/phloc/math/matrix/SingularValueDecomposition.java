@@ -455,7 +455,7 @@ public class SingularValueDecomposition implements Serializable
             }
           }
           e[p - 2] = f;
-          iter = iter + 1;
+          iter++;
           break;
         }
 
