@@ -19,9 +19,6 @@ package com.phloc.math.genetic.model;
 
 import javax.annotation.Nonnull;
 
-import com.phloc.math.genetic.model.IChromosome;
-import com.phloc.math.genetic.model.IFitnessFunction;
-
 public final class MockFitnessFunction implements IFitnessFunction
 {
   public double getFitness (@Nonnull final IChromosome aChromosome)

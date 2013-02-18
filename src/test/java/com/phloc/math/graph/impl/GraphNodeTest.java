@@ -28,8 +28,6 @@ import org.junit.Test;
 import com.phloc.commons.mock.PhlocTestUtils;
 import com.phloc.commons.string.StringHelper;
 import com.phloc.math.graph.IGraphRelation;
-import com.phloc.math.graph.impl.GraphNode;
-import com.phloc.math.graph.impl.GraphRelation;
 
 /**
  * Test class for class {@link GraphNode}.

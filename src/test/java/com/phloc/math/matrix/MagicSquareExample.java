@@ -23,11 +23,6 @@ import javax.annotation.Nonnegative;
 
 import org.junit.Test;
 
-import com.phloc.math.matrix.EigenvalueDecomposition;
-import com.phloc.math.matrix.LUDecomposition;
-import com.phloc.math.matrix.Matrix;
-import com.phloc.math.matrix.QRDecomposition;
-
 /** Example of use of Matrix Class, featuring magic squares. **/
 
 public class MagicSquareExample

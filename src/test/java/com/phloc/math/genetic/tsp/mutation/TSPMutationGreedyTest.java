@@ -26,7 +26,6 @@ import org.junit.Test;
 import com.phloc.commons.io.resource.ClassPathResource;
 import com.phloc.commons.timing.StopWatch;
 import com.phloc.math.genetic.tsp.AbstractFileBasedTSPRunner;
-import com.phloc.math.genetic.tsp.mutation.TSPMutationGreedy;
 import com.phloc.math.matrix.Matrix;
 
 public final class TSPMutationGreedyTest

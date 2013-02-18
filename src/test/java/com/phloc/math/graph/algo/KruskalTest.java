@@ -23,7 +23,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.phloc.math.graph.algo.Kruskal;
 import com.phloc.math.graph.simple.SimpleGraph;
 
 public final class KruskalTest

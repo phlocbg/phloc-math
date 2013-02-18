@@ -23,8 +23,6 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import com.phloc.commons.mock.PhlocTestUtils;
-import com.phloc.math.graph.impl.DirectedGraphNode;
-import com.phloc.math.graph.impl.DirectedGraphRelation;
 
 /**
  * Test class for class {@link DirectedGraphRelation}.
