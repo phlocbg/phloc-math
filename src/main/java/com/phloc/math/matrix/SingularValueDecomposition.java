@@ -269,6 +269,7 @@ public class SingularValueDecomposition implements Serializable
 
     // Main iteration loop for the singular values.
     final int pp = p - 1;
+    @SuppressWarnings ("unused")
     int iter = 0;
     while (p > 0)
     {
