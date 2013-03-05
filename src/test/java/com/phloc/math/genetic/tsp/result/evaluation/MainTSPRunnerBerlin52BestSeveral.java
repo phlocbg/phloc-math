@@ -17,14 +17,15 @@
  */
 package com.phloc.math.genetic.tsp.result.evaluation;
 
+import gnu.trove.iterator.TIntIterator;
+import gnu.trove.list.TIntList;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.commons.collections.primitives.IntIterator;
-import org.apache.commons.collections.primitives.IntList;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -73,8 +74,8 @@ public final class MainTSPRunnerBerlin52BestSeveral extends AbstractFileBasedTSP
     RandomGenerator.setRandomGenerator (new RandomGeneratorRandom (new Random (789234789989L)));
 
     final int nRepeats = 5;
-    final List <IntList> aDistanceListPerPopulations = new ArrayList <IntList> (nRepeats);
-    final List <IntList> aDistanceListBest = new ArrayList <IntList> (nRepeats);
+    final List <TIntList> aDistanceListPerPopulations = new ArrayList <TIntList> (nRepeats);
+    final List <TIntList> aDistanceListBest = new ArrayList <TIntList> (nRepeats);
     for (int i = 0; i < nRepeats; ++i)
     {
       final int nPopulationSize = nCities;
@@ -114,7 +115,7 @@ public final class MainTSPRunnerBerlin52BestSeveral extends AbstractFileBasedTSP
 
     // Ensure all rows are present
     int nMaxRows = 0;
-    for (final IntList aIL : aDistanceListPerPopulations)
+    for (final TIntList aIL : aDistanceListPerPopulations)
       nMaxRows = Math.max (nMaxRows, aIL.size ());
 
     // Create rows and set generation and optimum
@@ -134,7 +135,7 @@ public final class MainTSPRunnerBerlin52BestSeveral extends AbstractFileBasedTSP
     for (int i = 0; i < nRepeats; ++i)
     {
       int nRow = 1;
-      final IntIterator itPerPop = aDistanceListPerPopulations.get (i).iterator ();
+      final TIntIterator itPerPop = aDistanceListPerPopulations.get (i).iterator ();
       while (itPerPop.hasNext ())
         aSheet.getRow (nRow++).createCell (nColumn).setCellValue (itPerPop.next ());
       ++nColumn;
@@ -142,7 +143,7 @@ public final class MainTSPRunnerBerlin52BestSeveral extends AbstractFileBasedTSP
       if (bWithBest)
       {
         nRow = 1;
-        final IntIterator itBest = aDistanceListBest.get (i).iterator ();
+        final TIntIterator itBest = aDistanceListBest.get (i).iterator ();
         while (itBest.hasNext ())
           aSheet.getRow (nRow++).createCell (nColumn).setCellValue (itBest.next ());
         ++nColumn;

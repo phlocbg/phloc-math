@@ -17,10 +17,10 @@
  */
 package com.phloc.math.genetic.tsp.eventhandler;
 
-import javax.annotation.Nonnull;
+import gnu.trove.list.TIntList;
+import gnu.trove.list.array.TIntArrayList;
 
-import org.apache.commons.collections.primitives.ArrayIntList;
-import org.apache.commons.collections.primitives.IntList;
+import javax.annotation.Nonnull;
 
 import com.phloc.math.genetic.eventhandler.EventHandlerDefault;
 import com.phloc.math.genetic.model.IChromosome;
@@ -30,14 +30,14 @@ import com.phloc.math.genetic.tsp.model.TSPFitnessFunction;
 public class TSPEventHandlerGenerationTracker extends EventHandlerDefault
 {
   private final TSPFitnessFunction m_aFF;
-  private final IntList m_aDistanceListPerPopulation;
-  private final IntList m_aDistanceListBest;
+  private final TIntList m_aDistanceListPerPopulation;
+  private final TIntList m_aDistanceListBest;
 
   public TSPEventHandlerGenerationTracker (@Nonnull final TSPFitnessFunction ff)
   {
     m_aFF = ff;
-    m_aDistanceListPerPopulation = new ArrayIntList ();
-    m_aDistanceListBest = new ArrayIntList ();
+    m_aDistanceListPerPopulation = new TIntArrayList ();
+    m_aDistanceListBest = new TIntArrayList ();
   }
 
   @Override
@@ -59,13 +59,13 @@ public class TSPEventHandlerGenerationTracker extends EventHandlerDefault
   }
 
   @Nonnull
-  public IntList getDistanceListPerPopulation ()
+  public TIntList getDistanceListPerPopulation ()
   {
     return m_aDistanceListPerPopulation;
   }
 
   @Nonnull
-  public IntList getDistanceListBest ()
+  public TIntList getDistanceListBest ()
   {
     return m_aDistanceListBest;
   }

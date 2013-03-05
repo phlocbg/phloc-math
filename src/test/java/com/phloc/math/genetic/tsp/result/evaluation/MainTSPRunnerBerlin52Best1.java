@@ -17,11 +17,11 @@
  */
 package com.phloc.math.genetic.tsp.result.evaluation;
 
+import gnu.trove.iterator.TIntIterator;
+import gnu.trove.list.TIntList;
+
 import java.io.File;
 import java.util.Random;
-
-import org.apache.commons.collections.primitives.IntIterator;
-import org.apache.commons.collections.primitives.IntList;
 
 import com.phloc.commons.io.file.FileUtils;
 import com.phloc.commons.io.resource.ClassPathResource;
@@ -74,7 +74,7 @@ public final class MainTSPRunnerBerlin52Best1 extends AbstractFileBasedTSPRunner
                                                         new MutationRandomPartialReverse (new DecisionMakerPercentage (80)));
 
     new TSPRunner ("berlin52").run (aDistances, nOptimumDistance, ff, eh, cont, pc, s, c, m);
-    final IntList aList = eh.getDistanceListPerPopulation ();
+    final TIntList aList = eh.getDistanceListPerPopulation ();
 
     final File aFile = new File ("data/berlin52/results-best.xlsx");
     final WorkbookCreationHelper aWCH = new WorkbookCreationHelper (EExcelVersion.XLSX);
@@ -83,7 +83,7 @@ public final class MainTSPRunnerBerlin52Best1 extends AbstractFileBasedTSPRunner
     aWCH.addCell ("Generation");
     aWCH.addCell ("Optimum");
     aWCH.addCell ("Distance");
-    final IntIterator it = aList.iterator ();
+    final TIntIterator it = aList.iterator ();
     int nGeneration = 1;
     while (it.hasNext ())
     {
