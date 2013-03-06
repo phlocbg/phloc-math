@@ -43,6 +43,8 @@ import com.phloc.commons.string.StringHelper;
 import com.phloc.commons.system.SystemHelper;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import gnu.trove.list.TDoubleList;
+import gnu.trove.list.array.TDoubleArrayList;
 
 /**
  * Jama = Java Matrix class.
@@ -1439,10 +1441,10 @@ public class Matrix implements Serializable, ICloneable <Matrix>
       throw new IOException ("Unexpected EOF on matrix read.");
 
     // Read & store 1st row.
-    final List <Double> vD = new ArrayList <Double> ();
+    final TDoubleList vD = new TDoubleArrayList ();
     do
     {
-      vD.add (Double.valueOf (aTokenizer.sval));
+      vD.add (Double.parseDouble (aTokenizer.sval));
     } while (aTokenizer.nextToken () == StreamTokenizer.TT_WORD);
 
     // Now we've got the number of columns!
@@ -1451,7 +1453,7 @@ public class Matrix implements Serializable, ICloneable <Matrix>
     for (int nCol = 0; nCol < nCols; nCol++)
     {
       // extract the elements of the 1st row.
-      aRow[nCol] = vD.get (nCol).doubleValue ();
+      aRow[nCol] = vD.get (nCol);
     }
 
     final List <double []> v = new ArrayList <double []> ();

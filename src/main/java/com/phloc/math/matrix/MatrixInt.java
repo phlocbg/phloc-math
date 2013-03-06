@@ -44,6 +44,8 @@ import com.phloc.commons.string.StringHelper;
 import com.phloc.commons.system.SystemHelper;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import gnu.trove.list.TIntList;
+import gnu.trove.list.array.TIntArrayList;
 
 /**
  * Jama = Java Matrix class.
@@ -1296,10 +1298,10 @@ public class MatrixInt implements Serializable, ICloneable <MatrixInt>
       throw new IOException ("Unexpected EOF on matrix read.");
 
     // Read & store 1st row.
-    final List <Integer> vD = new ArrayList <Integer> ();
+    final TIntList vD = new TIntArrayList ();
     do
     {
-      vD.add (Integer.valueOf (aTokenizer.sval));
+      vD.add (Integer.parseInt (aTokenizer.sval));
     } while (aTokenizer.nextToken () == StreamTokenizer.TT_WORD);
 
     // Now we've got the number of columns!
@@ -1308,7 +1310,7 @@ public class MatrixInt implements Serializable, ICloneable <MatrixInt>
     for (int nCol = 0; nCol < nCols; nCol++)
     {
       // extract the elements of the 1st row.
-      aRow[nCol] = vD.get (nCol).intValue ();
+      aRow[nCol] = vD.get (nCol);
     }
 
     final List <int []> v = new ArrayList <int []> ();
