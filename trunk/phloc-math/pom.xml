@@ -24,8 +24,8 @@
   
   <scm>
     <url>http://code.google.com/p/phloc-math/source/browse/</url>
-    <connection>scm:svn:http://phloc-math.googlecode.com/svn/trunk</connection>
-    <developerConnection>scm:svn:https://phloc-math.googlecode.com/svn/trunk</developerConnection>
+    <connection>scm:svn:http://phloc-math.googlecode.com/svn/trunk/phloc-math</connection>
+    <developerConnection>scm:svn:https://phloc-math.googlecode.com/svn/trunk/phloc-math</developerConnection>
   </scm>
 
   <organization>
