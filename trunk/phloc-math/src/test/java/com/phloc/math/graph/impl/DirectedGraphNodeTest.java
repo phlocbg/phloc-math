@@ -34,7 +34,7 @@ import com.phloc.math.graph.IDirectedGraphRelation;
 /**
  * Test class for class {@link DirectedGraphNode}.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public final class DirectedGraphNodeTest
 {

@@ -28,7 +28,7 @@ import com.phloc.math.graph.IGraphNode;
  * Implementation of {@link com.phloc.math.graph.IGraphRelation} interface with
  * quick and dirty equals and hashCode (on ID only)
  * 
- * @author philip
+ * @author Philip Helger
  */
 @NotThreadSafe
 public class GraphRelationFast extends GraphRelation

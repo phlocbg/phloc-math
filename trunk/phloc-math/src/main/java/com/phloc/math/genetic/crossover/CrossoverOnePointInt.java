@@ -52,7 +52,7 @@ import com.phloc.math.genetic.utils.random.RandomGenerator;
  * Chromosome2: 4 2 | 3 5 6 1
  * </pre>
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class CrossoverOnePointInt extends AbstractCrossover
 {

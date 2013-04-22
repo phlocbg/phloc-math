@@ -71,7 +71,7 @@ import com.phloc.math.genetic.utils.decisionmaker.IDecisionMaker;
  *    X = Z
  * </pre>
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class CrossoverEdgeRecombination extends AbstractCrossover
 {

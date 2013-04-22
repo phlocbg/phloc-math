@@ -36,7 +36,7 @@ import com.phloc.math.genetic.utils.random.RandomGenerator;
  * <li>Randomly choose a chromosome of them</li>
  * </ul>
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class SelectorBestSortedRandom extends AbstractSelector
 {

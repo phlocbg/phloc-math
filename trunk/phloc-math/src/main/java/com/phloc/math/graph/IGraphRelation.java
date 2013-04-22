@@ -24,7 +24,7 @@ import com.phloc.commons.annotations.MustImplementEqualsAndHashcode;
 /**
  * Base interface for a single undirected graph relation.
  * 
- * @author philip
+ * @author Philip Helger
  */
 @MustImplementEqualsAndHashcode
 public interface IGraphRelation extends IBaseGraphRelation <IGraphNode, IGraphRelation>

@@ -25,7 +25,7 @@ import com.phloc.commons.state.EChange;
 /**
  * Interface for a modifiable graph.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public interface IBaseGraph <N extends IBaseGraphNode <N, R>, R extends IBaseGraphRelation <N, R>> extends
                                                                                                    IReadonlyBaseGraph <N, R>

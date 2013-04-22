@@ -20,7 +20,7 @@ package com.phloc.math.graph;
 /**
  * Interface for a modifiable directed graph.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public interface IDirectedGraph extends
                                IBaseGraph <IDirectedGraphNode, IDirectedGraphRelation>,

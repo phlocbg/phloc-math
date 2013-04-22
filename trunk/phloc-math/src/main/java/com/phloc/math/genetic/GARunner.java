@@ -39,7 +39,7 @@ import com.phloc.math.genetic.model.IPopulation;
  *     [Loop] Go to step 2
  * </pre>
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class GARunner
 {

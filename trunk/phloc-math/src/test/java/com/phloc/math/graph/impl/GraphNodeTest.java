@@ -32,7 +32,7 @@ import com.phloc.math.graph.IGraphRelation;
 /**
  * Test class for class {@link GraphNode}.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public final class GraphNodeTest
 {

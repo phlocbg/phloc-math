@@ -29,7 +29,7 @@ import com.phloc.math.genetic.model.IChromosome;
 /**
  * Crossover chromosome wrapper (CCW) implementation
  * 
- * @author philip
+ * @author Philip Helger
  */
 class CCW
 {

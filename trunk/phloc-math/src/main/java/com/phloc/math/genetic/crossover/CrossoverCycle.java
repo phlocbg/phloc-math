@@ -74,7 +74,7 @@ import com.phloc.math.genetic.utils.decisionmaker.IDecisionMaker;
  *     N2 = (7 - 1 - 2 - 0 - 4 - 5 - 3 - 6)
  * </pre>
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class CrossoverCycle extends AbstractCrossover
 {

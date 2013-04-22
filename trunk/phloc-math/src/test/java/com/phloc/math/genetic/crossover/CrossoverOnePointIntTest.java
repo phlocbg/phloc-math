@@ -34,7 +34,7 @@ import com.phloc.math.genetic.utils.decisionmaker.DecisionMakerAlways;
 /**
  * Test class for class {@link CrossoverOnePointInt}.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public final class CrossoverOnePointIntTest
 {

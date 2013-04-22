@@ -24,7 +24,7 @@ import com.phloc.commons.annotations.OverrideOnDemand;
 /**
  * A percentage based decision maker with increasing percentages.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class DecisionMakerPercentageIncreasing extends DecisionMakerPercentage
 {

@@ -36,7 +36,7 @@ import com.phloc.math.matrix.Matrix;
 /**
  * Mutation that sorts a sub-sequence with the greedy TSP algorithm:
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class TSPMutationGreedy extends AbstractMutation
 {

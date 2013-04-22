@@ -30,7 +30,7 @@ import com.phloc.commons.state.EChange;
 /**
  * Base interface for a single graph node.
  * 
- * @author philip
+ * @author Philip Helger
  */
 @MustImplementEqualsAndHashcode
 public interface IBaseGraphNode <N extends IBaseGraphNode <N, R>, R extends IBaseGraphRelation <N, R>> extends

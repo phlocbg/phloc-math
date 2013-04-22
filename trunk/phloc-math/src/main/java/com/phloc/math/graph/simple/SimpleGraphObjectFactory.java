@@ -30,7 +30,7 @@ import com.phloc.math.graph.impl.GraphRelation;
  * Default implementation of the {@link IGraphObjectFactory} with
  * {@link GraphNode} and {@link GraphRelation}.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class SimpleGraphObjectFactory implements IGraphObjectFactory
 {

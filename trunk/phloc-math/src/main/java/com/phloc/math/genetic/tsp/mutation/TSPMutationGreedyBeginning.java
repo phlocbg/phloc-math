@@ -31,7 +31,7 @@ import com.phloc.math.matrix.Matrix;
  * A mutation that always performs a greedy optimization for the first 20
  * generations, and than uses the supplied mutation.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class TSPMutationGreedyBeginning extends AbstractMutation
 {

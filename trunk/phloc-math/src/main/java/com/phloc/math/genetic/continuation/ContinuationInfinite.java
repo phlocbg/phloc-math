@@ -29,7 +29,7 @@ import com.phloc.math.genetic.model.IPopulation;
 /**
  * Run infinitely!
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class ContinuationInfinite extends AbstractContinuation
 {

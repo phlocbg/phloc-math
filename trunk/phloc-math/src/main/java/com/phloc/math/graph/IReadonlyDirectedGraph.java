@@ -26,7 +26,7 @@ import com.phloc.commons.annotations.ReturnsMutableCopy;
 /**
  * Base interface for a read-only directed graph.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public interface IReadonlyDirectedGraph extends IReadonlyBaseGraph <IDirectedGraphNode, IDirectedGraphRelation>
 {

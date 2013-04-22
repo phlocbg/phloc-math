@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 /**
  * Abstract fitness function declaration.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public interface IFitnessFunction
 {

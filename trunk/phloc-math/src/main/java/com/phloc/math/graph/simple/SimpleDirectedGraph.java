@@ -29,7 +29,7 @@ import com.phloc.math.graph.impl.DirectedGraph;
 /**
  * A simple graph object that bidirectionally links graph nodes.
  * 
- * @author philip
+ * @author Philip Helger
  */
 @NotThreadSafe
 public class SimpleDirectedGraph extends DirectedGraph implements ISimpleDirectedGraph

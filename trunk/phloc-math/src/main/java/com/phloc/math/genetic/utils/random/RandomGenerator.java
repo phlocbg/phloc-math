@@ -27,7 +27,7 @@ import com.phloc.commons.random.VerySecureRandom;
 /**
  * The central class for creating random values.
  * 
- * @author philip
+ * @author Philip Helger
  */
 @NotThreadSafe
 public final class RandomGenerator

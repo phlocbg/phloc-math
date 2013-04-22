@@ -28,7 +28,7 @@ import com.phloc.commons.annotations.Nonempty;
 /**
  * Implementation of {@link IRandomGenerator} based on {@link java.util.Random}
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class RandomGeneratorRandom implements IRandomGenerator
 {

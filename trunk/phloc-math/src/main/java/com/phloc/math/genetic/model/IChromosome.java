@@ -31,7 +31,7 @@ import com.phloc.commons.annotations.ReturnsMutableCopy;
  * called only once per instance, so the object should be immutable.<br>
  * Assumption: chromosome is ordered!
  * 
- * @author philip
+ * @author Philip Helger
  */
 @MustImplementEqualsAndHashcode
 public interface IChromosome

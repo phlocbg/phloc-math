@@ -28,7 +28,7 @@ import com.phloc.math.genetic.model.IChromosome;
  * Special CCW with additional index map. Separated to save memory in cases
  * where the index is not needed.
  * 
- * @author philip
+ * @author Philip Helger
  */
 final class CCWWithIndex extends CCW
 {

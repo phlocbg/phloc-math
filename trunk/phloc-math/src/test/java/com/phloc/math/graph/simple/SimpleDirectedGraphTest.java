@@ -35,7 +35,7 @@ import com.phloc.math.graph.impl.DirectedGraphNode;
 /**
  * Test class for class {@link SimpleDirectedGraph}.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public final class SimpleDirectedGraphTest extends AbstractGraphTestCase
 {

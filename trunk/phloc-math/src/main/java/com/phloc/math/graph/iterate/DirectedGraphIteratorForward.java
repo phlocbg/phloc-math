@@ -36,7 +36,7 @@ import com.phloc.math.graph.IDirectedGraphRelation;
 /**
  * A simple forward iterator for directed graphs (following the outgoing nodes).
  * 
- * @author philip
+ * @author Philip Helger
  */
 @NotThreadSafe
 public final class DirectedGraphIteratorForward implements IIterableIterator <IDirectedGraphNode>
@@ -45,7 +45,7 @@ public final class DirectedGraphIteratorForward implements IIterableIterator <ID
    * This class represents a node in the current iteration process. It is
    * relevant to easily keep the current iterator status and the node together.
    * 
-   * @author philip
+   * @author Philip Helger
    */
   private static final class IterationNode
   {

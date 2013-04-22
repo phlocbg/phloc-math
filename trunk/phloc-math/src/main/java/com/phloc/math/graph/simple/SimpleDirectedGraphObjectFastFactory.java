@@ -30,7 +30,7 @@ import com.phloc.math.graph.impl.DirectedGraphRelationFast;
  * Default implementation of the {@link IDirectedGraphObjectFactory} with
  * {@link DirectedGraphNodeFast} and {@link DirectedGraphRelationFast}.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class SimpleDirectedGraphObjectFastFactory implements IDirectedGraphObjectFactory
 {

@@ -36,7 +36,7 @@ import com.phloc.math.matrix.Matrix;
 /**
  * Test class for class {@link SimpleGraph}.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public final class SimpleGraphTest extends AbstractGraphTestCase
 {

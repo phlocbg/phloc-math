@@ -37,7 +37,7 @@ import com.phloc.math.genetic.utils.random.RandomGenerator;
  * <li>Always use the absolute fittest chromosome</li>
  * </ul>
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class SelectorRandomSortedBestOnly extends AbstractSelector
 {

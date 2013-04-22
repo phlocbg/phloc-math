@@ -35,7 +35,7 @@ import com.phloc.math.genetic.utils.random.RandomGenerator;
  * <li>Choose every chromosome exactly once, independent of the fitness</li>
  * </ul>
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class SelectorTournament extends AbstractSelector
 {

@@ -28,7 +28,7 @@ import com.phloc.math.graph.IDirectedGraphNode;
  * Implementation of {@link com.phloc.math.graph.IDirectedGraphRelation}
  * interface with quick and dirty equals and hashCode (on ID only)
  * 
- * @author philip
+ * @author Philip Helger
  */
 @NotThreadSafe
 public class DirectedGraphRelationFast extends DirectedGraphRelation

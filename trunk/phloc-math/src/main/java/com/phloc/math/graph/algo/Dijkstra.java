@@ -46,7 +46,7 @@ import com.phloc.math.graph.IDirectedGraphRelation;
 /**
  * Find the shortest path between 2 graph nodes, using Dijsktra's algorithm
  * 
- * @author philip
+ * @author Philip Helger
  */
 public final class Dijkstra
 {

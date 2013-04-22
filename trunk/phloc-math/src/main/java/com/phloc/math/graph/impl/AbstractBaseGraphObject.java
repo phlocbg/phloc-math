@@ -31,7 +31,7 @@ import com.phloc.math.graph.IBaseGraphObject;
 /**
  * Base class for graph nodes and graph relations.
  * 
- * @author philip
+ * @author Philip Helger
  */
 @NotThreadSafe
 public abstract class AbstractBaseGraphObject extends MapBasedAttributeContainer implements IBaseGraphObject

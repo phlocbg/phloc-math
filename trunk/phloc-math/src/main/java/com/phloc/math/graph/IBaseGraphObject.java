@@ -23,7 +23,7 @@ import com.phloc.commons.id.IHasID;
 /**
  * Base interface for graph nodes and graph relations.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public interface IBaseGraphObject extends IHasID <String>, IAttributeContainer
 {

@@ -27,7 +27,7 @@ import com.phloc.math.genetic.model.IChromosome;
 /**
  * Cross over selector that does not alter the previous population!
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class SelectorAllUnsortedAll extends AbstractSelector
 {

@@ -31,7 +31,7 @@ import com.phloc.commons.state.EChange;
 /**
  * Base interface for graph node implementations.
  * 
- * @author philip
+ * @author Philip Helger
  */
 @MustImplementEqualsAndHashcode
 public interface IDirectedGraphNode extends IBaseGraphNode <IDirectedGraphNode, IDirectedGraphRelation>

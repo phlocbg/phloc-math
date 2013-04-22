@@ -20,7 +20,7 @@ package com.phloc.math.graph;
 /**
  * Base interface for a read-only undirected graph.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public interface IReadonlyGraph extends IReadonlyBaseGraph <IGraphNode, IGraphRelation>
 {

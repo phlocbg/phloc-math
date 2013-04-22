@@ -33,7 +33,7 @@ import com.phloc.math.graph.IGraphRelation;
 /**
  * Default implementation of the {@link IGraphRelation} interface
  * 
- * @author philip
+ * @author Philip Helger
  */
 @NotThreadSafe
 public class GraphRelation extends AbstractBaseGraphObject implements IGraphRelation

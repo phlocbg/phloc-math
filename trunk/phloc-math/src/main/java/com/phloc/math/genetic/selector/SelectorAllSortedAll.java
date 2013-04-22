@@ -33,7 +33,7 @@ import com.phloc.math.genetic.model.IChromosome;
  * <li>Choose every chromosome exactly once, independent of the fitness</li>
  * </ul>
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class SelectorAllSortedAll extends AbstractSelector
 {

@@ -46,7 +46,7 @@ import com.phloc.math.genetic.utils.random.RandomGenerator;
  * 
  * Also called "Inversion".
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class MutationRandomPartialReverse extends AbstractMutation
 {
