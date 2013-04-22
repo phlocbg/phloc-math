@@ -41,7 +41,7 @@ import com.phloc.math.graph.simple.SimpleGraphObjectFastFactory;
 /**
  * Find the minimum spanning tree of a graph, using Kruskal's algorithm.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public final class Kruskal
 {

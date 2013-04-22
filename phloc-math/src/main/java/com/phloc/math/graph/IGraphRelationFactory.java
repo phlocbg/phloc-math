@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 /**
  * Factory interface for creating undirected graph relations.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public interface IGraphRelationFactory
 {

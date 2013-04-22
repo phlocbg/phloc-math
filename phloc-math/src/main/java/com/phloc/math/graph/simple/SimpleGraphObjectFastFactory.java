@@ -30,7 +30,7 @@ import com.phloc.math.graph.impl.GraphRelationFast;
  * Default implementation of the {@link IGraphObjectFactory} with
  * {@link GraphNodeFast} and {@link GraphRelationFast}.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class SimpleGraphObjectFastFactory implements IGraphObjectFactory
 {

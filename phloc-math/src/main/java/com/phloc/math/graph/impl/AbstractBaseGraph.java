@@ -37,7 +37,7 @@ import com.phloc.math.graph.IBaseGraphRelation;
 /**
  * A simple graph object that bidirectionally links graph nodes.
  * 
- * @author philip
+ * @author Philip Helger
  */
 @NotThreadSafe
 public abstract class AbstractBaseGraph <N extends IBaseGraphNode <N, R>, R extends IBaseGraphRelation <N, R>> extends AbstractBaseGraphObject implements IBaseGraph <N, R>

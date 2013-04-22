@@ -25,7 +25,7 @@ import com.phloc.commons.state.EChange;
 /**
  * Interface for a modifiable undirected graph.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public interface IGraph extends IBaseGraph <IGraphNode, IGraphRelation>, IReadonlyGraph, IGraphObjectFactory
 {

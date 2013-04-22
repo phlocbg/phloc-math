@@ -34,7 +34,7 @@ import com.phloc.math.graph.IReadonlyGraph;
 /**
  * Test class for class {@link GraphIterator}.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public final class GraphIteratorTest extends AbstractGraphTestCase
 {

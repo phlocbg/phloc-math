@@ -29,7 +29,7 @@ import com.phloc.math.graph.impl.Graph;
 /**
  * A simple graph object that bidirectionally links graph nodes.
  * 
- * @author philip
+ * @author Philip Helger
  */
 @NotThreadSafe
 public class SimpleGraph extends Graph implements ISimpleGraph

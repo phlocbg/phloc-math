@@ -37,7 +37,7 @@ import com.phloc.math.graph.IGraphRelation;
 /**
  * Default implementation if the {@link IGraphNode} interface
  * 
- * @author philip
+ * @author Philip Helger
  */
 @NotThreadSafe
 public class GraphNode extends AbstractBaseGraphObject implements IGraphNode

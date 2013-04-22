@@ -57,7 +57,7 @@ import com.phloc.math.genetic.utils.random.RandomGenerator;
  *     N2 = (4 - 5 - 2 - 7 - 1 - 6 - 3)
  * </pre>
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class CrossoverPartiallyMapped extends AbstractCrossover
 {

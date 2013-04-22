@@ -35,7 +35,7 @@ import com.phloc.math.genetic.model.IChromosome;
  * <li>Always choose the n best fitting chromosomes</li>
  * </ul>
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class SelectorAllSortedBest extends AbstractSelector
 {

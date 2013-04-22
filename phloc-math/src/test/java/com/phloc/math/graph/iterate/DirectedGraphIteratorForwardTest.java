@@ -34,7 +34,7 @@ import com.phloc.math.graph.IReadonlyDirectedGraph;
 /**
  * Test class for class {@link DirectedGraphIteratorForward}.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public final class DirectedGraphIteratorForwardTest extends AbstractGraphTestCase
 {

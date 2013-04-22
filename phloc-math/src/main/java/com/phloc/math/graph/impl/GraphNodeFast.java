@@ -26,7 +26,7 @@ import com.phloc.commons.hash.HashCodeGenerator;
  * Implementation of {@link com.phloc.math.graph.IGraphNode} interface with
  * quick and dirty equals and hashCode (on ID only)
  * 
- * @author philip
+ * @author Philip Helger
  */
 @NotThreadSafe
 public class GraphNodeFast extends GraphNode

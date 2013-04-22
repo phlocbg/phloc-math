@@ -53,7 +53,7 @@ import com.phloc.math.matrix.Matrix;
  * SelectorAllSortedBest(2); new DecisionMakerPercentage (0.0); new DecisionMakerPercentage (86.3); nPopulationSize=38
  * </pre>
  * 
- * @author philip
+ * @author Philip Helger
  */
 public final class MainTSPRunnerCh130 extends AbstractFileBasedTSPRunner
 {

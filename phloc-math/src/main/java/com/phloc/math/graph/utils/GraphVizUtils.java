@@ -43,7 +43,7 @@ import com.phloc.math.graph.IReadonlyGraph;
 /**
  * Utility class to export a graph to something else
  * 
- * @author philip
+ * @author Philip Helger
  */
 @Immutable
 public final class GraphVizUtils

@@ -44,7 +44,7 @@ import com.phloc.math.genetic.utils.random.RandomGenerator;
  * 
  * Also called "Swap".
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class MutationRandomMoveSingle extends AbstractMutation
 {

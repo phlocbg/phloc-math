@@ -35,7 +35,7 @@ import com.phloc.commons.idfactory.IIDFactory;
  * default), {@link GlobalIDFactory#getNewStringID()} is used to create Graph
  * object IDs.
  * 
- * @author philip
+ * @author Philip Helger
  */
 @ThreadSafe
 public final class GraphObjectIDFactory

@@ -26,7 +26,7 @@ import com.phloc.math.graph.IGraphRelation;
 /**
  * Interface for a modifiable simple graph.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public interface ISimpleGraph extends IGraph
 {

@@ -33,7 +33,7 @@ import com.phloc.math.graph.IDirectedGraphRelation;
 /**
  * Default implementation of the {@link IDirectedGraphRelation} interface
  * 
- * @author philip
+ * @author Philip Helger
  */
 @NotThreadSafe
 public class DirectedGraphRelation extends AbstractBaseGraphObject implements IDirectedGraphRelation

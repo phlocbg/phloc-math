@@ -28,7 +28,7 @@ import com.phloc.commons.idfactory.StringIDFromGlobalIntIDFactory;
 /**
  * Test class for class {@link GraphObjectIDFactory}.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public final class GraphObjectIDFactoryTest
 {

@@ -35,7 +35,7 @@ import com.phloc.math.graph.IGraphRelation;
 /**
  * A simple iterator for undirected graphs.
  * 
- * @author philip
+ * @author Philip Helger
  */
 @NotThreadSafe
 public final class GraphIterator implements IIterableIterator <IGraphNode>

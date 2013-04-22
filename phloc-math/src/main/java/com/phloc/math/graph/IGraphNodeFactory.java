@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 /**
  * Factory interface for creating undirected graph nodes
  * 
- * @author philip
+ * @author Philip Helger
  */
 public interface IGraphNodeFactory
 {

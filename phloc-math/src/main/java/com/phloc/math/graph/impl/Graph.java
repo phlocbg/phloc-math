@@ -41,7 +41,7 @@ import com.phloc.math.matrix.Matrix;
 /**
  * A simple graph object that bidirectionally links graph nodes.
  * 
- * @author philip
+ * @author Philip Helger
  */
 @NotThreadSafe
 public class Graph extends AbstractBaseGraph <IGraphNode, IGraphRelation> implements IGraph

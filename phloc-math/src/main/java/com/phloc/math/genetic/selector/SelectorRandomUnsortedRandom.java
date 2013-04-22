@@ -33,7 +33,7 @@ import com.phloc.math.genetic.utils.random.RandomGenerator;
  * <li>Pick random chromosomes in each run</li>
  * </ul>
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class SelectorRandomUnsortedRandom extends AbstractSelector
 {

@@ -21,7 +21,7 @@ package com.phloc.math.graph;
  * Combined factory interface that encapsulates node and relation factory
  * methods.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public interface IDirectedGraphObjectFactory extends IDirectedGraphNodeFactory, IDirectedGraphRelationFactory
 {

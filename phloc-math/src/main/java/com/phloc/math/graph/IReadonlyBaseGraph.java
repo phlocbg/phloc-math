@@ -30,7 +30,7 @@ import com.phloc.math.matrix.Matrix;
 /**
  * Base interface for a read-only graph.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public interface IReadonlyBaseGraph <N extends IBaseGraphNode <N, R>, R extends IBaseGraphRelation <N, R>> extends
                                                                                                            IBaseGraphObject
