@@ -96,19 +96,6 @@
     </dependency>
     
     <dependency>
-      <groupId>com.phloc</groupId>
-      <artifactId>phloc-poi</artifactId>
-      <version>2.7.6</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>net.sf.opencsv</groupId>
-      <artifactId>opencsv</artifactId>
-      <version>2.3</version>
-      <optional>true</optional>
-    </dependency>
-    
-    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
       <scope>test</scope>
