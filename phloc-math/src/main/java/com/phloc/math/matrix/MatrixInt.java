@@ -704,7 +704,7 @@ public class MatrixInt implements Serializable, ICloneable <MatrixInt>
       final int [] aRow = m_aData[nRow];
       int nSum = 0;
       for (int nCol = 0; nCol < m_nCols; nCol++)
-        nSum += Math.abs (aRow[nCol]);
+        nSum += MathHelper.abs (aRow[nCol]);
       ret = Math.max (ret, nSum);
     }
     return ret;

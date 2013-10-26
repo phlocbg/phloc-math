@@ -22,6 +22,7 @@ import java.io.Serializable;
 import javax.annotation.Nonnull;
 
 import com.phloc.commons.annotations.ReturnsMutableCopy;
+import com.phloc.commons.math.MathHelper;
 
 /**
  * LU Decomposition.
@@ -107,7 +108,7 @@ public class LUDecomposition implements Serializable
       // Find pivot and exchange if necessary.
       int p = j;
       for (int i = j + 1; i < m_nRows; i++)
-        if (Math.abs (aLUcolj[i]) > Math.abs (aLUcolj[p]))
+        if (MathHelper.abs (aLUcolj[i]) > MathHelper.abs (aLUcolj[p]))
           p = i;
       final double [] aLUj = m_aLU[j];
       if (p != j)
@@ -146,14 +147,14 @@ public class LUDecomposition implements Serializable
    * A.getRowDimension(); n = A.getColumnDimension(); piv = new int[m]; for (int
    * i = 0; i < m; i++) { piv[i] = i; } pivsign = 1; // Main loop. for (int k =
    * 0; k < n; k++) { // Find pivot. int p = k; for (int i = k+1; i < m; i++) {
-   * if (Math.abs(LU[i][k]) > Math.abs(LU[p][k])) { p = i; } } // Exchange if
-   * necessary. if (p != k) { for (int j = 0; j < n; j++) { double t = LU[p][j];
-   * LU[p][j] = LU[k][j]; LU[k][j] = t; } int t = piv[p]; piv[p] = piv[k];
-   * piv[k] = t; pivsign = -pivsign; } // Compute multipliers and eliminate k-th
-   * column. if (LU[k][k] != 0.0) { for (int i = k+1; i < m; i++) { LU[i][k] /=
-   * LU[k][k]; for (int j = k+1; j < n; j++) { LU[i][j] -= LU[i][k]*LU[k][j]; }
-   * } } } } \* ------------------------ End of temporary code.
-   * ------------------------
+   * if (MathHelper.abs(LU[i][k]) > MathHelper.abs(LU[p][k])) { p = i; } } //
+   * Exchange if necessary. if (p != k) { for (int j = 0; j < n; j++) { double t
+   * = LU[p][j]; LU[p][j] = LU[k][j]; LU[k][j] = t; } int t = piv[p]; piv[p] =
+   * piv[k]; piv[k] = t; pivsign = -pivsign; } // Compute multipliers and
+   * eliminate k-th column. if (LU[k][k] != 0.0) { for (int i = k+1; i < m; i++)
+   * { LU[i][k] /= LU[k][k]; for (int j = k+1; j < n; j++) { LU[i][j] -=
+   * LU[i][k]*LU[k][j]; } } } } } \* ------------------------ End of temporary
+   * code. ------------------------
    */
 
   /**

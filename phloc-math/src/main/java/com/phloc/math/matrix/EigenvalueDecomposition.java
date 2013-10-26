@@ -112,7 +112,7 @@ public class EigenvalueDecomposition implements Serializable
       double scale = 0.0;
       double h = 0.0;
       for (int k = 0; k < i; k++)
-        scale += Math.abs (m_aEVd[k]);
+        scale += MathHelper.abs (m_aEVd[k]);
       if (scale == 0.0)
       {
         m_aEVe[i] = m_aEVd[i - 1];
@@ -242,11 +242,11 @@ public class EigenvalueDecomposition implements Serializable
     for (int l = 0; l < m_nDim; l++)
     {
       // Find small subdiagonal element
-      tst1 = Math.max (tst1, Math.abs (m_aEVd[l]) + Math.abs (m_aEVe[l]));
+      tst1 = Math.max (tst1, MathHelper.abs (m_aEVd[l]) + MathHelper.abs (m_aEVe[l]));
       int m = l;
       while (m < m_nDim)
       {
-        if (Math.abs (m_aEVe[m]) <= EPSILON * tst1)
+        if (MathHelper.abs (m_aEVe[m]) <= EPSILON * tst1)
           break;
         m++;
       }
@@ -318,7 +318,7 @@ public class EigenvalueDecomposition implements Serializable
 
           // Check for convergence.
 
-        } while (Math.abs (m_aEVe[l]) > EPSILON * tst1);
+        } while (MathHelper.abs (m_aEVe[l]) > EPSILON * tst1);
       }
       m_aEVd[l] = m_aEVd[l] + f;
       m_aEVe[l] = 0.0;
@@ -369,7 +369,7 @@ public class EigenvalueDecomposition implements Serializable
       // Scale column.
       double scale = 0.0;
       for (int i = m; i <= high; i++)
-        scale += Math.abs (m_aHessenBerg[i][m - 1]);
+        scale += MathHelper.abs (m_aHessenBerg[i][m - 1]);
       if (scale != 0.0)
       {
         // Compute Householder transformation.
@@ -511,7 +511,7 @@ public class EigenvalueDecomposition implements Serializable
       }
       for (int j = Math.max (i - 1, 0); j < nn; j++)
       {
-        norm += Math.abs (m_aHessenBerg[i][j]);
+        norm += MathHelper.abs (m_aHessenBerg[i][j]);
       }
     }
 
@@ -523,10 +523,10 @@ public class EigenvalueDecomposition implements Serializable
       int l = n;
       while (l > low)
       {
-        s = Math.abs (m_aHessenBerg[l - 1][l - 1]) + Math.abs (m_aHessenBerg[l][l]);
+        s = MathHelper.abs (m_aHessenBerg[l - 1][l - 1]) + MathHelper.abs (m_aHessenBerg[l][l]);
         if (s == 0.0)
           s = norm;
-        if (Math.abs (m_aHessenBerg[l][l - 1]) < EPSILON * s)
+        if (MathHelper.abs (m_aHessenBerg[l][l - 1]) < EPSILON * s)
           break;
         l--;
       }
@@ -548,7 +548,7 @@ public class EigenvalueDecomposition implements Serializable
           w = m_aHessenBerg[n][n - 1] * m_aHessenBerg[n - 1][n];
           p = (m_aHessenBerg[n - 1][n - 1] - m_aHessenBerg[n][n]) / 2.0;
           q = p * p + w;
-          z = Math.sqrt (Math.abs (q));
+          z = Math.sqrt (MathHelper.abs (q));
           m_aHessenBerg[n][n] = m_aHessenBerg[n][n] + exshift;
           m_aHessenBerg[n - 1][n - 1] = m_aHessenBerg[n - 1][n - 1] + exshift;
           x = m_aHessenBerg[n][n];
@@ -568,7 +568,7 @@ public class EigenvalueDecomposition implements Serializable
             m_aEVe[n - 1] = 0.0;
             m_aEVe[n] = 0.0;
             x = m_aHessenBerg[n][n - 1];
-            s = Math.abs (x) + Math.abs (z);
+            s = MathHelper.abs (x) + MathHelper.abs (z);
             p = x / s;
             q = z / s;
             r = Math.sqrt (p * p + q * q);
@@ -633,7 +633,7 @@ public class EigenvalueDecomposition implements Serializable
             {
               m_aHessenBerg[i][i] -= x;
             }
-            s = Math.abs (m_aHessenBerg[n][n - 1]) + Math.abs (m_aHessenBerg[n - 1][n - 2]);
+            s = MathHelper.abs (m_aHessenBerg[n][n - 1]) + MathHelper.abs (m_aHessenBerg[n - 1][n - 2]);
             x = 0.75 * s;
             y = x;
             w = -0.4375 * s * s;
@@ -673,15 +673,15 @@ public class EigenvalueDecomposition implements Serializable
             p = (r * s - w) / m_aHessenBerg[m + 1][m] + m_aHessenBerg[m][m + 1];
             q = m_aHessenBerg[m + 1][m + 1] - z - r - s;
             r = m_aHessenBerg[m + 2][m + 1];
-            s = Math.abs (p) + Math.abs (q) + Math.abs (r);
+            s = MathHelper.abs (p) + MathHelper.abs (q) + MathHelper.abs (r);
             p /= s;
             q /= s;
             r /= s;
             if (m == l)
               break;
-            if (Math.abs (m_aHessenBerg[m][m - 1]) * (Math.abs (q) + Math.abs (r)) < EPSILON *
-                                                                                     (Math.abs (p) * (Math.abs (m_aHessenBerg[m - 1][m - 1]) +
-                                                                                                      Math.abs (z) + Math.abs (m_aHessenBerg[m + 1][m + 1]))))
+            if (MathHelper.abs (m_aHessenBerg[m][m - 1]) * (MathHelper.abs (q) + MathHelper.abs (r)) < EPSILON *
+                                                                                                       (MathHelper.abs (p) * (MathHelper.abs (m_aHessenBerg[m - 1][m - 1]) +
+                                                                                                                              MathHelper.abs (z) + MathHelper.abs (m_aHessenBerg[m + 1][m + 1]))))
             {
               break;
             }
@@ -707,7 +707,7 @@ public class EigenvalueDecomposition implements Serializable
               p = m_aHessenBerg[k][k - 1];
               q = m_aHessenBerg[k + 1][k - 1];
               r = (notlast ? m_aHessenBerg[k + 2][k - 1] : 0.0);
-              x = Math.abs (p) + Math.abs (q) + Math.abs (r);
+              x = MathHelper.abs (p) + MathHelper.abs (q) + MathHelper.abs (r);
               if (x == 0.0)
               {
                 continue;
@@ -841,7 +841,7 @@ public class EigenvalueDecomposition implements Serializable
               q = (m_aEVd[i] - p) * (m_aEVd[i] - p) + m_aEVe[i] * m_aEVe[i];
               t = (x * s - z * r) / q;
               m_aHessenBerg[i][n] = t;
-              if (Math.abs (x) > Math.abs (z))
+              if (MathHelper.abs (x) > MathHelper.abs (z))
               {
                 m_aHessenBerg[i + 1][n] = (-r - w * t) / x;
               }
@@ -853,7 +853,7 @@ public class EigenvalueDecomposition implements Serializable
 
             // Overflow control
 
-            t = Math.abs (m_aHessenBerg[i][n]);
+            t = MathHelper.abs (m_aHessenBerg[i][n]);
             if ((EPSILON * t) * t > 1)
             {
               for (int j = i; j <= n; j++)
@@ -874,7 +874,7 @@ public class EigenvalueDecomposition implements Serializable
 
           // Last vector component imaginary so matrix is triangular
 
-          if (Math.abs (m_aHessenBerg[n][n - 1]) > Math.abs (m_aHessenBerg[n - 1][n]))
+          if (MathHelper.abs (m_aHessenBerg[n][n - 1]) > MathHelper.abs (m_aHessenBerg[n - 1][n]))
           {
             m_aHessenBerg[n - 1][n - 1] = q / m_aHessenBerg[n][n - 1];
             m_aHessenBerg[n - 1][n] = -(m_aHessenBerg[n][n] - p) / m_aHessenBerg[n][n - 1];
@@ -925,12 +925,14 @@ public class EigenvalueDecomposition implements Serializable
                 vi = (m_aEVd[i] - p) * 2.0 * q;
                 if (vr == 0.0 & vi == 0.0)
                 {
-                  vr = EPSILON * norm * (Math.abs (w) + Math.abs (q) + Math.abs (x) + Math.abs (y) + Math.abs (z));
+                  vr = EPSILON *
+                       norm *
+                       (MathHelper.abs (w) + MathHelper.abs (q) + MathHelper.abs (x) + MathHelper.abs (y) + MathHelper.abs (z));
                 }
                 _cdiv (x * r - z * ra + q * sa, x * s - z * sa - q * ra, vr, vi);
                 m_aHessenBerg[i][n - 1] = m_dCdivr;
                 m_aHessenBerg[i][n] = m_dCdivi;
-                if (Math.abs (x) > (Math.abs (z) + Math.abs (q)))
+                if (MathHelper.abs (x) > (MathHelper.abs (z) + MathHelper.abs (q)))
                 {
                   m_aHessenBerg[i + 1][n - 1] = (-ra - w * m_aHessenBerg[i][n - 1] + q * m_aHessenBerg[i][n]) / x;
                   m_aHessenBerg[i + 1][n] = (-sa - w * m_aHessenBerg[i][n] - q * m_aHessenBerg[i][n - 1]) / x;
@@ -945,7 +947,7 @@ public class EigenvalueDecomposition implements Serializable
 
               // Overflow control
 
-              t = Math.max (Math.abs (m_aHessenBerg[i][n - 1]), Math.abs (m_aHessenBerg[i][n]));
+              t = Math.max (MathHelper.abs (m_aHessenBerg[i][n - 1]), MathHelper.abs (m_aHessenBerg[i][n]));
               if ((EPSILON * t) * t > 1)
               {
                 for (int j = i; j <= n; j++)

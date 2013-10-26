@@ -711,7 +711,7 @@ public class Matrix implements Serializable, ICloneable <Matrix>
       final double [] aRow = m_aData[nRow];
       double dSum = 0;
       for (int nCol = 0; nCol < m_nCols; nCol++)
-        dSum += Math.abs (aRow[nCol]);
+        dSum += MathHelper.abs (aRow[nCol]);
       ret = Math.max (ret, dSum);
     }
     return ret;
