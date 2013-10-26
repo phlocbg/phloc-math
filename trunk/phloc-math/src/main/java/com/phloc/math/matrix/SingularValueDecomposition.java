@@ -291,7 +291,7 @@ public class SingularValueDecomposition implements Serializable
       {
         if (k == -1)
           break;
-        if (Math.abs (e[k]) <= TINY + EPSILON * (MathHelper.abs (m_aData[k]) + MathHelper.abs (m_aData[k + 1])))
+        if (MathHelper.abs (e[k]) <= TINY + EPSILON * (MathHelper.abs (m_aData[k]) + MathHelper.abs (m_aData[k + 1])))
         {
           e[k] = 0.0;
           break;
@@ -392,11 +392,11 @@ public class SingularValueDecomposition implements Serializable
         {
 
           // Calculate the shift.
-          final double scale = MathHelper.getMaxDouble (Math.abs (m_aData[p - 1]),
-                                                        Math.abs (m_aData[p - 2]),
-                                                        Math.abs (e[p - 2]),
-                                                        Math.abs (m_aData[k]),
-                                                        Math.abs (e[k]));
+          final double scale = MathHelper.getMaxDouble (MathHelper.abs (m_aData[p - 1]),
+                                                        MathHelper.abs (m_aData[p - 2]),
+                                                        MathHelper.abs (e[p - 2]),
+                                                        MathHelper.abs (m_aData[k]),
+                                                        MathHelper.abs (e[k]));
           final double sp = m_aData[p - 1] / scale;
           final double spm1 = m_aData[p - 2] / scale;
           final double epm1 = e[p - 2] / scale;
