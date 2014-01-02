@@ -30,9 +30,10 @@ import com.phloc.commons.charset.CharsetManager;
 import com.phloc.commons.io.streams.NonBlockingByteArrayOutputStream;
 import com.phloc.commons.io.streams.StreamUtils;
 import com.phloc.commons.string.StringHelper;
+import com.phloc.commons.xml.EXMLCharMode;
 import com.phloc.commons.xml.EXMLIncorrectCharacterHandling;
-import com.phloc.commons.xml.EXMLVersion;
-import com.phloc.commons.xml.XMLHelper;
+import com.phloc.commons.xml.serialize.EXMLSerializeVersion;
+import com.phloc.commons.xml.serialize.XMLMaskHelper;
 import com.phloc.math.graph.IDirectedGraphNode;
 import com.phloc.math.graph.IDirectedGraphRelation;
 import com.phloc.math.graph.IGraphNode;
@@ -56,9 +57,10 @@ public final class GraphVizUtils
   public static String getAttribute (@Nonnull @Nonempty final String sName, @Nonnull final String sValue)
   {
     return new StringBuilder (sName).append ("=<")
-                                    .append (XMLHelper.getMaskedXMLText (EXMLVersion.XML_10,
-                                                                         EXMLIncorrectCharacterHandling.DEFAULT,
-                                                                         sValue))
+                                    .append (XMLMaskHelper.getMaskedXMLText (EXMLSerializeVersion.XML_10,
+                                                                             EXMLCharMode.ELEMENT_NAME,
+                                                                             EXMLIncorrectCharacterHandling.DEFAULT,
+                                                                             sValue))
                                     .append ('>')
                                     .toString ();
   }
@@ -153,7 +155,10 @@ public final class GraphVizUtils
       {
         final String sLabel = aGraphNode.getAttributeAsString (sNodeLabelAttr);
         aSB.append ("[label=<")
-           .append (XMLHelper.getMaskedXMLText (EXMLVersion.XML_10, EXMLIncorrectCharacterHandling.DEFAULT, sLabel))
+           .append (XMLMaskHelper.getMaskedXMLText (EXMLSerializeVersion.XML_10,
+                                                    EXMLCharMode.ELEMENT_NAME,
+                                                    EXMLIncorrectCharacterHandling.DEFAULT,
+                                                    sLabel))
            .append (">]");
       }
       aSB.append (';');
@@ -166,7 +171,10 @@ public final class GraphVizUtils
       {
         final String sLabel = aGraphRelation.getAttributeAsString (sRelationLabelAttr);
         aSB.append ("[label=<")
-           .append (XMLHelper.getMaskedXMLText (EXMLVersion.XML_10, EXMLIncorrectCharacterHandling.DEFAULT, sLabel))
+           .append (XMLMaskHelper.getMaskedXMLText (EXMLSerializeVersion.XML_10,
+                                                    EXMLCharMode.ELEMENT_NAME,
+                                                    EXMLIncorrectCharacterHandling.DEFAULT,
+                                                    sLabel))
            .append (">]");
       }
       aSB.append (";\n");
