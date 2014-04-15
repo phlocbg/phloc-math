@@ -64,6 +64,7 @@ public class ImprovedRegulaFalsiPanel extends RootFinderPanel
   /** x false value */
   private float xFalse;
   /** x-axis row */
+  @SuppressWarnings ("unused")
   private int xAxisRow;
 
   /**
@@ -114,6 +115,7 @@ public class ImprovedRegulaFalsiPanel extends RootFinderPanel
     // Convert xNeg, xPos, and xFalse to graph columns.
     final int cNeg = Math.round ((xNeg - xMin) / xDelta);
     final int cPos = Math.round ((xPos - xMin) / xDelta);
+    @SuppressWarnings ("unused")
     final int cFalse = Math.round ((xFalse - xMin) / xDelta);
 
     final float fNeg = finder.getFNeg ();
@@ -123,6 +125,7 @@ public class ImprovedRegulaFalsiPanel extends RootFinderPanel
     // Convert f(xNeg), f(xPos), and f(xFalse) to graph rows.
     final int rNeg = Math.round ((yMax - fNeg) / yDelta);
     final int rPos = Math.round ((yMax - fPos) / yDelta);
+    @SuppressWarnings ("unused")
     final int rFalse = Math.round ((yMax - fFalse) / yDelta);
 
     // Draw the secant.

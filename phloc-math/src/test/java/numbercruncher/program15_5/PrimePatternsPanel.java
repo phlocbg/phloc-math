@@ -285,7 +285,7 @@ public class PrimePatternsPanel extends GraphPanel
    */
   private class Monitor extends Thread
   {
-    private final Thread thread;
+    private final Thread m_aThread;
 
     /**
      * Constructor.
@@ -295,7 +295,7 @@ public class PrimePatternsPanel extends GraphPanel
      */
     private Monitor (final Thread thread)
     {
-      this.thread = thread;
+      this.m_aThread = thread;
     }
 
     /**
@@ -305,11 +305,11 @@ public class PrimePatternsPanel extends GraphPanel
     @Override
     public void run ()
     {
-      if (thread.isAlive ())
+      if (m_aThread.isAlive ())
       {
         try
         {
-          thread.join ();
+          m_aThread.join ();
         }
         catch (final InterruptedException ex)
         {}

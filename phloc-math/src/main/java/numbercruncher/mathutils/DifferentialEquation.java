@@ -1,6 +1,5 @@
 package numbercruncher.mathutils;
 
-
 /**
  * The base class for functions that can have derivatives. Initialize the static
  * function table with some sample functions.
@@ -48,7 +47,7 @@ public abstract class DifferentialEquation implements IEvaluatable
 
   /**
    * Return the value of the differential equation at x. (Implementation of
-   * Evaluatable.)
+   * {@link IEvaluatable}.)
    * 
    * @param x
    *        the value of x
@@ -59,6 +58,8 @@ public abstract class DifferentialEquation implements IEvaluatable
   /**
    * Return the value of the differential equation at (x, y).
    * 
+   * @param x
+   * @param y
    * @return the solution value
    */
   public float at (final float x, final float y)

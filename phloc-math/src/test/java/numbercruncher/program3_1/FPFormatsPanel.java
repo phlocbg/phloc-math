@@ -1045,6 +1045,7 @@ class FPFormatsPanel extends Panel
       int sign;
       final int biased = floatBiasedExponent ();
       final String signBitText = fSignBitText.getText ();
+      @SuppressWarnings ("unused")
       final String unbiasedText = fUnbiasedText.getText ();
       final String fractionBitsText = fFractionBitsText.getText ();
 
@@ -1629,15 +1630,16 @@ class FPFormatsPanel extends Panel
    * Convert a long value into a string of '0' and '1' that represents the value
    * in base 2.
    * 
-   * @param n
+   * @param pn
    *        the long value
    * @param size
    *        the array size
    * @return the character array
    */
-  private String toBitString (long n, final int size)
+  private String toBitString (final long pn, final int size)
   {
-    final StringBuffer buffer = new StringBuffer (size);
+    long n = pn;
+    final StringBuilder buffer = new StringBuilder (size);
 
     // Convert each bit from right to left.
     for (int i = size - 1; i >= 0; --i)
@@ -1712,29 +1714,29 @@ class FPFormatsPanel extends Panel
    */
   private class GridBagConstraints extends java.awt.GridBagConstraints
   {
-    GridBagConstraints (final int gridx,
-                        final int gridy,
-                        final int gridwidth,
-                        final int gridheight,
-                        final double weightx,
-                        final double weighty,
-                        final int anchor,
-                        final int fill,
-                        final Insets insets,
-                        final int ipadx,
-                        final int ipady)
+    GridBagConstraints (final int pgridx,
+                        final int pgridy,
+                        final int pgridwidth,
+                        final int pgridheight,
+                        final double pweightx,
+                        final double pweighty,
+                        final int panchor,
+                        final int pfill,
+                        final Insets pinsets,
+                        final int pipadx,
+                        final int pipady)
     {
-      super.gridx = gridx;
-      super.gridy = gridy;
-      super.gridwidth = gridwidth;
-      super.gridheight = gridheight;
-      super.weightx = weightx;
-      super.weighty = weighty;
-      super.anchor = anchor;
-      super.fill = fill;
-      super.insets = insets;
-      super.ipadx = ipadx;
-      super.ipady = ipady;
+      super.gridx = pgridx;
+      super.gridy = pgridy;
+      super.gridwidth = pgridwidth;
+      super.gridheight = pgridheight;
+      super.weightx = pweightx;
+      super.weighty = pweighty;
+      super.anchor = panchor;
+      super.fill = pfill;
+      super.insets = pinsets;
+      super.ipadx = pipadx;
+      super.ipady = pipady;
     }
   }
 }

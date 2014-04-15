@@ -18,6 +18,7 @@ import numbercruncher.graphutils.IDemoPanel;
 /**
  * The demo panel for the Borwein pi algorithm program and applet.
  */
+@SuppressWarnings ("deprecation")
 public class PiBorweinPanel extends Panel implements IDemoPanel, IPiBorweinParent
 {
   private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat ("00");

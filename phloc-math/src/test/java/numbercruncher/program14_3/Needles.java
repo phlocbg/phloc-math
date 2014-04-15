@@ -17,14 +17,15 @@ class Needles
   /** y coord of the other end of a needle */
   private float y2;
   /** angle of rotation about the midpoint */
-  private float theta;
+  @SuppressWarnings ("unused")
+  private float m_fTheta;
 
   /** paper's left edge */
-  private final float xMin;
+  private final float m_fXMin;
   /** paper's width */
   private final float xWidth;
   /** paper's bottom edge */
-  private final float yMin;
+  private final float m_fYMin;
   /** paper's height */
   private final float yHeight;
 
@@ -52,9 +53,9 @@ class Needles
    */
   Needles (final float xMin, final float xMax, final float yMin, final float yMax)
   {
-    this.xMin = xMin;
+    this.m_fXMin = xMin;
     this.xWidth = xMax - xMin;
-    this.yMin = yMin;
+    this.m_fYMin = yMin;
     this.yHeight = yMax - yMin;
   }
 
@@ -155,8 +156,8 @@ class Needles
 
     // Compute random values for the x and y coordinates of the
     // needle's midpoint, and for the needle's angle of rotation.
-    final float xCenter = xWidth * random.nextFloat () + xMin;
-    final float yCenter = yHeight * random.nextFloat () + yMin;
+    final float xCenter = xWidth * random.nextFloat () + m_fXMin;
+    final float yCenter = yHeight * random.nextFloat () + m_fYMin;
     final float theta = (float) Math.PI * random.nextFloat ();
 
     final float sin = (float) Math.sin (theta);

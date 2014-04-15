@@ -2,11 +2,12 @@ package numbercruncher.rootutils;
 
 import java.awt.Rectangle;
 import java.util.Hashtable;
+import java.util.Map;
 
-import numbercruncher.graphutils.PlotProperties;
 import numbercruncher.graphutils.IPlottable;
-import numbercruncher.mathutils.IEvaluatable;
+import numbercruncher.graphutils.PlotProperties;
 import numbercruncher.mathutils.Function;
+import numbercruncher.mathutils.IEvaluatable;
 
 /**
  * Wrapper class that makes functions plottable.
@@ -56,14 +57,14 @@ public class PlotFunction implements IPlottable
   private static final int Y92B = 506;
 
   /** function */
-  private Function function;
+  private Function m_aFunction;
   /** image region */
   private Rectangle rectangle;
   /** plot properties */
   private PlotProperties properties;
 
   /** wrapped function table */
-  private static Hashtable TABLE = new Hashtable (32);
+  private static Map <String, PlotFunction> TABLE = new Hashtable <String, PlotFunction> (32);
 
   // Enter the wrapped functions into the table.
   static
@@ -88,7 +89,7 @@ public class PlotFunction implements IPlottable
     enter ("sin(x)/2 + 1", XL1, Y71B, XL2, Y72B);
     enter ("1 + 1/x + 1/(x*x)", XL1, Y81B, XL2, Y82B);
     enter ("20/(x*x + 2*x + 10)", XL1, Y91B, XL2, Y92B);
-  };
+  }
 
   /**
    * Create a wrapped function and enter it into the table.
@@ -107,7 +108,7 @@ public class PlotFunction implements IPlottable
   private static void enter (final String key, final int x1, final int y1, final int x2, final int y2)
   {
     final PlotFunction plotFunction = new PlotFunction (x1, y1, x2, y2);
-    plotFunction.function = RootFunctions.function (key);
+    plotFunction.m_aFunction = RootFunctions.function (key);
 
     TABLE.put (key, plotFunction);
   }
@@ -128,11 +129,11 @@ public class PlotFunction implements IPlottable
    */
   public PlotFunction (final String key, final float xMin, final float xMax, final float yMin, final float yMax)
   {
-    final PlotFunction plotFunction = (PlotFunction) TABLE.get (key);
+    final PlotFunction plotFunction = TABLE.get (key);
 
     if (plotFunction != null)
     {
-      this.function = plotFunction.function;
+      this.m_aFunction = plotFunction.m_aFunction;
       this.rectangle = plotFunction.rectangle;
       this.properties = new PlotProperties (xMin, xMax, yMin, yMax);
     }
@@ -154,7 +155,7 @@ public class PlotFunction implements IPlottable
    */
   public PlotFunction (final Function function, final float xMin, final float xMax, final float yMin, final float yMax)
   {
-    this.function = function;
+    this.m_aFunction = function;
     this.rectangle = null;
     this.properties = new PlotProperties (xMin, xMax, yMin, yMax);
   }
@@ -183,7 +184,7 @@ public class PlotFunction implements IPlottable
    */
   public IEvaluatable getFunction ()
   {
-    return function;
+    return m_aFunction;
   }
 
   /**
@@ -193,7 +194,7 @@ public class PlotFunction implements IPlottable
    */
   public float at (final float x)
   {
-    return function.at (x);
+    return m_aFunction.at (x);
   }
 
   /**
@@ -203,7 +204,7 @@ public class PlotFunction implements IPlottable
    */
   public float derivativeAt (final float x)
   {
-    return function.derivativeAt (x);
+    return m_aFunction.derivativeAt (x);
   }
 
   // --------------------------//

@@ -31,11 +31,11 @@ public class CubePanel extends Panel
   private boolean first = true;
 
   /** wire frame cube */
-  private WireFrameCube cube;
+  private WireFrameCube m_aCube;
   /** transformation */
-  private final Transformation transformation;
+  private final Transformation m_aTransformation;
   /** parent panel */
-  private final TransformationPanel parent;
+  private final TransformationPanel m_aParent;
 
   /**
    * Constructor.
@@ -47,9 +47,9 @@ public class CubePanel extends Panel
    */
   CubePanel (final Transformation transformation, final TransformationPanel parent)
   {
-    this.transformation = transformation;
-    this.parent = parent;
-    this.cube = new WireFrameCube ();
+    this.m_aTransformation = transformation;
+    this.m_aParent = parent;
+    this.m_aCube = new WireFrameCube ();
 
     setBackground (Color.white);
   }
@@ -59,7 +59,7 @@ public class CubePanel extends Panel
    */
   public void reset ()
   {
-    cube = new WireFrameCube ();
+    m_aCube = new WireFrameCube ();
     first = true;
     bg = null;
 
@@ -75,7 +75,7 @@ public class CubePanel extends Panel
       return;
     bg.clearRect (0, 0, width, height);
 
-    transformation.init ();
+    m_aTransformation.init ();
 
     if (first)
     {
@@ -87,7 +87,7 @@ public class CubePanel extends Panel
     }
 
     repaint ();
-    parent.updateMatrixDisplay ();
+    m_aParent.updateMatrixDisplay ();
   }
 
   /**
@@ -137,17 +137,17 @@ public class CubePanel extends Panel
   private void firstDraw ()
   {
     // Scale and move to the center.
-    transformation.setScaling (50, 50, 50);
-    transformation.setTranslation (width / 2, height / 2, depth / 2);
+    m_aTransformation.setScaling (50, 50, 50);
+    m_aTransformation.setTranslation (width / 2, height / 2, depth / 2);
 
-    cube.draw (bg, transformation);
+    m_aCube.draw (bg, m_aTransformation);
 
     // Random subsequent translations.
     final float xDelta = (float) (2 * MAX_TRANSLATE * Math.random () - MAX_TRANSLATE);
     final float yDelta = (float) (2 * MAX_TRANSLATE * Math.random () - MAX_TRANSLATE);
     final float zDelta = (float) (2 * MAX_TRANSLATE * Math.random () - MAX_TRANSLATE);
 
-    transformation.setTranslation (xDelta, yDelta, zDelta);
+    m_aTransformation.setTranslation (xDelta, yDelta, zDelta);
 
     // Set the scale factor based on the space's depth and
     // whether the cube is moving towards or away from the viewer.
@@ -158,7 +158,7 @@ public class CubePanel extends Panel
     if (zDelta < 0)
       scaleFactor = 1 / scaleFactor;
 
-    transformation.setScaling (scaleFactor, scaleFactor, scaleFactor);
+    m_aTransformation.setScaling (scaleFactor, scaleFactor, scaleFactor);
 
     setRandomRotation ();
     first = false;
@@ -170,10 +170,10 @@ public class CubePanel extends Panel
   private void subsequentDraw ()
   {
     // Draw the transformed cube.
-    cube.draw (bg, transformation);
+    m_aCube.draw (bg, m_aTransformation);
 
     // If there was a bounce, set new random rotation angles.
-    if (transformation.bounced (width, height, depth))
+    if (m_aTransformation.bounced (width, height, depth))
     {
       setRandomRotation ();
     }
@@ -184,7 +184,7 @@ public class CubePanel extends Panel
    */
   private void setRandomRotation ()
   {
-    transformation.setRotation ((float) (0.1 * Math.random ()), // x axis
+    m_aTransformation.setRotation ((float) (0.1 * Math.random ()), // x axis
                                 (float) (0.1 * Math.random ()), // y axis
                                 (float) (0.1 * Math.random ())); // z axis
   }

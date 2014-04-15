@@ -1,6 +1,7 @@
 package numbercruncher.rootutils;
 
 import java.util.Hashtable;
+import java.util.Map;
 
 import numbercruncher.mathutils.Function;
 
@@ -10,7 +11,7 @@ import numbercruncher.mathutils.Function;
 public class RootFunctions
 {
   /** global function table */
-  private static Hashtable TABLE = new Hashtable (32);
+  private static Map <String, Function> TABLE = new Hashtable <String, Function> (32);
 
   // Enter the functions into the global function table.
   static
@@ -27,7 +28,7 @@ public class RootFunctions
    */
   public static Function function (final String key)
   {
-    return (Function) TABLE.get (key);
+    return TABLE.get (key);
   }
 
   /**

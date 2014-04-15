@@ -10,7 +10,7 @@ import numbercruncher.matrix.SquareMatrix;
 class Transformation
 {
   /** translation matrix */
-  private final SquareMatrix translate = new IdentityMatrix (4);
+  private final SquareMatrix m_aTranslate = new IdentityMatrix (4);
 
   /** scaling matrix */
   private final SquareMatrix scale = new IdentityMatrix (4);
@@ -67,9 +67,9 @@ class Transformation
   {
     try
     {
-      translate.set (3, 0, tx);
-      translate.set (3, 1, ty);
-      translate.set (3, 2, tz);
+      m_aTranslate.set (3, 0, tx);
+      m_aTranslate.set (3, 1, ty);
+      m_aTranslate.set (3, 2, tz);
     }
     catch (final MatrixException ex)
     {}
@@ -201,21 +201,21 @@ class Transformation
       // Bounced off the sides?
       if ((center.x () < 0) || (center.x () > width))
       {
-        translate.set (3, 0, -translate.at (3, 0));
+        m_aTranslate.set (3, 0, -m_aTranslate.at (3, 0));
         b = true;
       }
 
       // Bounced off the top or bottom?
       if ((center.y () < 0) || (center.y () > height))
       {
-        translate.set (3, 1, -translate.at (3, 1));
+        m_aTranslate.set (3, 1, -m_aTranslate.at (3, 1));
         b = true;
       }
 
       // Bounced off the front or back?
       if ((center.z () < 0) || (center.z () > depth))
       {
-        translate.set (3, 2, -translate.at (3, 2));
+        m_aTranslate.set (3, 2, -m_aTranslate.at (3, 2));
 
         // Invert the scale factor.
         final float scaleFactor = 1 / scale.at (0, 0);
@@ -289,7 +289,7 @@ class Transformation
    */
   private void translate ()
   {
-    translate (translate);
+    translate (m_aTranslate);
   }
 
   /**

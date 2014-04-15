@@ -16,6 +16,7 @@ public class MandelbrotSetPanel extends GraphPanel
   /** control panel */
   private final Panel fractalControlPanel = new Panel ();
   /** bounds panel */
+  @SuppressWarnings ("unused")
   private final Panel boundsPanel = new Panel ();
 
   /** x-minimum label */
@@ -157,6 +158,7 @@ public class MandelbrotSetPanel extends GraphPanel
   /**
    * Start the plot.
    */
+  @SuppressWarnings ("unused")
   private void startPlot ()
   {
     stopPlot (); // stop currently running plot
@@ -318,8 +320,6 @@ public class MandelbrotSetPanel extends GraphPanel
 
           boolean escaped = false;
           int iters = 0;
-          final float x = x0;
-          final float y = y0;
           float modulus;
 
           // Iterate z^2 + c, keeping track of the

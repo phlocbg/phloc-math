@@ -25,6 +25,7 @@ public class SecantPanel extends RootFinderPanel
   private static final String FUNCTION_FRAME_TITLE = "Click to choose a function f(x)";
 
   /** control panel */
+  @SuppressWarnings ("hiding")
   private final Panel controlPanel = new Panel ();
   /** xnm1 label */
   private final Label xnm1Label = new Label ("x[n-1]:");
@@ -65,6 +66,7 @@ public class SecantPanel extends RootFinderPanel
   /** minimum x value */
   private float xMin;
   /** maximum x value */
+  @SuppressWarnings ("unused")
   private float xMax;
   /** maximum y value */
   private float yMax;
@@ -83,6 +85,7 @@ public class SecantPanel extends RootFinderPanel
   /** f([n]) */
   private float fn;
   /** f(x[n+1]) */
+  @SuppressWarnings ("unused")
   private float fnp1;
   /** count of starting values */
   private int xStartCount;

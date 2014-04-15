@@ -9,6 +9,7 @@ import numbercruncher.mathutils.RegressionLine;
  */
 public class LinearRegression
 {
+  @SuppressWarnings ("unused")
   private static final int MAX_POINTS = 10;
 
   /**

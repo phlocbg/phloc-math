@@ -24,7 +24,7 @@ public final class Epsilon
     while (1 + dTemp > 1)
       dTemp /= 2;
     doubleEpsilon = dTemp;
-  };
+  }
 
   /**
    * Return the float epsilon value.

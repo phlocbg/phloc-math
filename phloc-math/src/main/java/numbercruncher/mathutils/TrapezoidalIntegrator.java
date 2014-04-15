@@ -3,7 +3,7 @@ package numbercruncher.mathutils;
 /**
  * Function integrator that implements the trapezoidal algorithm.
  */
-public class TrapezoidalIntegrator implements Integrator
+public class TrapezoidalIntegrator implements IIntegrator
 {
   /** the function to integrate */
   private final IEvaluatable m_aIntegrand;

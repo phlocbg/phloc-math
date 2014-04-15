@@ -1,6 +1,7 @@
 package numbercruncher.program8_1;
 
 import java.util.Hashtable;
+import java.util.Map;
 
 import numbercruncher.mathutils.DataPoint;
 import numbercruncher.mathutils.DifferentialEquation;
@@ -11,7 +12,7 @@ import numbercruncher.mathutils.DifferentialEquation;
 public class DiffEqsToSolve
 {
   /** global function table */
-  private static Hashtable TABLE = new Hashtable (32);
+  private static Map <String, DifferentialEquation> TABLE = new Hashtable <String, DifferentialEquation> (32);
 
   // Enter the differential equations into the global table.
   static
@@ -28,7 +29,7 @@ public class DiffEqsToSolve
    */
   public static DifferentialEquation equation (final String key)
   {
-    return (DifferentialEquation) TABLE.get (key);
+    return TABLE.get (key);
   }
 
   /**

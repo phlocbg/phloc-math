@@ -22,6 +22,7 @@ public class IntegerOverflow
     }
     System.out.println ();
 
+    @SuppressWarnings ("unused")
     final int dze = big / 0;
   }
 }

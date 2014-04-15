@@ -2,9 +2,10 @@ package numbercruncher.program8_1;
 
 import java.awt.Rectangle;
 import java.util.Hashtable;
+import java.util.Map;
 
-import numbercruncher.graphutils.PlotProperties;
 import numbercruncher.graphutils.IPlottable;
+import numbercruncher.graphutils.PlotProperties;
 import numbercruncher.mathutils.DataPoint;
 import numbercruncher.mathutils.DifferentialEquation;
 import numbercruncher.mathutils.IEvaluatable;
@@ -31,14 +32,14 @@ public class PlotDiffEq implements IPlottable
   private static final int Y62 = 219;
 
   /** differential equation */
-  private DifferentialEquation equation;
+  private DifferentialEquation m_aEquation;
   /** image region */
   private Rectangle rectangle;
   /** plot properties */
   private PlotProperties properties;
 
   /** wrapped differential equations table */
-  public static Hashtable TABLE = new Hashtable (32);
+  public static Map <String, PlotDiffEq> TABLE = new Hashtable <String, PlotDiffEq> (32);
 
   // Enter the wrapped differential equations into the table.
   static
@@ -49,7 +50,7 @@ public class PlotDiffEq implements IPlottable
     enter ("2xe^2x + y", X1, Y41, X2, Y42);
     enter ("8x - 2y + 8", X1, Y51, X2, Y52);
     enter ("xe^-2x - 2y", X1, Y61, X2, Y62);
-  };
+  }
 
   /**
    * Create a wrapped diffential equation and enter it into the table.
@@ -68,7 +69,7 @@ public class PlotDiffEq implements IPlottable
   private static void enter (final String key, final int x1, final int y1, final int x2, final int y2)
   {
     final PlotDiffEq plotDiffEq = new PlotDiffEq (x1, y1, x2, y2);
-    plotDiffEq.equation = DiffEqsToSolve.equation (key);
+    plotDiffEq.m_aEquation = DiffEqsToSolve.equation (key);
 
     TABLE.put (key, plotDiffEq);
   }
@@ -89,11 +90,11 @@ public class PlotDiffEq implements IPlottable
    */
   public PlotDiffEq (final String key, final float xMin, final float xMax, final float yMin, final float yMax)
   {
-    final PlotDiffEq solvedEquation = (PlotDiffEq) TABLE.get (key);
+    final PlotDiffEq solvedEquation = TABLE.get (key);
 
     if (solvedEquation != null)
     {
-      this.equation = solvedEquation.equation;
+      this.m_aEquation = solvedEquation.m_aEquation;
       this.rectangle = solvedEquation.rectangle;
       this.properties = new PlotProperties (xMin, xMax, yMin, yMax);
     }
@@ -119,7 +120,7 @@ public class PlotDiffEq implements IPlottable
                      final float yMin,
                      final float yMax)
   {
-    this.equation = equation;
+    this.m_aEquation = equation;
     this.rectangle = null;
     this.properties = new PlotProperties (xMin, xMax, yMin, yMax);
   }
@@ -148,7 +149,7 @@ public class PlotDiffEq implements IPlottable
    */
   public IEvaluatable getFunction ()
   {
-    return equation;
+    return m_aEquation;
   }
 
   /**
@@ -158,7 +159,7 @@ public class PlotDiffEq implements IPlottable
    */
   public float at (final float x)
   {
-    return equation.at (x);
+    return m_aEquation.at (x);
   }
 
   /**
@@ -168,7 +169,7 @@ public class PlotDiffEq implements IPlottable
    */
   public float solutionAt (final float x)
   {
-    return equation.solutionAt (x);
+    return m_aEquation.solutionAt (x);
   }
 
   /**
@@ -178,7 +179,7 @@ public class PlotDiffEq implements IPlottable
    */
   public DataPoint getInitialCondition ()
   {
-    return equation.getInitialCondition ();
+    return m_aEquation.getInitialCondition ();
   }
 
   // --------------------------//
