@@ -27,16 +27,16 @@ public abstract class RootFinderPanel extends GraphPanel
   protected Button stepButton = new Button ("Step");
 
   /** function image file name */
-  private final String functionImageFileName;
+  private final String m_sFunctionImageFileName;
   /** function frame */
-  private FunctionFrame functionFrame;
+  private FunctionFrame m_aFunctionFrame;
   /** function frame title */
-  private final String functionFrameTitle;
+  private final String m_sFunctionFrameTitle;
 
   /**
    * array of functions to find roots for
    */
-  private final PlotFunction plotFunctions[];
+  private final PlotFunction m_aPlotFunctions[];
   /** selected function */
   private PlotFunction plotFunction;
 
@@ -46,7 +46,7 @@ public abstract class RootFinderPanel extends GraphPanel
   /** true if pause button was pressed */
   private boolean paused = false;
   /** true if algorithm converged */
-  private boolean converged = false;
+  private boolean m_bConverged = false;
 
   /**
    * Constructor.
@@ -107,10 +107,10 @@ public abstract class RootFinderPanel extends GraphPanel
   {
     super (plotFunctions, plotFunctions[0].getPlotProperties (), xorMode, drawXequalsY);
 
-    this.plotFunctions = plotFunctions;
+    this.m_aPlotFunctions = plotFunctions;
     this.plotFunction = plotFunctions[0];
-    this.functionImageFileName = functionImageFileName;
-    this.functionFrameTitle = functionFrameTitle;
+    this.m_sFunctionImageFileName = functionImageFileName;
+    this.m_sFunctionFrameTitle = functionFrameTitle;
 
     final Font labelFont = getLabelFont ();
     final Font textFont = getTextFont ();
@@ -171,7 +171,7 @@ public abstract class RootFinderPanel extends GraphPanel
    */
   public void setConverged (final boolean converged)
   {
-    this.converged = converged;
+    this.m_bConverged = converged;
   }
 
   /**
@@ -179,11 +179,11 @@ public abstract class RootFinderPanel extends GraphPanel
    */
   private void openFunctionFrame ()
   {
-    functionFrame = new FunctionFrame (plotFunctions, functionImageFileName, functionFrameTitle, this);
-    functionFrame.setVisible (true);
+    m_aFunctionFrame = new FunctionFrame (m_aPlotFunctions, m_sFunctionImageFileName, m_sFunctionFrameTitle, this);
+    m_aFunctionFrame.setVisible (true);
 
-    setHeaderImage (functionFrame.getImage ());
-    setFunction (plotFunctions[0]);
+    setHeaderImage (m_aFunctionFrame.getImage ());
+    setFunction (m_aPlotFunctions[0]);
   }
 
   /**
@@ -192,7 +192,7 @@ public abstract class RootFinderPanel extends GraphPanel
   @Override
   public void chooseFunction (final int index)
   {
-    plotFunction = plotFunctions[index];
+    plotFunction = m_aPlotFunctions[index];
     setFunction (plotFunction);
     draw ();
   }
@@ -218,9 +218,9 @@ public abstract class RootFinderPanel extends GraphPanel
   @Override
   public void doHeaderAction ()
   {
-    if (functionFrame != null)
+    if (m_aFunctionFrame != null)
     {
-      functionFrame.toFront ();
+      m_aFunctionFrame.toFront ();
     }
     else
     {
@@ -269,7 +269,7 @@ public abstract class RootFinderPanel extends GraphPanel
   {
     // Stop the run thread.
     paused = true;
-    converged = false;
+    m_bConverged = false;
 
     // Reinitialize the run and step buttons.
     runButton.setEnabled (true);
@@ -299,11 +299,11 @@ public abstract class RootFinderPanel extends GraphPanel
   @Override
   public void closeDemo ()
   {
-    if (functionFrame != null)
+    if (m_aFunctionFrame != null)
     {
-      functionFrame.setVisible (false);
-      functionFrame.dispose ();
-      functionFrame = null;
+      m_aFunctionFrame.setVisible (false);
+      m_aFunctionFrame.dispose ();
+      m_aFunctionFrame = null;
     }
   }
 
@@ -329,7 +329,7 @@ public abstract class RootFinderPanel extends GraphPanel
     public void run ()
     {
       // Loop until the iteration count stops.
-      while ((!paused) && (!converged))
+      while ((!paused) && (!m_bConverged))
       {
         step ();
 
@@ -356,7 +356,7 @@ public abstract class RootFinderPanel extends GraphPanel
    */
   protected void successfullyConverged ()
   {
-    converged = true;
+    m_bConverged = true;
 
     runButton.setEnabled (false);
     stepButton.setEnabled (false);
@@ -372,7 +372,7 @@ public abstract class RootFinderPanel extends GraphPanel
    */
   protected void iterationLimitExceeded (final int maxIters, final Label text)
   {
-    converged = false;
+    m_bConverged = false;
     paused = true; // stop the run thread
 
     nText.setText (">" + maxIters + " ITERS");

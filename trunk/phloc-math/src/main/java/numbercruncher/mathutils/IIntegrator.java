@@ -3,7 +3,7 @@ package numbercruncher.mathutils;
 /**
  * Interface implemented by integrator classes.
  */
-public interface Integrator
+public interface IIntegrator
 {
   /**
    * Integrate the function from a to b, and return an approximation to the

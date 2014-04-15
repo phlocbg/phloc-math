@@ -33,7 +33,7 @@ class PiMTAlgorithm
 
   private BigDecimal big1, big2, big4, big6;
   private BigDecimal power2;
-  private BigDecimal y, a;
+  private BigDecimal m_aY, m_aA;
 
   private final BigDecimal ys[] = new BigDecimal [MAX_ITERS];
   private final BigDecimal as[] = new BigDecimal [MAX_ITERS];
@@ -99,11 +99,11 @@ class PiMTAlgorithm
     m_aParent.notifyTask (M + "sqrt2" + FINISHED);
 
     m_aParent.notifyTask (M + "y" + STARTED);
-    y = sqrt2.subtract (BigDecimal.valueOf (1));
+    m_aY = sqrt2.subtract (BigDecimal.valueOf (1));
     m_aParent.notifyTask (M + "y" + FINISHED);
 
     m_aParent.notifyTask (M + "a" + STARTED);
-    a = big6.subtract (big4.multiply (sqrt2).setScale (scale, BigDecimal.ROUND_HALF_EVEN));
+    m_aA = big6.subtract (big4.multiply (sqrt2).setScale (scale, BigDecimal.ROUND_HALF_EVEN));
     m_aParent.notifyTask (M + "a" + FINISHED);
 
     yThread.start ();
@@ -120,9 +120,10 @@ class PiMTAlgorithm
     m_aParent.notifyPhase (PiBorweinConstants.DONE);
   }
 
+  @SuppressWarnings ("deprecation")
   private class YThread extends Thread
   {
-    private BigDecimal y2, y4, yRoot4, yNumerator, yDenominator;
+    private BigDecimal y4, yRoot4, yNumerator, yDenominator;
     private int i = 0;
 
     @Override
@@ -133,9 +134,9 @@ class PiMTAlgorithm
         ++i;
         compute ();
 
-        if (y.signum () == 0)
+        if (m_aY.signum () == 0)
           break;
-        ys[i] = y;
+        ys[i] = m_aY;
 
         aThread.resume ();
         yield ();
@@ -148,7 +149,7 @@ class PiMTAlgorithm
     private void compute ()
     {
       m_aParent.notifyTask (Y + "y4" + "[" + i + "]" + STARTED);
-      y4 = y.multiply (y).setScale (scale, BigDecimal.ROUND_HALF_EVEN);
+      y4 = m_aY.multiply (m_aY).setScale (scale, BigDecimal.ROUND_HALF_EVEN);
       y4 = y4.multiply (y4).setScale (scale, BigDecimal.ROUND_HALF_EVEN);
       m_aParent.notifyTask (Y + "y4" + "[" + i + "]" + FINISHED);
 
@@ -160,11 +161,12 @@ class PiMTAlgorithm
       m_aParent.notifyTask (Y + "y" + "[" + i + "]" + STARTED);
       yNumerator = big1.subtract (yRoot4);
       yDenominator = big1.add (yRoot4);
-      y = yNumerator.divide (yDenominator, scale, BigDecimal.ROUND_HALF_EVEN);
+      m_aY = yNumerator.divide (yDenominator, scale, BigDecimal.ROUND_HALF_EVEN);
       m_aParent.notifyTask (Y + "y" + "[" + i + "]" + FINISHED);
     }
   }
 
+  @SuppressWarnings ("deprecation")
   private class AThread extends Thread
   {
     private BigDecimal aTerm4, aTerm, y2;
@@ -200,7 +202,7 @@ class PiMTAlgorithm
       aTerm4 = big1.add (y);
       aTerm4 = aTerm4.multiply (aTerm4).setScale (scale, BigDecimal.ROUND_HALF_EVEN);
       aTerm4 = aTerm4.multiply (aTerm4).setScale (scale, BigDecimal.ROUND_HALF_EVEN);
-      a = a.multiply (aTerm4).setScale (scale, BigDecimal.ROUND_HALF_EVEN);
+      m_aA = m_aA.multiply (aTerm4).setScale (scale, BigDecimal.ROUND_HALF_EVEN);
       m_aParent.notifyTask (A + "aTerm" + "[" + i + "]" + FINISHED);
 
       m_aParent.notifyTask (A + "power2" + "[" + i + "]" + STARTED);
@@ -214,13 +216,14 @@ class PiMTAlgorithm
       m_aParent.notifyTask (A + "a" + "[" + i + "]" + STARTED);
       aTerm = big1.add (y).add (y2);
       aTerm = power2.multiply (y).multiply (aTerm).setScale (scale, BigDecimal.ROUND_HALF_EVEN);
-      a = a.subtract (aTerm).setScale (scale, BigDecimal.ROUND_HALF_EVEN);
+      m_aA = m_aA.subtract (aTerm).setScale (scale, BigDecimal.ROUND_HALF_EVEN);
 
-      as[i] = a;
+      as[i] = m_aA;
       m_aParent.notifyTask (A + "a" + "[" + i + "]" + FINISHED);
     }
   }
 
+  @SuppressWarnings ("deprecation")
   private class XThread extends Thread
   {
     private int i = 0;

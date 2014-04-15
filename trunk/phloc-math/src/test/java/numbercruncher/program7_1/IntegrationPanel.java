@@ -11,7 +11,7 @@ import java.awt.event.ItemListener;
 import numbercruncher.graphutils.PlotProperties;
 import numbercruncher.mathutils.DataPoint;
 import numbercruncher.mathutils.Epsilon;
-import numbercruncher.mathutils.Integrator;
+import numbercruncher.mathutils.IIntegrator;
 import numbercruncher.mathutils.InterpolationPolynomial;
 import numbercruncher.mathutils.SimpsonsIntegrator;
 import numbercruncher.mathutils.TrapezoidalIntegrator;
@@ -30,6 +30,7 @@ public class IntegrationPanel extends UserPointPanel
   private static final float TO_LIMIT = 10.0f;
 
   private static final int TRAPEZOIDAL = 0;
+  @SuppressWarnings ("unused")
   private static final int SIMPSONS = 1;
 
   private static final String ALGORITHMS[] = { "the Trapezoidal", "Simpson's" };
@@ -57,7 +58,7 @@ public class IntegrationPanel extends UserPointPanel
   InterpolationPolynomial integrand = new InterpolationPolynomial (MAX_POINTS);
 
   /** integrator */
-  Integrator integrator;
+  IIntegrator integrator;
 
   /** number of intervals */
   private int intervals = 1;
@@ -155,8 +156,8 @@ public class IntegrationPanel extends UserPointPanel
     intervals = 1;
     area = 0;
 
-    integrator = (algorithm == TRAPEZOIDAL) ? (Integrator) new TrapezoidalIntegrator (integrand)
-                                           : (Integrator) new SimpsonsIntegrator (integrand);
+    integrator = (algorithm == TRAPEZOIDAL) ? (IIntegrator) new TrapezoidalIntegrator (integrand)
+                                           : (IIntegrator) new SimpsonsIntegrator (integrand);
   }
 
   /**
@@ -253,14 +254,16 @@ public class IntegrationPanel extends UserPointPanel
   /**
    * Display the ith parabolic region by coloring it.
    * 
-   * @param i
+   * @param pi
    *        the value of i
-   * @param h
+   * @param ph
    *        the width of the region
    */
-  private void showParabolicRegion (int i, float h)
+  private void showParabolicRegion (final int pi, final float ph)
   {
     // Split the region in half.
+    int i = pi;
+    float h = ph;
     h /= 2;
     i *= 2;
 

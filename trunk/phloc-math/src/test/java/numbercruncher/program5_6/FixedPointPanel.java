@@ -27,7 +27,7 @@ public class FixedPointPanel extends RootFinderPanel
   private static final String FUNCTION_FRAME_TITLE = "Click to choose a convergent or a divergent function g(x)";
 
   /** control panel */
-  private final Panel controlPanel = new Panel ();
+  private final Panel m_aControlPanel = new Panel ();
   /** x0 label */
   private final Label x0Label = new Label ("x[0]:");
   /** x0 text */
@@ -78,7 +78,8 @@ public class FixedPointPanel extends RootFinderPanel
   /** trace point index */
   private int k;
   /** starting value of x */
-  private float x0;
+  @SuppressWarnings ("unused")
+  private float m_fX0;
 
   /**
    * Constructor.
@@ -103,14 +104,14 @@ public class FixedPointPanel extends RootFinderPanel
     xnText.setAlignment (Label.LEFT);
 
     // Fixed-point iteration panel.
-    controlPanel.setLayout (new GridLayout (0, 4, 5, 2));
-    controlPanel.add (x0Label);
-    controlPanel.add (x0Text);
-    controlPanel.add (xnLabel);
-    controlPanel.add (xnText);
-    controlPanel.add (nLabel);
-    controlPanel.add (nText);
-    addDemoControls (controlPanel);
+    m_aControlPanel.setLayout (new GridLayout (0, 4, 5, 2));
+    m_aControlPanel.add (x0Label);
+    m_aControlPanel.add (x0Text);
+    m_aControlPanel.add (xnLabel);
+    m_aControlPanel.add (xnText);
+    m_aControlPanel.add (nLabel);
+    m_aControlPanel.add (nText);
+    addDemoControls (m_aControlPanel);
   }
 
   // ------------------//
@@ -224,9 +225,12 @@ public class FixedPointPanel extends RootFinderPanel
   {
     // Plot properties.
     final PlotProperties plotProps = getPlotProperties ();
+    @SuppressWarnings ("unused")
     final int w = plotProps.getWidth ();
+    @SuppressWarnings ("unused")
     final int h = plotProps.getHeight ();
     final int xAxisRow = plotProps.getXAxisRow ();
+    @SuppressWarnings ("unused")
     final int yAxisCol = plotProps.getYAxisColumn ();
     final float xMin = plotProps.getXMin ();
     final float yMax = plotProps.getYMax ();

@@ -48,6 +48,7 @@ public class JuliaSetPanel extends GraphPanel
   /** control panel */
   private final Panel fractalControlPanel = new Panel ();
   /** bounds panel */
+  @SuppressWarnings ("unused")
   private final Panel boundsPanel = new Panel ();
 
   /** real label */
@@ -93,6 +94,7 @@ public class JuliaSetPanel extends GraphPanel
   /** filler 3 */
   private final Label filler3 = new Label ();
   /** filler 4 */
+  @SuppressWarnings ("unused")
   private final Label filler4 = new Label ();
 
   /** iteration counter */
@@ -124,11 +126,11 @@ public class JuliaSetPanel extends GraphPanel
   private float oldYMax;
 
   /** zoom rectangle upper left row */
-  private int r1;
+  private int m_nR1;
   /** zoom rectangle upper left column */
   private int c1;
   /** zoom rectangle bottom right row */
-  private int r2;
+  private int m_nR2;
   /** zoom rectangle bottom right column */
   private int c2;
 
@@ -405,11 +407,11 @@ public class JuliaSetPanel extends GraphPanel
 
     // Starting corner.
     c1 = ev.getX ();
-    r1 = ev.getY ();
+    m_nR1 = ev.getY ();
 
     // Ending corner.
     c2 = -1;
-    r2 = -1;
+    m_nR2 = -1;
 
     setXORMode ();
   }
@@ -424,24 +426,32 @@ public class JuliaSetPanel extends GraphPanel
       return;
 
     // Erase the previous rectangle.
-    if ((c2 != -1) && (r2 != -1))
+    if ((c2 != -1) && (m_nR2 != -1))
     {
-      plotRectangle (Math.min (c1, c2), Math.min (r1, r2), Math.abs (c1 - c2), Math.abs (r1 - r2), Color.black);
+      plotRectangle (Math.min (c1, c2),
+                     Math.min (m_nR1, m_nR2),
+                     Math.abs (c1 - c2),
+                     Math.abs (m_nR1 - m_nR2),
+                     Color.black);
     }
 
     // Current ending corner.
     c2 = ev.getX ();
-    r2 = ev.getY ();
+    m_nR2 = ev.getY ();
 
     // Calculate and display new zoom area bounds.
     xMin = oldXMin + delta * Math.min (c1, c2);
     xMax = oldXMin + delta * Math.max (c1, c2);
-    yMin = oldYMax - delta * Math.max (r1, r2);
-    yMax = oldYMax - delta * Math.min (r1, r2);
+    yMin = oldYMax - delta * Math.max (m_nR1, m_nR2);
+    yMax = oldYMax - delta * Math.min (m_nR1, m_nR2);
     displayBounds ();
 
     // Draw the new rectangle.
-    plotRectangle (Math.min (c1, c2), Math.min (r1, r2), Math.abs (c1 - c2), Math.abs (r1 - r2), Color.black);
+    plotRectangle (Math.min (c1, c2),
+                   Math.min (m_nR1, m_nR2),
+                   Math.abs (c1 - c2),
+                   Math.abs (m_nR1 - m_nR2),
+                   Color.black);
   }
 
   /**
@@ -455,9 +465,13 @@ public class JuliaSetPanel extends GraphPanel
       return;
 
     // Draw the rectangle.
-    if ((c2 != -1) && (r2 != -1))
+    if ((c2 != -1) && (m_nR2 != -1))
     {
-      plotRectangle (Math.min (c1, c2), Math.min (r1, r2), Math.abs (c1 - c2), Math.abs (r1 - r2), Color.black);
+      plotRectangle (Math.min (c1, c2),
+                     Math.min (m_nR1, m_nR2),
+                     Math.abs (c1 - c2),
+                     Math.abs (m_nR1 - m_nR2),
+                     Color.black);
     }
 
     // Plot the area in the rectangle.
@@ -496,8 +510,6 @@ public class JuliaSetPanel extends GraphPanel
 
           boolean escaped = false;
           int iters = 0;
-          final float x = x0;
-          final float y = y0;
           float modulus;
 
           // Iterate z^2 + c, keeping track of the

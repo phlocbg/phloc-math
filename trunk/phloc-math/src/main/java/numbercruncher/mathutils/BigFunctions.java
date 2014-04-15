@@ -3,6 +3,8 @@ package numbercruncher.mathutils;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import javax.annotation.Nonnull;
+
 /**
  * Several useful BigDecimal mathematical functions.
  */
@@ -20,7 +22,7 @@ public final class BigFunctions
    *        the desired scale of the result
    * @return the result value
    */
-  public static BigDecimal intPower (final BigDecimal px, final long pexponent, final int scale)
+  public static BigDecimal intPower (@Nonnull final BigDecimal px, final long pexponent, final int scale)
   {
     BigDecimal x = px;
     long exponent = pexponent;
@@ -28,10 +30,10 @@ public final class BigFunctions
     // If the exponent is negative, compute 1/(x^-exponent).
     if (exponent < 0)
     {
-      return BigDecimal.valueOf (1).divide (intPower (x, -exponent, scale), scale, BigDecimal.ROUND_HALF_EVEN);
+      return BigDecimal.ONE.divide (intPower (x, -exponent, scale), scale, BigDecimal.ROUND_HALF_EVEN);
     }
 
-    BigDecimal power = BigDecimal.valueOf (1);
+    BigDecimal power = BigDecimal.ONE;
 
     // Loop to compute value^exponent.
     while (exponent > 0)
@@ -65,14 +67,14 @@ public final class BigFunctions
    *        the desired scale of the result
    * @return the result value
    */
-  public static BigDecimal intRoot (final BigDecimal px, final long index, final int scale)
+  public static BigDecimal intRoot (@Nonnull final BigDecimal px, final long index, final int scale)
   {
     BigDecimal x = px;
 
     // Check that x >= 0.
     if (x.signum () < 0)
     {
-      throw new IllegalArgumentException ("x < 0");
+      throw new IllegalArgumentException ("x < 0: " + x);
     }
 
     final int sp1 = scale + 1;
@@ -126,15 +128,14 @@ public final class BigFunctions
     // e^0 = 1
     if (x.signum () == 0)
     {
-      return BigDecimal.valueOf (1);
+      return BigDecimal.ONE;
     }
 
     // If x is negative, return 1/(e^-x).
-    else
-      if (x.signum () == -1)
-      {
-        return BigDecimal.valueOf (1).divide (exp (x.negate (), scale), scale, BigDecimal.ROUND_HALF_EVEN);
-      }
+    if (x.signum () == -1)
+    {
+      return BigDecimal.ONE.divide (exp (x.negate (), scale), scale, BigDecimal.ROUND_HALF_EVEN);
+    }
 
     // Compute the whole part of x.
     BigDecimal xWhole = x.setScale (0, BigDecimal.ROUND_DOWN);
@@ -147,13 +148,13 @@ public final class BigFunctions
     final BigDecimal xFraction = x.subtract (xWhole);
 
     // z = 1 + fraction/whole
-    final BigDecimal z = BigDecimal.valueOf (1).add (xFraction.divide (xWhole, scale, BigDecimal.ROUND_HALF_EVEN));
+    final BigDecimal z = BigDecimal.ONE.add (xFraction.divide (xWhole, scale, BigDecimal.ROUND_HALF_EVEN));
 
     // t = e^z
     final BigDecimal t = expTaylor (z, scale);
 
     final BigDecimal maxLong = BigDecimal.valueOf (Long.MAX_VALUE);
-    BigDecimal result = BigDecimal.valueOf (1);
+    BigDecimal result = BigDecimal.ONE;
 
     // Compute and return t^whole using intPower().
     // If whole > Long.MAX_VALUE, then first compute products
@@ -179,12 +180,12 @@ public final class BigFunctions
    */
   private static BigDecimal expTaylor (final BigDecimal x, final int scale)
   {
-    BigDecimal factorial = BigDecimal.valueOf (1);
+    BigDecimal factorial = BigDecimal.ONE;
     BigDecimal xPower = x;
     BigDecimal sumPrev;
 
     // 1 + x
-    BigDecimal sum = x.add (BigDecimal.valueOf (1));
+    BigDecimal sum = x.add (BigDecimal.ONE);
 
     // Loop until the sums converge
     // (two successive sums are equal after rounding).
@@ -214,12 +215,12 @@ public final class BigFunctions
   /**
    * Compute the natural logarithm of x to a given scale, x > 0.
    */
-  public static BigDecimal ln (final BigDecimal x, final int scale)
+  public static BigDecimal ln (@Nonnull final BigDecimal x, final int scale)
   {
     // Check that x > 0.
     if (x.signum () <= 0)
     {
-      throw new IllegalArgumentException ("x <= 0");
+      throw new IllegalArgumentException ("x <= 0: " + x);
     }
 
     // The number of digits to the left of the decimal point.
@@ -246,7 +247,7 @@ public final class BigFunctions
    * Compute the natural logarithm of x to a given scale, x > 0. Use Newton's
    * algorithm.
    */
-  private static BigDecimal lnNewton (final BigDecimal px, final int scale)
+  private static BigDecimal lnNewton (@Nonnull final BigDecimal px, final int scale)
   {
     BigDecimal x = px;
     final int sp1 = scale + 1;
@@ -285,12 +286,12 @@ public final class BigFunctions
    *        the desired scale of the result
    * @return the result value
    */
-  public static BigDecimal arctan (final BigDecimal x, final int scale)
+  public static BigDecimal arctan (@Nonnull final BigDecimal x, final int scale)
   {
     // Check that |x| < 1.
-    if (x.abs ().compareTo (BigDecimal.valueOf (1)) >= 0)
+    if (x.abs ().compareTo (BigDecimal.ONE) >= 0)
     {
-      throw new IllegalArgumentException ("|x| >= 1");
+      throw new IllegalArgumentException ("|x| >= 1: " + x);
     }
 
     // If x is negative, return -arctan(-x).
@@ -355,12 +356,12 @@ public final class BigFunctions
    *        the desired scale of the result
    * @return the result value
    */
-  public static BigDecimal sqrt (final BigDecimal x, final int scale)
+  public static BigDecimal sqrt (@Nonnull final BigDecimal x, final int scale)
   {
     // Check that x >= 0.
     if (x.signum () < 0)
     {
-      throw new IllegalArgumentException ("x < 0");
+      throw new IllegalArgumentException ("x < 0: " + x);
     }
 
     // n = x*(10^(2*scale))

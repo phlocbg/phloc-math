@@ -27,7 +27,7 @@ class NewtonsPanel extends RootFinderPanel
   private static final String FUNCTION_FRAME_TITLE = "Click to choose a function f(x)";
 
   /** control panel */
-  private final Panel controlPanel = new Panel ();
+  private final Panel m_aControlPanel = new Panel ();
   /** x[0] label */
   private final Label x0Label = new Label ("x[0]:");
   /** x[0] text */
@@ -69,7 +69,8 @@ class NewtonsPanel extends RootFinderPanel
   /** trace point index */
   private int k;
   /** starting value of x */
-  private float x0;
+  @SuppressWarnings ("unused")
+  private float m_fX0;
 
   /** true if OK to trace */
   private boolean traceOK = true;
@@ -96,14 +97,14 @@ class NewtonsPanel extends RootFinderPanel
     xnp1Text.setAlignment (Label.LEFT);
 
     // Newton control panel.
-    controlPanel.setLayout (new GridLayout (0, 4, 5, 2));
-    controlPanel.add (x0Label);
-    controlPanel.add (x0Text);
-    controlPanel.add (xnp1Label);
-    controlPanel.add (xnp1Text);
-    controlPanel.add (nLabel);
-    controlPanel.add (nText);
-    addDemoControls (controlPanel);
+    m_aControlPanel.setLayout (new GridLayout (0, 4, 5, 2));
+    m_aControlPanel.add (x0Label);
+    m_aControlPanel.add (x0Text);
+    m_aControlPanel.add (xnp1Label);
+    m_aControlPanel.add (xnp1Text);
+    m_aControlPanel.add (nLabel);
+    m_aControlPanel.add (nText);
+    addDemoControls (m_aControlPanel);
   }
 
   // ------------------//
@@ -219,6 +220,7 @@ class NewtonsPanel extends RootFinderPanel
     final int w = props.getWidth ();
     final int h = props.getHeight ();
     final int xAxisRow = props.getXAxisRow ();
+    @SuppressWarnings ("unused")
     final int yAxisCol = props.getYAxisColumn ();
     final float xMin = props.getXMin ();
     final float yMax = props.getYMax ();

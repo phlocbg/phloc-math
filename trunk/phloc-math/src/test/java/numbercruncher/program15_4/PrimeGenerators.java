@@ -1,6 +1,7 @@
 package numbercruncher.program15_4;
 
 import java.util.HashSet;
+import java.util.Set;
 
 import numbercruncher.mathutils.AlignRight;
 import numbercruncher.primeutils.PrimalityTest;
@@ -27,8 +28,10 @@ public class PrimeGenerators
     int ePrimeCount = 0; // count of Euler primes
     int gPrimeCount = 0; // count of Greenwood primes
 
-    final HashSet ePrimes = new HashSet (); // set of Euler primes
-    final HashSet gPrimes = new HashSet (); // set of Greenwood primes
+    // set of Euler primes
+    final Set <Integer> ePrimes = new HashSet <Integer> ();
+    // set of Greenwood primes
+    final Set <Integer> gPrimes = new HashSet <Integer> ();
 
     String eMark, gMark; // " " if prime, "c" if composite
 

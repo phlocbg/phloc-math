@@ -3,7 +3,7 @@ package numbercruncher.program7_1;
 import numbercruncher.mathutils.AlignRight;
 import numbercruncher.mathutils.Epsilon;
 import numbercruncher.mathutils.Function;
-import numbercruncher.mathutils.Integrator;
+import numbercruncher.mathutils.IIntegrator;
 import numbercruncher.mathutils.SimpsonsIntegrator;
 import numbercruncher.mathutils.TrapezoidalIntegrator;
 
@@ -64,7 +64,6 @@ public class Integration
    *        0 for trapezoidal, 1 for Simpson's
    * @param integrand
    *        the function to integrate
-   * @return an approximation to the area
    */
   private static void integrate (final int algorithm, final Function integrand)
   {
@@ -72,11 +71,12 @@ public class Integration
     float area = 0; // total area
     float errorPct = Float.MAX_VALUE; // % error
 
+    @SuppressWarnings ("unused")
     float prevArea;
     float prevErrorPct;
 
-    final Integrator integrator = (algorithm == TRAPEZOIDAL) ? (Integrator) new TrapezoidalIntegrator (integrand)
-                                                            : (Integrator) new SimpsonsIntegrator (integrand);
+    final IIntegrator integrator = (algorithm == TRAPEZOIDAL) ? (IIntegrator) new TrapezoidalIntegrator (integrand)
+                                                             : (IIntegrator) new SimpsonsIntegrator (integrand);
 
     final AlignRight ar = new AlignRight ();
 

@@ -69,6 +69,7 @@ public class BisectionPanel extends RootFinderPanel
   /** x delta per pixel */
   private float xDelta;
   /** y delta per pixel */
+  @SuppressWarnings ("unused")
   private float yDelta;
   /** x-negative value */
   private float xNeg;

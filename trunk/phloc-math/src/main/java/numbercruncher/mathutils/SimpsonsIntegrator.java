@@ -3,7 +3,7 @@ package numbercruncher.mathutils;
 /**
  * Function integrator that implements Simpson's algorithm with parabolas.
  */
-public class SimpsonsIntegrator implements Integrator
+public class SimpsonsIntegrator implements IIntegrator
 {
   /** the function to integrate */
   private final IEvaluatable m_aIntegrand;

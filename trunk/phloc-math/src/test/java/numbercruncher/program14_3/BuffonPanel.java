@@ -268,7 +268,7 @@ public class BuffonPanel extends GraphPanel
     final int yFirst = (int) Math.floor (yMin);
     final int yLast = (int) Math.floor (yMax);
 
-    for (int y = yFirst; y <= yMax; ++y)
+    for (int y = yFirst; y <= yLast; ++y)
     {
       final int r = Math.round ((yMax - y) / yDelta);
       plotLine (0, r, w, r, Color.blue);

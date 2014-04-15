@@ -84,7 +84,7 @@ public class SolveDiffEqPanel extends GraphPanel
   /** iteration counter */
   private int iteration;
   /** interval width */
-  private float h;
+  private float m_fH;
 
   /** selected equation */
   private PlotDiffEq plotEquation;
@@ -302,7 +302,7 @@ public class SolveDiffEqPanel extends GraphPanel
     }
 
     // The initial interval width.
-    h = Math.max (Math.abs (x - xMin), Math.abs (x - xMax));
+    m_fH = Math.max (Math.abs (x - xMin), Math.abs (x - xMax));
   }
 
   // ----------------//
@@ -349,9 +349,9 @@ public class SolveDiffEqPanel extends GraphPanel
 
     iterationText.setText (Integer.toString (iteration));
     intervalsText.setText (Integer.toString (k));
-    hText.setText (Float.toString (h));
+    hText.setText (Float.toString (m_fH));
 
-    h /= 2;
+    m_fH /= 2;
 
     // Too many iterations?
     if (iteration == MAX_STEPS)
@@ -409,8 +409,8 @@ public class SolveDiffEqPanel extends GraphPanel
     }
 
     k = 0;
-    plotForward (h);
-    plotBackward (h);
+    plotForward (m_fH);
+    plotBackward (m_fH);
 
     // Display current plot.
     plotLines (cs1, rs1, cs2, rs2, k, Color.red);

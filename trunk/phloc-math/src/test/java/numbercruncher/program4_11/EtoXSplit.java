@@ -10,7 +10,7 @@ import numbercruncher.mathutils.IntPower;
  */
 public class EtoXSplit
 {
-  private static final double x = -19.5;
+  private static final double X = -19.5;
 
   private static AlignRight ar = new AlignRight ();
 
@@ -19,7 +19,7 @@ public class EtoXSplit
     double result;
 
     // Split off the whole part of |x|.
-    final double xAbs = Math.abs (x);
+    final double xAbs = Math.abs (X);
     final int xWhole = (int) xAbs;
 
     // x is only a fraction.
@@ -41,11 +41,11 @@ public class EtoXSplit
     }
 
     // Invert the result if x < 0.
-    if (x < 0)
+    if (X < 0)
       result = 1 / result;
 
-    final double correct = Math.exp (x);
-    System.out.println ("\ne^" + x + " = " + result);
+    final double correct = Math.exp (X);
+    System.out.println ("\ne^" + X + " = " + result);
     System.out.println ("% error = " + 100 * Math.abs (result - correct) / correct);
   }
 
