@@ -1,31 +1,31 @@
 package numbercruncher.program5_5;
 
-import java.awt.*;
+import java.awt.Frame;
+
 import numbercruncher.graphutils.DemoFrame;
 
 /**
- * PROGRAM 5-5d: Newton's Algorithm (Interactive Standalone Demo)
- *
- * Interactively demonstrate Newton's Algorithm on various functions.
+ * PROGRAM 5-5d: Newton's Algorithm (Interactive Standalone Demo) Interactively
+ * demonstrate Newton's Algorithm on various functions.
  */
 public class NewtonsDemo extends DemoFrame
 {
-    private static final String TITLE = "Newton's Demo";
+  private static final String TITLE = "Newton's Demo";
 
-    /**
-     * Constructor.
-     */
-    private NewtonsDemo()
-    {
-        super(TITLE, new NewtonsPanel());
-    }
+  /**
+   * Constructor.
+   */
+  private NewtonsDemo ()
+  {
+    super (TITLE, new NewtonsPanel ());
+  }
 
-    /**
-     * Main.
-     */
-    public static void main(String args[])
-    {
-        Frame frame = new NewtonsDemo();
-        frame.setVisible(true);
-    }
+  /**
+   * Main.
+   */
+  public static void main (final String args[])
+  {
+    final Frame frame = new NewtonsDemo ();
+    frame.setVisible (true);
+  }
 }

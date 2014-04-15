@@ -3,12 +3,12 @@ package numbercruncher.program13_3;
 /**
  * Constants for the Borwein pi algorithm.
  */
-interface PiBorweinConstants
+final class PiBorweinConstants
 {
-    static final int INITIALIZING = -1;
-    static final int INVERTING    = -2;
-    static final int DONE         = -3;
-    static final int STOPPED      = -4;
+  public static final int INITIALIZING = -1;
+  public static final int INVERTING = -2;
+  public static final int DONE = -3;
+  public static final int STOPPED = -4;
 
-    static final String STOPPED_EXCEPTION = "STOPPED";
+  public static final String STOPPED_EXCEPTION = "STOPPED";
 }

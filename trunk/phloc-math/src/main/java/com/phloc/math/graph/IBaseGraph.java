@@ -27,8 +27,7 @@ import com.phloc.commons.state.EChange;
  * 
  * @author Philip Helger
  */
-public interface IBaseGraph <N extends IBaseGraphNode <N, R>, R extends IBaseGraphRelation <N, R>> extends
-                                                                                                   IReadonlyBaseGraph <N, R>
+public interface IBaseGraph <N extends IBaseGraphNode <N, R>, R extends IBaseGraphRelation <N, R>> extends IReadonlyBaseGraph <N, R>
 {
   /**
    * Allow or disallow that {@link #addNode(IBaseGraphNode)} and

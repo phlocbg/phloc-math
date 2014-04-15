@@ -22,10 +22,7 @@ package com.phloc.math.graph;
  * 
  * @author Philip Helger
  */
-public interface IDirectedGraph extends
-                               IBaseGraph <IDirectedGraphNode, IDirectedGraphRelation>,
-                               IReadonlyDirectedGraph,
-                               IDirectedGraphObjectFactory
+public interface IDirectedGraph extends IBaseGraph <IDirectedGraphNode, IDirectedGraphRelation>, IReadonlyDirectedGraph, IDirectedGraphObjectFactory
 {
   /* empty */
 }

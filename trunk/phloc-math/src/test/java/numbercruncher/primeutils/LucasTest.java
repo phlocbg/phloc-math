@@ -8,92 +8,108 @@ import numbercruncher.mathutils.PrimeFactors;
  */
 public class LucasTest
 {
-    private static LucasStatus status = new LucasStatus();
+  private static LucasStatus status = new LucasStatus ();
 
-    /** number to test for primality */     int p;
-    /** prime factors of p-1 */             int q[];
-    /** caller of the test */               LucasCaller caller;
+  /** number to test for primality */
+  int m_nP;
+  /** prime factors of p-1 */
+  int q[];
+  /** caller of the test */
+  ILucasCaller m_aCaller;
 
-    /**
-     * Constructor.
-     * @param p the number to test for primality
-     * @param caller the caller of the test
-     */
-    public LucasTest(int p, LucasCaller caller)
+  /**
+   * Constructor.
+   * 
+   * @param p
+   *        the number to test for primality
+   * @param caller
+   *        the caller of the test
+   */
+  public LucasTest (final int p, final ILucasCaller caller)
+  {
+    this.m_nP = p;
+    this.m_aCaller = caller;
+
+    q = PrimeFactors.factorsOf (p - 1);
+  }
+
+  /**
+   * Perform the Lucas test.
+   * 
+   * @return true if p is prime, false if p is composite
+   */
+  public boolean test ()
+  {
+    // Try integers a from 2 through p.
+    for (int a = 2; a <= m_nP; ++a)
     {
-        this.p      = p;
-        this.caller = caller;
-
-        q = PrimeFactors.factorsOf(p-1);
+      if (passPart1 (a) && passPart2 (a))
+        return true; // prime
     }
 
-    /**
-     * Perform the Lucas test.
-     * @return true if p is prime, false if p is composite
-     */
-    public boolean test()
-    {
-        // Try integers a from 2 through p.
-        for (int a = 2; a <= p; ++a) {
-            if (passPart1(a) && passPart2(a)) return true;  // prime
-        }
+    return false; // composite
+  }
 
-        return false;   // composite
+  /**
+   * Test if integer a passes the first part of the test.
+   * 
+   * @param a
+   *        the value of a
+   * @return true if [a^(p-1)]%p == 1, else false
+   */
+  private boolean passPart1 (final int a)
+  {
+    final int exponent = m_nP - 1;
+    final int value = ModuloArithmetic.raise (a, exponent, m_nP);
+
+    // Report status back to the caller.
+    if (m_aCaller != null)
+    {
+      status.a = a;
+      status.q = 1;
+      status.exponent = exponent;
+      status.value = value;
+      status.pass = (value == 1);
+
+      m_aCaller.reportStatus (status);
     }
 
-    /**
-     * Test if integer a passes the first part of the test.
-     * @param a the value of a
-     * @return true if [a^(p-1)]%p == 1, else false
-     */
-    private boolean passPart1(int a)
+    return (value == 1); // pass if it's 1
+  }
+
+  /**
+   * Test if integer a passes the second part of the test.
+   * 
+   * @param a
+   *        the value of a
+   * @return true if [a^(p-1)/q]%p != 1 for all prime factors q, else false
+   */
+  private boolean passPart2 (final int a)
+  {
+    final int pm1 = m_nP - 1;
+
+    // Loop to try each prime factor.
+    for (final int element : q)
     {
-        int exponent = p-1;
-        int value    = ModuloArithmetic.raise(a, exponent, p);
+      final int exponent = pm1 / element;
+      final int value = ModuloArithmetic.raise (a, exponent, m_nP);
 
-        // Report status back to the caller.
-        if (caller != null) {
-            status.a        = a;
-            status.q        = 1;
-            status.exponent = exponent;
-            status.value    = value;
-            status.pass     = (value == 1);
+      // Report status back to the caller.
+      if (m_aCaller != null)
+      {
+        status.a = a;
+        status.q = element;
+        status.exponent = exponent;
+        status.value = value;
+        status.pass = (value != 1);
 
-            caller.reportStatus(status);
-        }
+        m_aCaller.reportStatus (status);
+      }
 
-        return (value == 1);    // pass if it's 1
+      if (value == 1)
+        return false; // fail
     }
 
-    /**
-     * Test if integer a passes the second part of the test.
-     * @param a the value of a
-     * @return true if [a^(p-1)/q]%p != 1 for all prime factors q,
-     *              else false
-     */
-    private boolean passPart2(int a)
-    {
-        int pm1 = p-1;
-
-        // Loop to try each prime factor.
-        for (int i = 0; i < q.length; ++i) {
-            int exponent = pm1/q[i];
-            int value    = ModuloArithmetic.raise(a, exponent, p);
-
-            // Report status back to the caller.
-            if (caller != null) {
-                status.a        = a;
-                status.q        = q[i];
-                status.exponent = exponent;
-                status.value    = value;
-                status.pass     = (value != 1);
-
-                caller.reportStatus(status);
-            }
-
-            if (value == 1) return false;   // fail
-        }
-
-        return true;    // pass
-    }
+    return true; // pass
+  }
 }

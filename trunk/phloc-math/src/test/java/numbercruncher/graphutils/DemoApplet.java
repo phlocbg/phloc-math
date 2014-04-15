@@ -1,69 +1,82 @@
 package numbercruncher.graphutils;
 
-import java.awt.*;
-import java.applet.*;
+import java.applet.Applet;
+import java.awt.BorderLayout;
+import java.awt.Graphics;
+import java.awt.Panel;
 
 /**
  * The base applet for all demo applets.
  */
 public abstract class DemoApplet extends Applet
 {
-    private DemoPanel demoPanel;    // demo panel
+  private final IDemoPanel m_aDemoPanel; // demo panel
 
-    /**
-     * Constructor.
-     * @param demoPanel the demo panel
-     */
-    protected DemoApplet(DemoPanel demoPanel)
-    {
-        this.demoPanel = demoPanel;
-    }
+  /**
+   * Constructor.
+   * 
+   * @param demoPanel
+   *        the demo panel
+   */
+  protected DemoApplet (final IDemoPanel demoPanel)
+  {
+    this.m_aDemoPanel = demoPanel;
+  }
 
-    /**
-     * Applet initializer.
-     */
-    public void init()
-    {
-        // Add the demo panel.
-        setLayout(new BorderLayout());
-        add((Panel) demoPanel, BorderLayout.CENTER);
+  /**
+   * Applet initializer.
+   */
+  @Override
+  public void init ()
+  {
+    // Add the demo panel.
+    setLayout (new BorderLayout ());
+    add ((Panel) m_aDemoPanel, BorderLayout.CENTER);
 
-        // Initialize the demo.
-        demoPanel.initializeDemo();
-    }
+    // Initialize the demo.
+    m_aDemoPanel.initializeDemo ();
+  }
 
-    /**
-     * Applet starter.
-     */
-    public void start()
-    {
-//	repaint();
-        paint(this.getGraphics());
-    }
+  /**
+   * Applet starter.
+   */
+  @Override
+  public void start ()
+  {
+    // repaint();
+    paint (this.getGraphics ());
+  }
 
-    /**
-     * Applet stopper.
-     */
-    public void stop()
-    {
-        demoPanel.closeDemo();
-    }
+  /**
+   * Applet stopper.
+   */
+  @Override
+  public void stop ()
+  {
+    m_aDemoPanel.closeDemo ();
+  }
 
-    /**
-     * Update the display without repainting the background.
-     * @param g the graphics context
-     */
-    public void update(Graphics g)
-    {
-        paint(g);
-    }
+  /**
+   * Update the display without repainting the background.
+   * 
+   * @param g
+   *        the graphics context
+   */
+  @Override
+  public void update (final Graphics g)
+  {
+    paint (g);
+  }
 
-    /**
-     * Redraw the contents of the demo panel.
-     * @param g the graphics context
-     */
-    public void paint(Graphics g)
-    {
-        demoPanel.draw();
-    }
+  /**
+   * Redraw the contents of the demo panel.
+   * 
+   * @param g
+   *        the graphics context
+   */
+  @Override
+  public void paint (final Graphics g)
+  {
+    m_aDemoPanel.draw ();
+  }
 }

@@ -1,33 +1,32 @@
 package numbercruncher.program5_1;
 
-import java.awt.*;
+import java.awt.Frame;
+
 import numbercruncher.graphutils.DemoFrame;
 
 /**
- * PROGRAM 5-1d: Bisection Algorithm (Interactive Standalone Demo)
- *
- * Interactively demonstrate the Bisection Algorithm on various functions.
- * Either single-step or let the program automatically step once each
- * half second.
+ * PROGRAM 5-1d: Bisection Algorithm (Interactive Standalone Demo) Interactively
+ * demonstrate the Bisection Algorithm on various functions. Either single-step
+ * or let the program automatically step once each half second.
  */
 public class BisectionDemo extends DemoFrame
 {
-    private static final String TITLE = "Bisection Demo";
+  private static final String TITLE = "Bisection Demo";
 
-    /**
-     * Constructor.
-     */
-    private BisectionDemo()
-    {
-        super(TITLE, new BisectionPanel());
-    }
+  /**
+   * Constructor.
+   */
+  private BisectionDemo ()
+  {
+    super (TITLE, new BisectionPanel ());
+  }
 
-    /**
-     * Main.
-     */
-    public static void main(String args[])
-    {
-        Frame frame = new BisectionDemo();
-        frame.setVisible(true);
-    }
+  /**
+   * Main.
+   */
+  public static void main (final String args[])
+  {
+    final Frame frame = new BisectionDemo ();
+    frame.setVisible (true);
+  }
 }

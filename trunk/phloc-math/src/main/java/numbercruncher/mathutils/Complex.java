@@ -1,110 +1,131 @@
 package numbercruncher.mathutils;
 
 /**
- * Perform basic complex arithmetic.  The complex objects are
- * immutable, and complex operations create new complex objects.
+ * Perform basic complex arithmetic. The complex objects are immutable, and
+ * complex operations create new complex objects.
  */
 public class Complex
 {
-    /** the real part */        private float real;
-    /** the imaginary part */   private float imaginary;
+  /** the real part */
+  private final float m_fReal;
+  /** the imaginary part */
+  private final float m_fImaginary;
 
-    /**
-     * Constructor.
-     * @param real the real part
-     * @param imaginary the imaginary part
-     */
-    public Complex(float real, float imaginary)
-    {
-        this.real      = real;
-        this.imaginary = imaginary;
-    }
+  /**
+   * Constructor.
+   * 
+   * @param real
+   *        the real part
+   * @param imaginary
+   *        the imaginary part
+   */
+  public Complex (final float real, final float imaginary)
+  {
+    this.m_fReal = real;
+    this.m_fImaginary = imaginary;
+  }
 
-    /**
-     * Return this complex number's real part.
-     * @return the real part
-     */
-    public float real() { return real; }
+  /**
+   * Return this complex number's real part.
+   * 
+   * @return the real part
+   */
+  public float real ()
+  {
+    return m_fReal;
+  }
 
-    /**
-     * Return this complex number's imaginary part.
-     * @return the imaginary part
-     */
-    public float imaginary() { return imaginary; }
+  /**
+   * Return this complex number's imaginary part.
+   * 
+   * @return the imaginary part
+   */
+  public float imaginary ()
+  {
+    return m_fImaginary;
+  }
 
-    /**
-     * Compute this complex number's modulus
-     */
-    public float modulus()
-    {
-        return (float) Math.sqrt(real*real + imaginary*imaginary);
-    }
+  /**
+   * Compute this complex number's modulus
+   */
+  public float modulus ()
+  {
+    return (float) Math.sqrt (m_fReal * m_fReal + m_fImaginary * m_fImaginary);
+  }
 
-    /**
-     * Return whether or not this complex number
-     * is equal to another one.
-     * @param z the other complex number
-     * @return true if equal, false if not
-     */
-    public boolean equal(Complex z)
-    {
-        return (real == z.real()) && (imaginary == z.imaginary());
-    }
+  /**
+   * Return whether or not this complex number is equal to another one.
+   * 
+   * @param z
+   *        the other complex number
+   * @return true if equal, false if not
+   */
+  public boolean equal (final Complex z)
+  {
+    return (m_fReal == z.real ()) && (m_fImaginary == z.imaginary ());
+  }
 
-    /**
-     * Add another complex number to this one.
-     * @param a the other complex number
-     * @return a new complex number that is the sum
-     */
-    public Complex add(Complex z)
-    {
-        return new Complex(real + z.real(),
-                           imaginary + z.imaginary());
-    }
+  /**
+   * Add another complex number to this one.
+   * 
+   * @param a
+   *        the other complex number
+   * @return a new complex number that is the sum
+   */
+  public Complex add (final Complex z)
+  {
+    return new Complex (m_fReal + z.real (), m_fImaginary + z.imaginary ());
+  }
 
-    /**
-     * Subtract another complex number from this one.
-     * @param a the other complex number
-     * @return a new complex number that is the difference
-     */
-    public Complex subtract(Complex z)
-    {
-        return new Complex(real - z.real(),
-                           imaginary - z.imaginary());
-    }
+  /**
+   * Subtract another complex number from this one.
+   * 
+   * @param a
+   *        the other complex number
+   * @return a new complex number that is the difference
+   */
+  public Complex subtract (final Complex z)
+  {
+    return new Complex (m_fReal - z.real (), m_fImaginary - z.imaginary ());
+  }
 
-    /**
-     * Multiply this complex number by another one.
-     * @param a the other complex number
-     * @return a new complex number that is the product
-     */
-    public Complex multiply(Complex z)
-    {
-        return new Complex(real*z.real() - imaginary*z.imaginary(),
-                           real*z.imaginary() + imaginary*z.real());
-    }
+  /**
+   * Multiply this complex number by another one.
+   * 
+   * @param a
+   *        the other complex number
+   * @return a new complex number that is the product
+   */
+  public Complex multiply (final Complex z)
+  {
+    return new Complex (m_fReal * z.real () - m_fImaginary * z.imaginary (), m_fReal * z.imaginary () + m_fImaginary * z.real ());
+  }
 
-    /**
-     * Divide this complex number by another one.
-     * @param a the other complex number
-     * @return a new complex number that is the quotient
-     */
-    public Complex divide(Complex z)
-    {
-        float denom = z.real()*z.real() + z.imaginary()*z.imaginary();
-        float qr    = (real*z.real() + imaginary*z.imaginary())/denom;
-        float qi    = (imaginary*z.real() - real*z.imaginary())/denom;
+  /**
+   * Divide this complex number by another one.
+   * 
+   * @param a
+   *        the other complex number
+   * @return a new complex number that is the quotient
+   */
+  public Complex divide (final Complex z)
+  {
+    final float denom = z.real () * z.real () + z.imaginary () * z.imaginary ();
+    final float qr = (m_fReal * z.real () + m_fImaginary * z.imaginary ()) / denom;
+    final float qi = (m_fImaginary * z.real () - m_fReal * z.imaginary ()) / denom;
 
-        return new Complex(qr, qi);
-    }
+    return new Complex (qr, qi);
+  }
 
-    /**
-     * Return the string representation of this complex number.
-     * @return the string representation
-     */
-    public String toString()
-    {
-        String operator = (imaginary >= 0) ? "+" : "-";
-        return real + operator + Math.abs(imaginary) + "i";
-    }
+  /**
+   * Return the string representation of this complex number.
+   * 
+   * @return the string representation
+   */
+  @Override
+  public String toString ()
+  {
+    final String operator = (m_fImaginary >= 0) ? "+" : "-";
+    return m_fReal + operator + Math.abs (m_fImaginary) + "i";
+  }
 }

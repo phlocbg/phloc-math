@@ -32,8 +32,7 @@ import com.phloc.math.matrix.Matrix;
  * 
  * @author Philip Helger
  */
-public interface IReadonlyBaseGraph <N extends IBaseGraphNode <N, R>, R extends IBaseGraphRelation <N, R>> extends
-                                                                                                           IBaseGraphObject
+public interface IReadonlyBaseGraph <N extends IBaseGraphNode <N, R>, R extends IBaseGraphRelation <N, R>> extends IBaseGraphObject
 {
   /**
    * @return The number of nodes currently in the graph. Always &ge; 0.
