@@ -105,8 +105,8 @@ class PlotPanel extends Panel
   /**
    * Initialize the plot with its properties.
    * 
-   * @param the
-   *        plot properties
+   * @param plotProps
+   *        the plot properties
    */
   void initPlot (final PlotProperties plotProps)
   {

@@ -39,7 +39,7 @@ public abstract class InterRegressPanel extends UserPointPanel
    *        the label for action button 1
    * @param actionButton2Label
    *        the label for action button 2
-   * @param enableDegree
+   * @param showDegree
    *        true to enable the degree choice, false to disable
    */
   protected InterRegressPanel (final int maxPoints,

@@ -185,7 +185,7 @@ public class CubePanel extends Panel
   private void setRandomRotation ()
   {
     m_aTransformation.setRotation ((float) (0.1 * Math.random ()), // x axis
-                                (float) (0.1 * Math.random ()), // y axis
-                                (float) (0.1 * Math.random ())); // z axis
+                                   (float) (0.1 * Math.random ()), // y axis
+                                   (float) (0.1 * Math.random ())); // z axis
   }
 }

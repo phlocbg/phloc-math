@@ -68,7 +68,7 @@ public class Complex
   /**
    * Add another complex number to this one.
    * 
-   * @param a
+   * @param z
    *        the other complex number
    * @return a new complex number that is the sum
    */
@@ -80,7 +80,7 @@ public class Complex
   /**
    * Subtract another complex number from this one.
    * 
-   * @param a
+   * @param z
    *        the other complex number
    * @return a new complex number that is the difference
    */
@@ -92,19 +92,22 @@ public class Complex
   /**
    * Multiply this complex number by another one.
    * 
-   * @param a
+   * @param z
    *        the other complex number
    * @return a new complex number that is the product
    */
   public Complex multiply (final Complex z)
   {
-    return new Complex (m_fReal * z.real () - m_fImaginary * z.imaginary (), m_fReal * z.imaginary () + m_fImaginary * z.real ());
+    return new Complex (m_fReal * z.real () - m_fImaginary * z.imaginary (), m_fReal *
+                                                                             z.imaginary () +
+                                                                             m_fImaginary *
+                                                                             z.real ());
   }
 
   /**
    * Divide this complex number by another one.
    * 
-   * @param a
+   * @param z
    *        the other complex number
    * @return a new complex number that is the quotient
    */

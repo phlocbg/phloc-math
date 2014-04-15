@@ -177,7 +177,7 @@ class HeaderPanel extends Panel
   /**
    * Set a function and repaint the function panel.
    * 
-   * @param xSelection
+   * @param function
    *        the selected function index
    */
   void setFunction (final IPlottable function)

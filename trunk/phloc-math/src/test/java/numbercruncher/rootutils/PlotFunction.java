@@ -96,14 +96,14 @@ public class PlotFunction implements IPlottable
    * 
    * @param key
    *        the hash key
-   * @param xMin
-   *        the minimum x value of the plot bounds
-   * @param xMax
-   *        the maximum x value of the plot bounds
-   * @param xMin
-   *        the minimum y value of the plot bounds
-   * @param yMax
-   *        the maximum y value of the plot bounds
+   * @param x1
+   *        the x-coordinate of upper left corner of image region
+   * @param y1
+   *        the y-coordinate of upper left corner of image region
+   * @param x1
+   *        the x-coordinate of lower left corner of image region
+   * @param y1
+   *        the y-coordinate of lower left corner of image region
    */
   private static void enter (final String key, final int x1, final int y1, final int x2, final int y2)
   {
@@ -118,14 +118,14 @@ public class PlotFunction implements IPlottable
    * 
    * @param key
    *        the function key
-   * @param x1
-   *        the x-coordinate of uppper left corner of image region
-   * @param y1
-   *        the y-coordinate of uppper left corner of image region
-   * @param x1
-   *        the x-coordinate of lower left corner of image region
-   * @param y1
-   *        the y-coordinate of lower left corner of image region
+   * @param xMin
+   *        the minimum x value of the plot bounds
+   * @param xMax
+   *        the maximum x value of the plot bounds
+   * @param yMin
+   *        the minimum y value of the plot bounds
+   * @param yMax
+   *        the maximum y value of the plot bounds
    */
   public PlotFunction (final String key, final float xMin, final float xMax, final float yMin, final float yMax)
   {
@@ -144,14 +144,14 @@ public class PlotFunction implements IPlottable
    * 
    * @param function
    *        the function
-   * @param x1
-   *        the x-coordinate of uppper left corner of image region
-   * @param y1
-   *        the y-coordinate of uppper left corner of image region
-   * @param x1
-   *        the x-coordinate of lower left corner of image region
-   * @param y1
-   *        the y-coordinate of lower left corner of image region
+   * @param xMin
+   *        the minimum x value of the plot bounds
+   * @param xMax
+   *        the maximum x value of the plot bounds
+   * @param yMin
+   *        the minimum y value of the plot bounds
+   * @param yMax
+   *        the maximum y value of the plot bounds
    */
   public PlotFunction (final Function function, final float xMin, final float xMax, final float yMin, final float yMax)
   {

@@ -82,7 +82,7 @@ public class Matrix
    * @param c
    *        the column index
    * @return the value
-   * @throws numbercruncher.MatrixException
+   * @throws MatrixException
    *         for an invalid index
    */
   public float at (final int r, final int c) throws MatrixException
@@ -101,7 +101,7 @@ public class Matrix
    * @param r
    *        the row index
    * @return the row as a row vector
-   * @throws numbercruncher.MatrixException
+   * @throws MatrixException
    *         for an invalid index
    */
   public RowVector getRow (final int r) throws MatrixException
@@ -126,7 +126,7 @@ public class Matrix
    * @param c
    *        the column index
    * @return the column as a column vector
-   * @throws numbercruncher.MatrixException
+   * @throws MatrixException
    *         for an invalid index
    */
   public ColumnVector getColumn (final int c) throws MatrixException
@@ -188,7 +188,7 @@ public class Matrix
    *        the column index
    * @param value
    *        the value
-   * @throws numbercruncher.MatrixException
+   * @throws MatrixException
    *         for an invalid index
    */
   public void set (final int r, final int c, final float value) throws MatrixException
@@ -228,7 +228,7 @@ public class Matrix
    *        the row vector
    * @param r
    *        the row index
-   * @throws numbercruncher.MatrixException
+   * @throws MatrixException
    *         for an invalid index or an invalid vector size
    */
   public void setRow (final RowVector rv, final int r) throws MatrixException
@@ -255,7 +255,7 @@ public class Matrix
    *        the column vector
    * @param c
    *        the column index
-   * @throws numbercruncher.MatrixException
+   * @throws MatrixException
    *         for an invalid index or an invalid vector size
    */
   public void setColumn (final ColumnVector cv, final int c) throws MatrixException
@@ -306,7 +306,7 @@ public class Matrix
    * @param m
    *        the matrix addend
    * @return the sum matrix
-   * @throws numbercruncher.MatrixException
+   * @throws MatrixException
    *         for invalid size
    */
   public Matrix add (final Matrix m) throws MatrixException
@@ -337,7 +337,7 @@ public class Matrix
    * @param m
    *        the matrix subrrahend
    * @return the difference matrix
-   * @throws numbercruncher.MatrixException
+   * @throws MatrixException
    *         for invalid size
    */
   public Matrix subtract (final Matrix m) throws MatrixException
@@ -391,7 +391,7 @@ public class Matrix
    * @param m
    *        the matrix multiplier
    * @return the product matrix
-   * @throws numbercruncher.MatrixException
+   * @throws MatrixException
    *         for invalid size
    */
   public Matrix multiply (final Matrix m) throws MatrixException
@@ -427,7 +427,7 @@ public class Matrix
    * @param cv
    *        the column vector
    * @return the product column vector
-   * @throws numbercruncher.MatrixException
+   * @throws MatrixException
    *         for invalid size
    */
   public ColumnVector multiply (final ColumnVector cv) throws MatrixException
@@ -460,7 +460,7 @@ public class Matrix
    * @param rv
    *        the row vector
    * @return the product row vector
-   * @throws numbercruncher.MatrixException
+   * @throws MatrixException
    *         for invalid size
    */
   public RowVector multiply (final RowVector rv) throws MatrixException

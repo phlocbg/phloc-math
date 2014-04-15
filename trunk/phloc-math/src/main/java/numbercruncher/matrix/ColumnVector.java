@@ -141,7 +141,7 @@ public class ColumnVector extends Matrix
    * @param cv
    *        the other column vector
    * @return the sum column vector
-   * @throws numbercruncher.MatrixException
+   * @throws MatrixException
    *         for invalid size
    */
   public ColumnVector add (final ColumnVector cv) throws MatrixException
@@ -155,7 +155,7 @@ public class ColumnVector extends Matrix
    * @param cv
    *        the other column vector
    * @return the sum column vector
-   * @throws numbercruncher.MatrixException
+   * @throws MatrixException
    *         for invalid size
    */
   public ColumnVector subtract (final ColumnVector cv) throws MatrixException

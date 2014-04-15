@@ -84,7 +84,7 @@ public class SquareMatrix extends Matrix
    * @param sm
    *        the square matrix addend
    * @return the sum matrix
-   * @throws numbercruncher.MatrixException
+   * @throws MatrixException
    *         for invalid size
    */
   public SquareMatrix add (final SquareMatrix sm) throws MatrixException
@@ -98,7 +98,7 @@ public class SquareMatrix extends Matrix
    * @param sm
    *        the square matrix subrrahend
    * @return the difference matrix
-   * @throws numbercruncher.MatrixException
+   * @throws MatrixException
    *         for invalid size
    */
   public SquareMatrix subtract (final SquareMatrix sm) throws MatrixException
@@ -112,7 +112,7 @@ public class SquareMatrix extends Matrix
    * @param sm
    *        the square matrix multiplier
    * @return the product matrix
-   * @throws numbercruncher.MatrixException
+   * @throws MatrixException
    *         for invalid size
    */
   public SquareMatrix multiply (final SquareMatrix sm) throws MatrixException

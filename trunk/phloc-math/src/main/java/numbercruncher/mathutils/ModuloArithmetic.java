@@ -46,9 +46,9 @@ public class ModuloArithmetic
   /**
    * Raise a to the b power modulo m.
    * 
-   * @param a
+   * @param pbase
    *        the value of a
-   * @param b
+   * @param pexponent
    *        the value of b
    * @param m
    *        the modulus m
