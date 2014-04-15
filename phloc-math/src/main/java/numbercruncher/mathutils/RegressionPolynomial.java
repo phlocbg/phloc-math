@@ -95,7 +95,7 @@ public class RegressionPolynomial implements IEvaluatable
    * Return the coefficients matrix.
    * 
    * @return the A matrix
-   * @throws matrix.MatrixException
+   * @throws MatrixException
    *         if a matrix error occurred
    * @throws Exception
    *         if an overflow occurred
@@ -110,7 +110,7 @@ public class RegressionPolynomial implements IEvaluatable
    * Return the regression coefficients.
    * 
    * @return the a vector
-   * @throws matrix.MatrixException
+   * @throws MatrixException
    *         if a matrix error occurred
    * @throws Exception
    *         if an overflow occurred
@@ -125,7 +125,7 @@ public class RegressionPolynomial implements IEvaluatable
    * Return the right hand side.
    * 
    * @return the b vector
-   * @throws matrix.MatrixException
+   * @throws MatrixException
    *         if a matrix error occurred
    * @throws Exception
    *         if an overflow occurred
@@ -213,7 +213,7 @@ public class RegressionPolynomial implements IEvaluatable
   /**
    * Compute the coefficients.
    * 
-   * @throws matrix.MatrixException
+   * @throws MatrixException
    *         if a matrix error occurred
    * @throws Exception
    *         if an overflow occurred
@@ -226,7 +226,7 @@ public class RegressionPolynomial implements IEvaluatable
   /**
    * Validate the coefficients.
    * 
-   * @throws matrix.MatrixException
+   * @throws MatrixException
    *         if a matrix error occurred
    * @throws Exception
    *         if an overflow occurred

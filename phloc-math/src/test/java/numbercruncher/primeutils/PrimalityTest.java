@@ -1,6 +1,5 @@
 package numbercruncher.primeutils;
 
-
 /**
  * Primality test that combines the Miller-Rabin and Lucas tests.
  */

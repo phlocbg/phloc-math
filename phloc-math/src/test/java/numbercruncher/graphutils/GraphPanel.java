@@ -192,8 +192,8 @@ public abstract class GraphPanel extends Panel implements IDemoPanel
   /**
    * Set the header image.
    * 
-   * @param the
-   *        header image
+   * @param image
+   *        the header image
    */
   protected void setHeaderImage (final Image image)
   {
@@ -250,8 +250,8 @@ public abstract class GraphPanel extends Panel implements IDemoPanel
   /**
    * Add a demo's controls to the control panel.
    * 
-   * @param the
-   *        demo's control subpanel
+   * @param demoControlPanel
+   *        the demo's control subpanel
    */
   protected void addDemoControls (final Panel demoControlPanel)
   {
@@ -320,7 +320,7 @@ public abstract class GraphPanel extends Panel implements IDemoPanel
   /**
    * Plot the function.
    * 
-   * @param m_aFunction
+   * @param plotFunction
    *        the function to plot
    */
   protected void plotFunction (final IPlottable plotFunction, final Color color)

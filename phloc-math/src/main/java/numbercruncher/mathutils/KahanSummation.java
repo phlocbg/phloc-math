@@ -41,8 +41,8 @@ public class KahanSummation
   /**
    * Add the value of an addend to the running sum.
    * 
-   * @param the
-   *        addend value
+   * @param addend
+   *        the value
    */
   public void add (final float addend)
   {

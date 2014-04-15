@@ -29,9 +29,9 @@ public abstract class RootFinder
   /**
    * Check the interval.
    * 
-   * @param xMin
+   * @param x1
    *        x-coordinate of the left of the interval
-   * @param xMax
+   * @param x2
    *        x-coordinate of the right end of the interval
    * @throws InvalidIntervalException
    */

@@ -135,7 +135,7 @@ public class RowVector extends Matrix
    * @param rv
    *        the other row vector
    * @return the sum row vector
-   * @throws numbercruncher.MatrixException
+   * @throws MatrixException
    *         for invalid size
    */
   public RowVector add (final RowVector rv) throws MatrixException
@@ -149,7 +149,7 @@ public class RowVector extends Matrix
    * @param rv
    *        the other row vector
    * @return the sum row vector
-   * @throws numbercruncher.MatrixException
+   * @throws MatrixException
    *         for invalid size
    */
   public RowVector subtract (final RowVector rv) throws MatrixException

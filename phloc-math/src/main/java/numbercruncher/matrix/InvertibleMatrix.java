@@ -1,6 +1,5 @@
 package numbercruncher.matrix;
 
-
 /**
  * A matrix that can be inverted. Also, compute its determinant, norm, and
  * condition number.
@@ -33,7 +32,7 @@ public class InvertibleMatrix extends LinearSystem
    * Compute the inverse of this matrix.
    * 
    * @return the inverse matrix
-   * @throws matrix.MatrixException
+   * @throws MatrixException
    *         if an error occurred
    */
   public InvertibleMatrix inverse () throws MatrixException
@@ -56,7 +55,7 @@ public class InvertibleMatrix extends LinearSystem
    * Compute the determinant.
    * 
    * @return the determinant
-   * @throws matrix.MatrixException
+   * @throws MatrixException
    *         if an error occurred
    */
   public float determinant () throws MatrixException

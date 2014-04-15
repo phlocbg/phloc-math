@@ -519,16 +519,16 @@ public class IEEE754
     if ((biased < 0) || (biased > IEEE754Constants.FLOAT_EXPONENT_RESERVED))
     {
       throw new IEEE754Exception ("The biased exponent value should be " +
-                           "0 through " +
-                           IEEE754Constants.FLOAT_EXPONENT_RESERVED +
-                           ".");
+                                  "0 through " +
+                                  IEEE754Constants.FLOAT_EXPONENT_RESERVED +
+                                  ".");
     }
   }
 
   /**
    * Validate the value of the float unbiased exponent value.
    * 
-   * @param biased
+   * @param unbiased
    *        the unbiased exponent value
    * @throws numbercruncher.mathutils.IEEE754.IEEE754Exception
    */
@@ -537,10 +537,10 @@ public class IEEE754
     if ((unbiased < -IEEE754Constants.FLOAT_EXPONENT_BIAS + 1) || (unbiased > IEEE754Constants.FLOAT_EXPONENT_BIAS))
     {
       throw new IEEE754Exception ("The unbiased exponent value should be " +
-                           -(IEEE754Constants.FLOAT_EXPONENT_BIAS - 1) +
-                           " through " +
-                           IEEE754Constants.FLOAT_EXPONENT_BIAS +
-                           ".");
+                                  -(IEEE754Constants.FLOAT_EXPONENT_BIAS - 1) +
+                                  " through " +
+                                  IEEE754Constants.FLOAT_EXPONENT_BIAS +
+                                  ".");
     }
   }
 
@@ -556,16 +556,16 @@ public class IEEE754
     if ((biased < 0) || (biased > IEEE754Constants.DOUBLE_EXPONENT_RESERVED))
     {
       throw new IEEE754Exception ("The biased exponent value should be " +
-                           "0 through " +
-                           IEEE754Constants.DOUBLE_EXPONENT_RESERVED +
-                           ".");
+                                  "0 through " +
+                                  IEEE754Constants.DOUBLE_EXPONENT_RESERVED +
+                                  ".");
     }
   }
 
   /**
    * Validate the value of the double unbiased exponent value.
    * 
-   * @param biased
+   * @param unbiased
    *        the unbiased exponent value
    * @throws numbercruncher.mathutils.IEEE754.IEEE754Exception
    */
@@ -574,10 +574,10 @@ public class IEEE754
     if ((unbiased < -IEEE754Constants.DOUBLE_EXPONENT_BIAS + 1) || (unbiased > IEEE754Constants.DOUBLE_EXPONENT_BIAS))
     {
       throw new IEEE754Exception ("The unbiased exponent value should be " +
-                           -(IEEE754Constants.DOUBLE_EXPONENT_BIAS - 1) +
-                           " through " +
-                           IEEE754Constants.DOUBLE_EXPONENT_BIAS +
-                           ".");
+                                  -(IEEE754Constants.DOUBLE_EXPONENT_BIAS - 1) +
+                                  " through " +
+                                  IEEE754Constants.DOUBLE_EXPONENT_BIAS +
+                                  ".");
     }
   }
 
