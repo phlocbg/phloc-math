@@ -33,8 +33,7 @@ import com.phloc.commons.state.EChange;
  * @author Philip Helger
  */
 @MustImplementEqualsAndHashcode
-public interface IBaseGraphNode <N extends IBaseGraphNode <N, R>, R extends IBaseGraphRelation <N, R>> extends
-                                                                                                       IBaseGraphObject
+public interface IBaseGraphNode <N extends IBaseGraphNode <N, R>, R extends IBaseGraphRelation <N, R>> extends IBaseGraphObject
 {
   /**
    * Check if this graph node is directly connected to the passed node, either

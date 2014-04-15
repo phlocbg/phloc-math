@@ -1,36 +1,39 @@
 package numbercruncher.primeutils;
 
-import numbercruncher.primeutils.MillerRabinTest;
-import numbercruncher.primeutils.LucasTest;
 
 /**
  * Primality test that combines the Miller-Rabin and Lucas tests.
  */
 public class PrimalityTest
 {
-    /** number to test for primality */   private int p;
-    /** number of times to run the
-        Miller-Rabin test */              private int iterations;
+  /** number to test for primality */
+  private final int m_nP;
+  /**
+   * number of times to run the Miller-Rabin test
+   */
+  private final int m_nIterations;
 
-    /**
-     * Constructor.
-     * @param p the number to test for primality
-     * @param iterations the number of times to run
-     *                   the Miller-Rabin test
-     */
-    public PrimalityTest(int p, int iterations)
-    {
-        this.p          = p;
-        this.iterations = iterations;
-     }
+  /**
+   * Constructor.
+   * 
+   * @param p
+   *        the number to test for primality
+   * @param iterations
+   *        the number of times to run the Miller-Rabin test
+   */
+  public PrimalityTest (final int p, final int iterations)
+  {
+    this.m_nP = p;
+    this.m_nIterations = iterations;
+  }
 
-    /**
-     * Perform the primality test.
-     * @return true if p is prime, false if p is composite
-     */
-    public boolean test()
-    {
-        return (new MillerRabinTest(p, iterations, null)).test()
-                    && (new LucasTest(p, null)).test();
-    }
+  /**
+   * Perform the primality test.
+   * 
+   * @return true if p is prime, false if p is composite
+   */
+  public boolean test ()
+  {
+    return (new MillerRabinTest (m_nP, m_nIterations, null)).test () && (new LucasTest (m_nP, null)).test ();
+  }
 }

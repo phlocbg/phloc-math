@@ -1,98 +1,123 @@
 package numbercruncher.graphutils;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Panel;
+import java.awt.Toolkit;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * The base frame for all standalone demo programs.
  */
 public abstract class DemoFrame extends Frame
 {
-    private String    title;        // window title
-    private DemoPanel demoPanel;    // demo panel
+  private final String m_sTitle; // window title
+  private final IDemoPanel m_aDemoPanel; // demo panel
 
-    /**
-     * Constructor.
-     * @param title the window title
-     * @param demoPanel the demo panel
-     */
-    protected DemoFrame(String title, DemoPanel demoPanel)
+  /**
+   * Constructor.
+   * 
+   * @param title
+   *        the window title
+   * @param demoPanel
+   *        the demo panel
+   */
+  protected DemoFrame (final String title, final IDemoPanel demoPanel)
+  {
+    this (title, demoPanel, 600, 500);
+  }
+
+  /**
+   * Constructor.
+   * 
+   * @param title
+   *        the window title
+   * @param demoPanel
+   *        the demo panel
+   * @param width
+   *        the frame width
+   * @param height
+   *        the frame height
+   */
+  protected DemoFrame (final String title, final IDemoPanel demoPanel, final int width, final int height)
+  {
+    this.m_sTitle = title;
+    this.m_aDemoPanel = demoPanel;
+    setTitle (m_sTitle);
+    initFrame (width, height);
+  }
+
+  /**
+   * Initialize the frame.
+   * 
+   * @param width
+   *        the frame width
+   * @param height
+   *        the frame height
+   */
+  private void initFrame (final int width, final int height)
+  {
+    // Center the demo frame.
+    final Dimension screenSize = Toolkit.getDefaultToolkit ().getScreenSize ();
+    setSize (width, height);
+    setLocation ((screenSize.width - width) / 2, (screenSize.height - height) / 2);
+
+    // Add the demo panel.
+    setLayout (new BorderLayout ());
+    add ((Panel) m_aDemoPanel, BorderLayout.CENTER);
+
+    // Initialize the demo.
+    m_aDemoPanel.initializeDemo ();
+
+    // Window event handlers.
+    addWindowListener (new WindowAdapter ()
     {
-        this(title, demoPanel, 600, 500);
-    }
+      @Override
+      public void windowOpened (final WindowEvent ev)
+      {
+        repaint ();
+      }
 
-    /**
-     * Constructor.
-     * @param title the window title
-     * @param demoPanel the demo panel
-     * @param width the frame width
-     * @param height the frame height
-     */
-    protected DemoFrame(String title, DemoPanel demoPanel,
-                        int width, int height)
+      @Override
+      public void windowClosing (final WindowEvent ev)
+      {
+        System.exit (0);
+      }
+    });
+
+    // Resize event handler.
+    addComponentListener (new ComponentAdapter ()
     {
-        this.title     = title;
-        this.demoPanel = demoPanel;
-        setTitle(title);
-        initFrame(width, height);
-    }
+      @Override
+      public void componentResized (final ComponentEvent ev)
+      {
+        resized ();
+      }
+    });
+  }
 
-    /**
-     * Initialize the frame.
-     * @param width the frame width
-     * @param height the frame height
-     */
-    private void initFrame(int width, int height)
-    {
-        // Center the demo frame.
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setSize(width, height);
-        setLocation((screenSize.width  - width )/2,
-                    (screenSize.height - height)/2);
+  /**
+   * The frame was resized.
+   */
+  private void resized ()
+  {
+    m_aDemoPanel.panelResized ();
+  }
 
-        // Add the demo panel.
-        setLayout(new BorderLayout());
-        add((Panel) demoPanel, BorderLayout.CENTER);
-
-        // Initialize the demo.
-        demoPanel.initializeDemo();
-
-        // Window event handlers.
-        addWindowListener(new WindowAdapter()
-        {
-            public void windowOpened(WindowEvent ev)
-            {
-                repaint();
-            }
-
-            public void windowClosing(WindowEvent ev)
-            {
-                System.exit(0);
-            }
-        });
-
-        // Resize event handler.
-        addComponentListener(new ComponentAdapter()
-        {
-            public void componentResized(ComponentEvent ev)
-            {
-                resized();
-            }
-        });
-    }
-
-    /**
-     * The frame was resized.
-     */
-    private void resized() { demoPanel.panelResized(); }
-
-    /**
-     * Update the display without repainting the background.
-     * @param g the graphics context
-     */
-    public void update(Graphics g)
-    {
-        demoPanel.draw();
-    }
+  /**
+   * Update the display without repainting the background.
+   * 
+   * @param g
+   *        the graphics context
+   */
+  @Override
+  public void update (final Graphics g)
+  {
+    m_aDemoPanel.draw ();
+  }
 }
-

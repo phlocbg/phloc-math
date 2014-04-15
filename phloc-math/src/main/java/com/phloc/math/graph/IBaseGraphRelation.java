@@ -31,8 +31,7 @@ import com.phloc.commons.annotations.ReturnsMutableCopy;
  * @author Philip Helger
  */
 @MustImplementEqualsAndHashcode
-public interface IBaseGraphRelation <N extends IBaseGraphNode <N, R>, R extends IBaseGraphRelation <N, R>> extends
-                                                                                                           IBaseGraphObject
+public interface IBaseGraphRelation <N extends IBaseGraphNode <N, R>, R extends IBaseGraphRelation <N, R>> extends IBaseGraphObject
 {
   /**
    * Check if this relation is connected to the passed node.

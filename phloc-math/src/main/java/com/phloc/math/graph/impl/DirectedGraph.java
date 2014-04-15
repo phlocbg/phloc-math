@@ -44,8 +44,7 @@ import com.phloc.math.matrix.Matrix;
  * @author Philip Helger
  */
 @NotThreadSafe
-public class DirectedGraph extends AbstractBaseGraph <IDirectedGraphNode, IDirectedGraphRelation> implements
-                                                                                                 IDirectedGraph
+public class DirectedGraph extends AbstractBaseGraph <IDirectedGraphNode, IDirectedGraphRelation> implements IDirectedGraph
 {
   private final IDirectedGraphObjectFactory m_aFactory;
   private ETriState m_eCacheHasCycles = ETriState.UNDEFINED;

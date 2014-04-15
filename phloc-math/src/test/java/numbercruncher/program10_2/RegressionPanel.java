@@ -1,12 +1,8 @@
 package numbercruncher.program10_2;
 
-import java.awt.*;
-import java.awt.event.*;
-
 import numbercruncher.graphutils.PlotProperties;
 import numbercruncher.mathutils.DataPoint;
 import numbercruncher.mathutils.RegressionPolynomial;
-import numbercruncher.matrix.MatrixException;
 import numbercruncher.pointutils.InterRegressPanel;
 
 /**
@@ -14,118 +10,140 @@ import numbercruncher.pointutils.InterRegressPanel;
  */
 public class RegressionPanel extends InterRegressPanel
 {
-    private static final int MAX_POINTS = 100;
+  private static final int MAX_POINTS = 100;
 
-    /** regression polynomial degree */     int degree = 1;
-    /** regression polynomial function */   RegressionPolynomial poly;
+  /** regression polynomial degree */
+  int m_nDegree = 1;
+  /** regression polynomial function */
+  RegressionPolynomial poly;
 
-    /**
-     * Constructor.
-     */
-    RegressionPanel()
+  /**
+   * Constructor.
+   */
+  RegressionPanel ()
+  {
+    super (MAX_POINTS, "Regression poly", "Reset", true);
+    poly = new RegressionPolynomial (m_nDegree, MAX_POINTS);
+  }
+
+  /**
+   * The user has added a data point.
+   * 
+   * @param r
+   *        the dot's row
+   * @param c
+   *        the dot's column
+   */
+  @Override
+  protected void doDotAction (final int r, final int c)
+  {
+    if (n > m_nDegree)
+      actionButton1.setEnabled (true);
+
+    final PlotProperties props = getPlotProperties ();
+
+    final float x = props.getXMin () + c * props.getXDelta ();
+    final float y = props.getYMax () - r * props.getYDelta ();
+
+    poly.addDataPoint (new DataPoint (x, y));
+  }
+
+  /**
+   * Button 1 action: Construct and plot the regression polynomial.
+   */
+  @Override
+  protected void doButton1Action ()
+  {
+    drawDots ();
+    plotOK = true;
+
+    try
     {
-        super(MAX_POINTS, "Regression poly", "Reset", true);
-        poly = new RegressionPolynomial(degree, MAX_POINTS);
-    }
+      poly.computeCoefficients ();
+      plotFunction ();
 
-    /**
-     * The user has added a data point.
-     * @param r the dot's row
-     * @param c the dot's column
-     */
-    protected void doDotAction(int r, int c)
+      String label = "Regression polynomial of degree " + m_nDegree;
+      final String message = poly.getWarningMessage ();
+      if (message != null)
+        label += "  (WARNING: " + message;
+
+      setHeaderLabel (label);
+    }
+    catch (final Exception ex)
     {
-        if (n > degree) actionButton1.setEnabled(true);
-
-        PlotProperties props = getPlotProperties();
-
-        float x = props.getXMin() + c*props.getXDelta();
-        float y = props.getYMax() - r*props.getYDelta();
-
-        poly.addDataPoint(new DataPoint(x, y));
+      setHeaderLabel ("Could not generate polynomial:  " + ex.getMessage (), MAROON);
     }
+  }
 
-    /**
-     * Button 1 action: Construct and plot the regression polynomial.
-     */
-    protected void doButton1Action()
-    {
-        drawDots();
-        plotOK = true;
+  /**
+   * Button 2 action: Reset.
+   */
+  @Override
+  protected void doButton2Action ()
+  {
+    reset ();
+    draw ();
 
-        try {
-            poly.computeCoefficients();
-            plotFunction();
+    setHeaderLabel ("");
+    actionButton1.setEnabled (false);
+  }
 
-            String label   = "Regression polynomial of degree " + degree;
-            String message = poly.getWarningMessage();
-            if (message != null) label += "  (WARNING: " + message;
+  // ------------------//
+  // Method overrides //
+  // ------------------//
 
-            setHeaderLabel(label);
-        }
-        catch(Exception ex) {
-            setHeaderLabel("Could not generate polynomial:  " +
-                           ex.getMessage(), MAROON);
-        }
-    }
+  /**
+   * Return the value of the regression poly function at x.
+   * 
+   * @param x
+   *        the value of x
+   * @return the value of the function
+   */
+  @Override
+  public float valueAt (final float x)
+  {
+    return poly.at (x);
+  }
 
-    /**
-     * Button 2 action: Reset.
-     */
-    protected void doButton2Action()
-    {
-        reset();
-        draw();
+  /**
+   * Notification that the plot bounds changed. Redraw the panel.
+   */
+  @Override
+  public void plotBoundsChanged ()
+  {
+    n = 0;
+    draw ();
+  }
 
-        setHeaderLabel("");
-        actionButton1.setEnabled(false);
-    }
+  /**
+   * The degree has changed.
+   * 
+   * @param degree
+   *        the new degree
+   */
+  @Override
+  protected void degreeChanged (final int degree)
+  {
+    this.m_nDegree = degree;
+    plotOK = false;
 
-    //------------------//
-    // Method overrides //
-    //------------------//
+    final DataPoint data[] = poly.getDataPoints ();
 
-    /**
-     * Return the value of the regression poly function at x.
-     * @param x the value of x
-     * @return the value of the function
-     */
-    public float valueAt(float x) { return poly.at(x); }
+    poly = new RegressionPolynomial (degree, MAX_POINTS);
+    for (int i = 0; i < n; ++i)
+      poly.addDataPoint (data[i]);
 
-    /**
-     * Notification that the plot bounds changed.
-     * Redraw the panel.
-     */
-    public void plotBoundsChanged()
-    {
-        n = 0;
-        draw();
-    }
+    actionButton1.setEnabled (n > degree);
+  }
 
-    /**
-     * The degree has changed.
-     * @param degree the new degree
-     */
-    protected void degreeChanged(int degree)
-    {
-        this.degree = degree;
-        plotOK     = false;
-
-        DataPoint data[] = poly.getDataPoints();
-
-        poly = new RegressionPolynomial(degree, MAX_POINTS);
-        for (int i = 0; i < n; ++i) poly.addDataPoint(data[i]);
-
-        actionButton1.setEnabled(n > degree);
-    }
-
-    /**
-     * Reset.
-     */
-    protected void reset()
-    {
-        super.reset();
-        plotOK = false;
-        poly.reset();
-    }
+  /**
+   * Reset.
+   */
+  @Override
+  protected void reset ()
+  {
+    super.reset ();
+    plotOK = false;
+    poly.reset ();
+  }
 }
