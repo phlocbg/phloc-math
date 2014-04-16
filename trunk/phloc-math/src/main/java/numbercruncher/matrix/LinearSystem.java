@@ -76,7 +76,7 @@ public class LinearSystem extends SquareMatrix
    *        the column index, 0..nRows
    * @param value
    *        the value
-   * @throws matrix.MatrixException
+   * @throws MatrixException
    *         for invalid index
    */
   @Override
@@ -93,7 +93,7 @@ public class LinearSystem extends SquareMatrix
    *        the row vector
    * @param r
    *        the row index
-   * @throws matrix.MatrixException
+   * @throws MatrixException
    *         for an invalid index or an invalid vector size
    */
   @Override
@@ -110,7 +110,7 @@ public class LinearSystem extends SquareMatrix
    *        the column vector
    * @param c
    *        the column index
-   * @throws matrix.MatrixException
+   * @throws MatrixException
    *         for an invalid index or an invalid vector size
    */
   @Override
@@ -138,7 +138,7 @@ public class LinearSystem extends SquareMatrix
    * @param improve
    *        true to improve the solution
    * @return the solution column vector
-   * @throws matrix.MatrixException
+   * @throws MatrixException
    *         if an error occurred
    */
   public ColumnVector solve (final ColumnVector b, final boolean improve) throws MatrixException
@@ -167,7 +167,7 @@ public class LinearSystem extends SquareMatrix
    * 
    * @param width
    *        the column width
-   * @throws matrix.MatrixException
+   * @throws MatrixException
    *         if an error occurred
    */
   public void printDecomposed (final int width) throws MatrixException
@@ -196,7 +196,7 @@ public class LinearSystem extends SquareMatrix
    * that A = L*U. Store L and U together in matrix LU. Compute the permutation
    * vector permutation of the row indices.
    * 
-   * @throws matrix.MatrixException
+   * @throws MatrixException
    *         for a zero row or a singular matrix
    */
   protected void decompose () throws MatrixException
@@ -251,7 +251,7 @@ public class LinearSystem extends SquareMatrix
    * Do forward elimination with scaled partial row pivoting.
    * 
    * @parm scales the scaling vector
-   * @throws matrix.MatrixException
+   * @throws MatrixException
    *         for a singular matrix
    */
   private void forwardElimination (final float scales[]) throws MatrixException
@@ -336,7 +336,7 @@ public class LinearSystem extends SquareMatrix
    * @param b
    *        the column vector b
    * @return the column vector y
-   * @throws matrix.MatrixException
+   * @throws MatrixException
    *         if an error occurred
    */
   private ColumnVector forwardSubstitution (final ColumnVector b) throws MatrixException
@@ -364,7 +364,7 @@ public class LinearSystem extends SquareMatrix
    * @param y
    *        the column vector y
    * @return the solution column vector x
-   * @throws matrix.MatrixException
+   * @throws MatrixException
    *         if an error occurred
    */
   private ColumnVector backSubstitution (final ColumnVector y) throws MatrixException
@@ -393,7 +393,7 @@ public class LinearSystem extends SquareMatrix
    *        the right-hand side column vector
    * @param x
    *        the improved solution column vector
-   * @throws matrix.MatrixException
+   * @throws MatrixException
    *         if failed to converge
    */
   private void improve (final ColumnVector b, final ColumnVector x) throws MatrixException
