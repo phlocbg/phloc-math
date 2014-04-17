@@ -63,7 +63,7 @@ public class PrimeFactors
       {
 
         // Prime divisor found.
-        v.add (new Integer (factor));
+        v.add (Integer.valueOf (factor));
 
         // Factor out multiples of the divisor.
         do

@@ -8,6 +8,9 @@ import numbercruncher.piutils.PiFormula;
  */
 public class PiBorwein extends PiFormula implements IPiBorweinParent
 {
+  private long m_nStartTime;
+  private long m_nMarkTime;
+
   /** number of digits to compute */
   private int m_nDigits;
 

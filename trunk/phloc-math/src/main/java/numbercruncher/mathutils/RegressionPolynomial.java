@@ -3,6 +3,7 @@ package numbercruncher.mathutils;
 import numbercruncher.matrix.ColumnVector;
 import numbercruncher.matrix.LinearSystem;
 import numbercruncher.matrix.MatrixException;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * A least-squares regression polynomial function.
@@ -53,6 +54,7 @@ public class RegressionPolynomial implements IEvaluatable
    * @param data
    *        the array of data points
    */
+  @SuppressFBWarnings ("EI_EXPOSE_REP2")
   public RegressionPolynomial (final int degree, final DataPoint [] data)
   {
     this.m_nDegree = degree;
@@ -86,6 +88,7 @@ public class RegressionPolynomial implements IEvaluatable
    * 
    * @return the count
    */
+  @SuppressFBWarnings ("EI_EXPOSE_REP")
   public DataPoint [] getDataPoints ()
   {
     return m_aData;

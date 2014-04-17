@@ -1,6 +1,7 @@
 package numbercruncher.matrix;
 
 import numbercruncher.mathutils.AlignRight;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * The matrix class.
@@ -150,6 +151,7 @@ public class Matrix
    * 
    * @return the values
    */
+  @SuppressFBWarnings ("EI_EXPOSE_REP")
   public float [][] values ()
   {
     return m_aValues;
