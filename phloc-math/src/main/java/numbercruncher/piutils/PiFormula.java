@@ -9,12 +9,6 @@ import java.util.Date;
  */
 public abstract class PiFormula
 {
-  private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat ("00");
-  private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat ("HH:mm:ss.SSS");
-
-  protected long m_nStartTime;
-  protected long m_nMarkTime;
-
   /**
    * Print the string containing the digits of pi.
    * 
@@ -69,6 +63,9 @@ public abstract class PiFormula
    */
   protected String timestamp (final long time)
   {
+    final DecimalFormat DECIMAL_FORMAT = new DecimalFormat ("00");
+    final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat ("HH:mm:ss.SSS");
+
     // Current time in hh:mm:ss.
     final String tString = TIME_FORMAT.format (new Date ());
 

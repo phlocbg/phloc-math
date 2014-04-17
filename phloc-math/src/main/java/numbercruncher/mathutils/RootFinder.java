@@ -133,18 +133,18 @@ public abstract class RootFinder
   /**
    * Invalid interval exception.
    */
-  public class InvalidIntervalException extends Exception
+  public static class InvalidIntervalException extends Exception
   {}
 
   /**
    * Iteration count exceeded exception.
    */
-  public class IterationCountExceededException extends Exception
+  public static class IterationCountExceededException extends Exception
   {}
 
   /**
    * Position unchanged exception.
    */
-  public class PositionUnchangedException extends Exception
+  public static class PositionUnchangedException extends Exception
   {}
 }

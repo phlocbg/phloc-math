@@ -1,5 +1,7 @@
 package numbercruncher.mathutils;
 
+import com.phloc.commons.equals.EqualsUtils;
+
 /**
  * The root finder class that implements the regula falsi algorithm.
  */
@@ -170,7 +172,7 @@ public class RegulaFalsiRootFinder extends RootFinder
   @Override
   protected void checkPosition () throws RootFinder.PositionUnchangedException
   {
-    if (xFalse == prevXFalse)
+    if (EqualsUtils.equals (xFalse, prevXFalse))
     {
       throw new RootFinder.PositionUnchangedException ();
     }

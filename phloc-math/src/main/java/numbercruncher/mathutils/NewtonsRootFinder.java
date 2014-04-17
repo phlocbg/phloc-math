@@ -1,5 +1,7 @@
 package numbercruncher.mathutils;
 
+import com.phloc.commons.equals.EqualsUtils;
+
 /**
  * The root finder class that implements Newton's algorithm.
  */
@@ -140,7 +142,7 @@ public class NewtonsRootFinder extends RootFinder
   @Override
   protected void checkPosition () throws RootFinder.PositionUnchangedException
   {
-    if (xnp1 == prevXnp1)
+    if (EqualsUtils.equals (xnp1, prevXnp1))
     {
       throw new RootFinder.PositionUnchangedException ();
     }

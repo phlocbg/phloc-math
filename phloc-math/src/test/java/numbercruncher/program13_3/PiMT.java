@@ -13,6 +13,8 @@ public class PiMT extends PiFormula implements IPiBorweinParent
 {
   private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat ("HH:mm:ss.SSS");
 
+  private long m_nStartTime;
+  private long m_nMarkTime;
   /** number of digits to compute */
   private int m_nDigits;
   /** the Borwein algorithm */

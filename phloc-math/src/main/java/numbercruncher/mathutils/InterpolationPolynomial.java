@@ -1,5 +1,7 @@
 package numbercruncher.mathutils;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * A polynomial interpolation function.
  */
@@ -18,6 +20,7 @@ public class InterpolationPolynomial implements IEvaluatable
    * @param data
    *        the array of data points
    */
+  @SuppressFBWarnings ("EI_EXPOSE_REP2")
   public InterpolationPolynomial (final DataPoint [] data)
   {
     this.m_aData = data;
@@ -46,6 +49,7 @@ public class InterpolationPolynomial implements IEvaluatable
    * 
    * @return the array of data points
    */
+  @SuppressFBWarnings ("EI_EXPOSE_REP2")
   public DataPoint [] getDataPoints ()
   {
     return m_aData;
@@ -56,6 +60,7 @@ public class InterpolationPolynomial implements IEvaluatable
    * 
    * @return the table
    */
+  @SuppressFBWarnings ("EI_EXPOSE_REP")
   public float [][] getDividedDifferenceTable ()
   {
     return dd;

@@ -1,5 +1,7 @@
 package numbercruncher.mathutils;
 
+import com.phloc.commons.equals.EqualsUtils;
+
 /**
  * The root finder class that implements the bisection algorithm.
  */
@@ -170,7 +172,7 @@ public class BisectionRootFinder extends RootFinder
   @Override
   protected void checkPosition () throws RootFinder.PositionUnchangedException
   {
-    if (xMid == prevXMid)
+    if (EqualsUtils.equals (xMid, prevXMid))
     {
       throw new RootFinder.PositionUnchangedException ();
     }
