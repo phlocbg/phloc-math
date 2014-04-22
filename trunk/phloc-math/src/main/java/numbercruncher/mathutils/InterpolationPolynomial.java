@@ -49,7 +49,7 @@ public class InterpolationPolynomial implements IEvaluatable
    * 
    * @return the array of data points
    */
-  @SuppressFBWarnings ("EI_EXPOSE_REP2")
+  @SuppressFBWarnings ("EI_EXPOSE_REP")
   public DataPoint [] getDataPoints ()
   {
     return m_aData;
