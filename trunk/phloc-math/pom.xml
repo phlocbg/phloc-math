@@ -108,6 +108,13 @@
       <artifactId>phloc-commons</artifactId>
       <version>4.3.1</version>
     </dependency>
+    <!-- trove4j is the suggested library for handling collections with primitive types -->
+    <dependency>
+      <groupId>net.sf.trove4j</groupId>
+      <artifactId>trove4j</artifactId>
+      <version>3.0.3</version>
+      <optional>true</optional>
+    </dependency>
     
     <dependency>
       <groupId>org.slf4j</groupId>
