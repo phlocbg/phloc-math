@@ -20,6 +20,17 @@
 -->
 <changelog xmlns="http://www.phloc.com/ns/changelog/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://www.phloc.com/ns/changelog/1.0 schemas/changelog-1.0.xsd" version="1.0" component="phloc-math">
+  <release date="2014-05-21" version="1.1.0" />
+  <entry date="2014-05-21" category="tech" action="change">
+    <change>
+      <text locale="en">Prepared for Maven central release</text>
+    </change>
+  </entry>
+  <entry date="2014-04-23" category="api" action="add" >
+    <change>
+      <text locale="en">Added Java Number Cruncher code from http://www.apropos-logic.com/nc/</text>
+    </change>
+  </entry>
   <release date="2014-01-02" version="1.0.4" />
   <entry date="2014-01-02" category="tech" action="update" >
     <change>
