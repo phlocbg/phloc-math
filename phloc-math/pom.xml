@@ -42,11 +42,18 @@
   </licenses>
   
   <scm>
+    <url>https://github.com/phlocbg/phloc-math</url>
+    <connection>scm:svn:https://github.com/phlocbg/phloc-math/trunk/phloc-math</connection>
+    <developerConnection>scm:svn:https://github.com/phlocbg/phloc-math/trunk/phloc-math</developerConnection>
+  </scm>
+  
+<!--  
+  <scm>
     <url>http://code.google.com/p/phloc-math/source/browse/</url>
     <connection>scm:svn:http://phloc-math.googlecode.com/svn/trunk/phloc-math</connection>
     <developerConnection>scm:svn:https://phloc-math.googlecode.com/svn/trunk/phloc-math</developerConnection>
   </scm>
-
+-->
   <organization>
     <name>phloc systems</name>
     <url>http://www.phloc.com</url>
