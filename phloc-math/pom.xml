@@ -41,12 +41,20 @@
     </license>
   </licenses>
 
+   <scm>
+    <connection>scm:git:https://github.com/phlocbg/phloc-math</connection>
+    <developerConnection>scm:git:https://github.com/phlocbg/phloc-math</developerConnection>
+    <url>http://github.com/phlocbg/phloc-math</url>
+    <tag>phloc-math-${project.version}</tag>
+  </scm>
+<!--
   <scm>
     <connection>scm:git:git@github.com:phlocbg/phloc-math.git</connection>
     <developerConnection>scm:git:git@github.com:phlocbg/phloc-math.git</developerConnection>
     <url>http://github.com/phlocbg/phloc-math</url>
     <tag>phloc-math-${project.version}</tag>
   </scm>
+-->
   <!--
   <scm>
     <url>https://github.com/phlocbg/phloc-math</url>
