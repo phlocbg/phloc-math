@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (C) 2006-2014 phloc systems
+    Copyright (C) 2006-2018 phloc systems
     http://www.phloc.com
     office[at]phloc[dot]com
 
@@ -22,7 +22,7 @@
   <parent>
     <groupId>com.phloc</groupId>
     <artifactId>parent-pom</artifactId>
-    <version>23.2</version>
+    <version>24.0</version>
     <relativePath>../phloc-parent-pom/pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -31,7 +31,7 @@
   <packaging>bundle</packaging>
   <name>phloc-math</name>
   <description>phloc basic math stuff</description>
-  <url>http://repo.phloc.com/apidocs/phloc-math/${project.version}</url>
+  <url>http://github.com/phlocbg/phloc-math</url>
   
   <licenses>
     <license>
@@ -45,30 +45,8 @@
     <connection>scm:git:https://github.com/phlocbg/phloc-math</connection>
     <developerConnection>scm:git:https://github.com/phlocbg/phloc-math</developerConnection>
     <url>http://github.com/phlocbg/phloc-math</url>
-    <tag>phloc-math-${project.version}</tag>
+    <tag>HEAD</tag>
   </scm>
-<!--
-  <scm>
-    <connection>scm:git:git@github.com:phlocbg/phloc-math.git</connection>
-    <developerConnection>scm:git:git@github.com:phlocbg/phloc-math.git</developerConnection>
-    <url>http://github.com/phlocbg/phloc-math</url>
-    <tag>phloc-math-${project.version}</tag>
-  </scm>
--->
-  <!--
-  <scm>
-    <url>https://github.com/phlocbg/phloc-math</url>
-    <connection>scm:svn:https://github.com/phlocbg/phloc-math/trunk/phloc-math</connection>
-    <developerConnection>scm:svn:https://github.com/phlocbg/phloc-math/trunk/phloc-math</developerConnection>
-  </scm>
-  -->
-<!--  
-  <scm>
-    <url>http://code.google.com/p/phloc-math/source/browse/</url>
-    <connection>scm:svn:http://phloc-math.googlecode.com/svn/trunk/phloc-math</connection>
-    <developerConnection>scm:svn:https://phloc-math.googlecode.com/svn/trunk/phloc-math</developerConnection>
-  </scm>
--->
   <organization>
     <name>phloc systems</name>
     <url>http://www.phloc.com</url>
